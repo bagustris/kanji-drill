@@ -1,0 +1,492 @@
+[
+  {
+    "kanji": "一",
+    "readings": [
+      "いち",
+      "ひとつ"
+    ]
+  },
+  {
+    "kanji": "右",
+    "readings": [
+      "みぎ"
+    ]
+  },
+  {
+    "kanji": "雨",
+    "readings": [
+      "あめ"
+    ]
+  },
+  {
+    "kanji": "円",
+    "readings": [
+      "えん"
+    ]
+  },
+  {
+    "kanji": "王",
+    "readings": [
+      "おう"
+    ]
+  },
+  {
+    "kanji": "音",
+    "readings": [
+      "おと"
+    ]
+  },
+  {
+    "kanji": "下",
+    "readings": [
+      "した"
+    ]
+  },
+  {
+    "kanji": "火",
+    "readings": [
+      "ひ"
+    ]
+  },
+  {
+    "kanji": "花",
+    "readings": [
+      "はな"
+    ]
+  },
+  {
+    "kanji": "貝",
+    "readings": [
+      "かい"
+    ]
+  },
+  {
+    "kanji": "学",
+    "readings": [
+      "がく"
+    ]
+  },
+  {
+    "kanji": "気",
+    "readings": [
+      "き"
+    ]
+  },
+  {
+    "kanji": "九",
+    "readings": [
+      "きゅう",
+      "ここのつ"
+    ]
+  },
+  {
+    "kanji": "休",
+    "readings": [
+      "やすむ"
+    ]
+  },
+  {
+    "kanji": "玉",
+    "readings": [
+      "たま"
+    ]
+  },
+  {
+    "kanji": "金",
+    "readings": [
+      "きん"
+    ]
+  },
+  {
+    "kanji": "空",
+    "readings": [
+      "そら"
+    ]
+  },
+  {
+    "kanji": "月",
+    "readings": [
+      "つき"
+    ]
+  },
+  {
+    "kanji": "犬",
+    "readings": [
+      "いぬ"
+    ]
+  },
+  {
+    "kanji": "見",
+    "readings": [
+      "みる"
+    ]
+  },
+  {
+    "kanji": "五",
+    "readings": [
+      "ご",
+      "いつつ"
+    ]
+  },
+  {
+    "kanji": "口",
+    "readings": [
+      "くち"
+    ]
+  },
+  {
+    "kanji": "校",
+    "readings": [
+      "こう"
+    ]
+  },
+  {
+    "kanji": "左",
+    "readings": [
+      "ひだり"
+    ]
+  },
+  {
+    "kanji": "三",
+    "readings": [
+      "さん",
+      "みっつ"
+    ]
+  },
+  {
+    "kanji": "山",
+    "readings": [
+      "やま"
+    ]
+  },
+  {
+    "kanji": "子",
+    "readings": [
+      "こ"
+    ]
+  },
+  {
+    "kanji": "四",
+    "readings": [
+      "よん",
+      "よっつ"
+    ]
+  },
+  {
+    "kanji": "糸",
+    "readings": [
+      "いと"
+    ]
+  },
+  {
+    "kanji": "字",
+    "readings": [
+      "じ"
+    ]
+  },
+  {
+    "kanji": "耳",
+    "readings": [
+      "みみ"
+    ]
+  },
+  {
+    "kanji": "七",
+    "readings": [
+      "しち",
+      "ななつ"
+    ]
+  },
+  {
+    "kanji": "車",
+    "readings": [
+      "くるま"
+    ]
+  },
+  {
+    "kanji": "手",
+    "readings": [
+      "て"
+    ]
+  },
+  {
+    "kanji": "十",
+    "readings": [
+      "じゅう",
+      "とお"
+    ]
+  },
+  {
+    "kanji": "出",
+    "readings": [
+      "でる"
+    ]
+  },
+  {
+    "kanji": "女",
+    "readings": [
+      "おんな"
+    ]
+  },
+  {
+    "kanji": "小",
+    "readings": [
+      "ちいさい"
+    ]
+  },
+  {
+    "kanji": "上",
+    "readings": [
+      "うえ"
+    ]
+  },
+  {
+    "kanji": "森",
+    "readings": [
+      "もり"
+    ]
+  },
+  {
+    "kanji": "人",
+    "readings": [
+      "ひと"
+    ]
+  },
+  {
+    "kanji": "水",
+    "readings": [
+      "みず"
+    ]
+  },
+  {
+    "kanji": "正",
+    "readings": [
+      "ただしい"
+    ]
+  },
+  {
+    "kanji": "生",
+    "readings": [
+      "せい"
+    ]
+  },
+  {
+    "kanji": "青",
+    "readings": [
+      "あお"
+    ]
+  },
+  {
+    "kanji": "夕",
+    "readings": [
+      "ゆう"
+    ]
+  },
+  {
+    "kanji": "石",
+    "readings": [
+      "いし"
+    ]
+  },
+  {
+    "kanji": "赤",
+    "readings": [
+      "あか"
+    ]
+  },
+  {
+    "kanji": "千",
+    "readings": [
+      "せん"
+    ]
+  },
+  {
+    "kanji": "川",
+    "readings": [
+      "かわ"
+    ]
+  },
+  {
+    "kanji": "先",
+    "readings": [
+      "さき"
+    ]
+  },
+  {
+    "kanji": "早",
+    "readings": [
+      "はやい"
+    ]
+  },
+  {
+    "kanji": "草",
+    "readings": [
+      "くさ"
+    ]
+  },
+  {
+    "kanji": "足",
+    "readings": [
+      "あし"
+    ]
+  },
+  {
+    "kanji": "村",
+    "readings": [
+      "むら"
+    ]
+  },
+  {
+    "kanji": "大",
+    "readings": [
+      "おおきい"
+    ]
+  },
+  {
+    "kanji": "男",
+    "readings": [
+      "おとこ"
+    ]
+  },
+  {
+    "kanji": "竹",
+    "readings": [
+      "たけ"
+    ]
+  },
+  {
+    "kanji": "中",
+    "readings": [
+      "なか"
+    ]
+  },
+  {
+    "kanji": "虫",
+    "readings": [
+      "むし"
+    ]
+  },
+  {
+    "kanji": "町",
+    "readings": [
+      "まち"
+    ]
+  },
+  {
+    "kanji": "天",
+    "readings": [
+      "てん"
+    ]
+  },
+  {
+    "kanji": "田",
+    "readings": [
+      "た"
+    ]
+  },
+  {
+    "kanji": "土",
+    "readings": [
+      "つち"
+    ]
+  },
+  {
+    "kanji": "二",
+    "readings": [
+      "に",
+      "ふたつ"
+    ]
+  },
+  {
+    "kanji": "日",
+    "readings": [
+      "にち"
+    ]
+  },
+  {
+    "kanji": "入",
+    "readings": [
+      "はいる"
+    ]
+  },
+  {
+    "kanji": "年",
+    "readings": [
+      "ねん"
+    ]
+  },
+  {
+    "kanji": "白",
+    "readings": [
+      "しろ"
+    ]
+  },
+  {
+    "kanji": "八",
+    "readings": [
+      "はち",
+      "やっつ"
+    ]
+  },
+  {
+    "kanji": "百",
+    "readings": [
+      "ひゃく"
+    ]
+  },
+  {
+    "kanji": "文",
+    "readings": [
+      "ぶん"
+    ]
+  },
+  {
+    "kanji": "木",
+    "readings": [
+      "もく"
+    ]
+  },
+  {
+    "kanji": "本",
+    "readings": [
+      "ほん"
+    ]
+  },
+  {
+    "kanji": "名",
+    "readings": [
+      "な"
+    ]
+  },
+  {
+    "kanji": "目",
+    "readings": [
+      "め"
+    ]
+  },
+  {
+    "kanji": "立",
+    "readings": [
+      "たつ"
+    ]
+  },
+  {
+    "kanji": "力",
+    "readings": [
+      "ちから"
+    ]
+  },
+  {
+    "kanji": "林",
+    "readings": [
+      "はやし"
+    ]
+  },
+  {
+    "kanji": "六",
+    "readings": [
+      "ろく",
+      "むっつ"
+    ]
+  }
+]

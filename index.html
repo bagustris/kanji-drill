@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>漢字ドリル - Kanji Drill</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%E6%BC%A2</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="app-header">
+  <h1>漢字ドリル</h1>
+</header>
+
+<main id="app">
+
+  <div id="file-protocol-warning" class="banner-warning hidden">
+    このアプリはサーバー経由で開く必要があります（file:// では動作しません）。<br>
+    This app must be served over HTTP, not opened directly as a file.<br>
+    Try: <code>python3 -m http.server</code>, then open <code>http://localhost:8000</code>.
+  </div>
+
+  <div id="load-error-banner" class="banner-error hidden"></div>
+
+  <section id="screen-home" class="screen">
+    <h2>学年を選んでください</h2>
+    <p class="subtitle">Choose a grade to start drilling</p>
+    <div class="grade-grid">
+      <button class="grade-btn" data-grade="1">1年生<span>80字</span></button>
+      <button class="grade-btn" data-grade="2">2年生<span>160字</span></button>
+      <button class="grade-btn" data-grade="3">3年生<span>200字</span></button>
+      <button class="grade-btn" data-grade="4">4年生<span>202字</span></button>
+      <button class="grade-btn" data-grade="5">5年生<span>193字</span></button>
+      <button class="grade-btn" data-grade="6">6年生<span>191字</span></button>
+    </div>
+  </section>
+
+  <section id="screen-quiz" class="screen hidden">
+    <div class="quiz-topbar">
+      <button id="btn-quit" class="link-btn">&larr; やめる</button>
+      <div id="quiz-progress" class="quiz-progress"></div>
+    </div>
+    <div class="quiz-card">
+      <div id="quiz-kanji" class="quiz-kanji">漢</div>
+      <p class="quiz-instruction">正しい読み方は？</p>
+      <div id="quiz-options" class="quiz-options"></div>
+    </div>
+  </section>
+
+  <section id="screen-summary" class="screen hidden">
+    <h2>おわり！</h2>
+    <p id="summary-score" class="summary-score"></p>
+    <div id="summary-missed" class="summary-missed"></div>
+    <div class="summary-actions">
+      <button id="btn-retry" class="primary-btn">もう一回</button>
+      <button id="btn-home" class="link-btn">学年を選びなおす</button>
+    </div>
+  </section>
+
+</main>
+
+<script src="js/storage.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
