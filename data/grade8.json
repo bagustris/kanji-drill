@@ -1,0 +1,2767 @@
+[
+  {
+    "kanji": "扶",
+    "readings": [
+      "ふ"
+    ],
+    "meaning": "assist; support"
+  },
+  {
+    "kanji": "抄",
+    "readings": [
+      "しょう"
+    ],
+    "meaning": "excerpt; digest"
+  },
+  {
+    "kanji": "把",
+    "readings": [
+      "は"
+    ],
+    "meaning": "grasp"
+  },
+  {
+    "kanji": "抑",
+    "readings": [
+      "おさ.える",
+      "よく"
+    ],
+    "meaning": "restrain"
+  },
+  {
+    "kanji": "抗",
+    "readings": [
+      "こう"
+    ],
+    "meaning": "resist"
+  },
+  {
+    "kanji": "抜",
+    "readings": [
+      "ぬ.く",
+      "ぬ.ける"
+    ],
+    "meaning": "pull out"
+  },
+  {
+    "kanji": "択",
+    "readings": [
+      "たく"
+    ],
+    "meaning": "choose"
+  },
+  {
+    "kanji": "披",
+    "readings": [
+      "ひ"
+    ],
+    "meaning": "open; disclose"
+  },
+  {
+    "kanji": "抱",
+    "readings": [
+      "だ.く",
+      "いだ.く"
+    ],
+    "meaning": "hold; embrace"
+  },
+  {
+    "kanji": "抵",
+    "readings": [
+      "てい"
+    ],
+    "meaning": "resist"
+  },
+  {
+    "kanji": "抹",
+    "readings": [
+      "まつ"
+    ],
+    "meaning": "erase; rub"
+  },
+  {
+    "kanji": "押",
+    "readings": [
+      "お.す",
+      "お.さえる"
+    ],
+    "meaning": "push; press"
+  },
+  {
+    "kanji": "抽",
+    "readings": [
+      "ちゅう"
+    ],
+    "meaning": "extract; draw"
+  },
+  {
+    "kanji": "拉",
+    "readings": [
+      "ら"
+    ],
+    "meaning": "abduct"
+  },
+  {
+    "kanji": "拍",
+    "readings": [
+      "はく"
+    ],
+    "meaning": "beat; clap"
+  },
+  {
+    "kanji": "拐",
+    "readings": [
+      "かい"
+    ],
+    "meaning": "kidnap"
+  },
+  {
+    "kanji": "拒",
+    "readings": [
+      "こば.む",
+      "きょ"
+    ],
+    "meaning": "refuse"
+  },
+  {
+    "kanji": "拓",
+    "readings": [
+      "たく"
+    ],
+    "meaning": "reclaim; expand"
+  },
+  {
+    "kanji": "拘",
+    "readings": [
+      "こう"
+    ],
+    "meaning": "detain; be bound by"
+  },
+  {
+    "kanji": "拙",
+    "readings": [
+      "つたな.い",
+      "せつ"
+    ],
+    "meaning": "clumsy"
+  },
+  {
+    "kanji": "拠",
+    "readings": [
+      "こ"
+    ],
+    "meaning": "basis; ground"
+  },
+  {
+    "kanji": "括",
+    "readings": [
+      "かつ"
+    ],
+    "meaning": "bundle; enclose"
+  },
+  {
+    "kanji": "拭",
+    "readings": [
+      "ふ.く",
+      "ぬぐ.う"
+    ],
+    "meaning": "wipe"
+  },
+  {
+    "kanji": "拳",
+    "readings": [
+      "こぶし",
+      "けん"
+    ],
+    "meaning": "fist"
+  },
+  {
+    "kanji": "拶",
+    "readings": [
+      "さつ"
+    ],
+    "meaning": "press"
+  },
+  {
+    "kanji": "拷",
+    "readings": [
+      "ごう"
+    ],
+    "meaning": "torture"
+  },
+  {
+    "kanji": "挑",
+    "readings": [
+      "いど.む",
+      "ちょう"
+    ],
+    "meaning": "challenge"
+  },
+  {
+    "kanji": "挟",
+    "readings": [
+      "はさ.む",
+      "はさ.まる"
+    ],
+    "meaning": "insert between"
+  },
+  {
+    "kanji": "挨",
+    "readings": [
+      "あい"
+    ],
+    "meaning": "greeting"
+  },
+  {
+    "kanji": "挫",
+    "readings": [
+      "ざ"
+    ],
+    "meaning": "sprain; be discouraged"
+  },
+  {
+    "kanji": "振",
+    "readings": [
+      "ふ.る",
+      "ふ.るう"
+    ],
+    "meaning": "wave; shake"
+  },
+  {
+    "kanji": "挿",
+    "readings": [
+      "さ.す",
+      "そう"
+    ],
+    "meaning": "insert"
+  },
+  {
+    "kanji": "捉",
+    "readings": [
+      "とら.える",
+      "そく"
+    ],
+    "meaning": "catch; grasp"
+  },
+  {
+    "kanji": "捕",
+    "readings": [
+      "と.る",
+      "つか.まえる"
+    ],
+    "meaning": "catch; capture"
+  },
+  {
+    "kanji": "捗",
+    "readings": [
+      "ちょく"
+    ],
+    "meaning": "progress"
+  },
+  {
+    "kanji": "捜",
+    "readings": [
+      "さが.す",
+      "そう"
+    ],
+    "meaning": "search for"
+  },
+  {
+    "kanji": "据",
+    "readings": [
+      "す.える",
+      "す.わる"
+    ],
+    "meaning": "set in place"
+  },
+  {
+    "kanji": "捻",
+    "readings": [
+      "ねん"
+    ],
+    "meaning": "twist"
+  },
+  {
+    "kanji": "掃",
+    "readings": [
+      "は.く",
+      "そう"
+    ],
+    "meaning": "sweep"
+  },
+  {
+    "kanji": "掌",
+    "readings": [
+      "しょう"
+    ],
+    "meaning": "palm; administer"
+  },
+  {
+    "kanji": "排",
+    "readings": [
+      "はい"
+    ],
+    "meaning": "reject; exclude"
+  },
+  {
+    "kanji": "掘",
+    "readings": [
+      "ほ.る",
+      "くつ"
+    ],
+    "meaning": "dig"
+  },
+  {
+    "kanji": "掛",
+    "readings": [
+      "か.ける",
+      "か.かる"
+    ],
+    "meaning": "hang; apply"
+  },
+  {
+    "kanji": "控",
+    "readings": [
+      "ひか.える",
+      "こう"
+    ],
+    "meaning": "refrain; note down"
+  },
+  {
+    "kanji": "措",
+    "readings": [
+      "そ"
+    ],
+    "meaning": "measure; deal with"
+  },
+  {
+    "kanji": "掲",
+    "readings": [
+      "かか.げる",
+      "けい"
+    ],
+    "meaning": "post; hoist"
+  },
+  {
+    "kanji": "描",
+    "readings": [
+      "えが.く",
+      "か.く"
+    ],
+    "meaning": "draw; depict"
+  },
+  {
+    "kanji": "揚",
+    "readings": [
+      "あ.げる",
+      "あ.がる"
+    ],
+    "meaning": "fry; hoist"
+  },
+  {
+    "kanji": "換",
+    "readings": [
+      "か.える",
+      "か.わる"
+    ],
+    "meaning": "exchange"
+  },
+  {
+    "kanji": "握",
+    "readings": [
+      "にぎ.る",
+      "あく"
+    ],
+    "meaning": "grasp"
+  },
+  {
+    "kanji": "援",
+    "readings": [
+      "えん"
+    ],
+    "meaning": "aid; support"
+  },
+  {
+    "kanji": "揺",
+    "readings": [
+      "ゆ.さぶる",
+      "ゆ.すぶる"
+    ],
+    "meaning": "shake"
+  },
+  {
+    "kanji": "搬",
+    "readings": [
+      "はん"
+    ],
+    "meaning": "transport"
+  },
+  {
+    "kanji": "搭",
+    "readings": [
+      "とう"
+    ],
+    "meaning": "board (a vehicle)"
+  },
+  {
+    "kanji": "携",
+    "readings": [
+      "たずさ.える",
+      "たずさ.わる"
+    ],
+    "meaning": "carry; be involved in"
+  },
+  {
+    "kanji": "搾",
+    "readings": [
+      "しぼ.る",
+      "さく"
+    ],
+    "meaning": "squeeze"
+  },
+  {
+    "kanji": "摂",
+    "readings": [
+      "せつ"
+    ],
+    "meaning": "take in; assist"
+  },
+  {
+    "kanji": "摘",
+    "readings": [
+      "つ.む",
+      "てき"
+    ],
+    "meaning": "pick; pluck"
+  },
+  {
+    "kanji": "摩",
+    "readings": [
+      "ま"
+    ],
+    "meaning": "rub; friction"
+  },
+  {
+    "kanji": "摯",
+    "readings": [
+      "し"
+    ],
+    "meaning": "sincere"
+  },
+  {
+    "kanji": "撃",
+    "readings": [
+      "う.つ",
+      "げき"
+    ],
+    "meaning": "attack; strike"
+  },
+  {
+    "kanji": "撤",
+    "readings": [
+      "てつ"
+    ],
+    "meaning": "withdraw; remove"
+  },
+  {
+    "kanji": "撮",
+    "readings": [
+      "と.る",
+      "さつ"
+    ],
+    "meaning": "take (a photo)"
+  },
+  {
+    "kanji": "撲",
+    "readings": [
+      "ぼく"
+    ],
+    "meaning": "beat; wrestling"
+  },
+  {
+    "kanji": "擁",
+    "readings": [
+      "よう"
+    ],
+    "meaning": "embrace; support"
+  },
+  {
+    "kanji": "擦",
+    "readings": [
+      "す.る",
+      "す.れる"
+    ],
+    "meaning": "rub; chafe"
+  },
+  {
+    "kanji": "擬",
+    "readings": [
+      "ぎ"
+    ],
+    "meaning": "imitation; quasi-"
+  },
+  {
+    "kanji": "攻",
+    "readings": [
+      "せ.める",
+      "こう"
+    ],
+    "meaning": "attack"
+  },
+  {
+    "kanji": "敏",
+    "readings": [
+      "びん"
+    ],
+    "meaning": "quick; sharp"
+  },
+  {
+    "kanji": "敢",
+    "readings": [
+      "かん"
+    ],
+    "meaning": "dare; brave"
+  },
+  {
+    "kanji": "敷",
+    "readings": [
+      "し.く",
+      "ふ"
+    ],
+    "meaning": "spread out"
+  },
+  {
+    "kanji": "斉",
+    "readings": [
+      "せい"
+    ],
+    "meaning": "uniform; together"
+  },
+  {
+    "kanji": "斎",
+    "readings": [
+      "さい"
+    ],
+    "meaning": "purify; study room"
+  },
+  {
+    "kanji": "斑",
+    "readings": [
+      "はん"
+    ],
+    "meaning": "spot; speckle"
+  },
+  {
+    "kanji": "斗",
+    "readings": [
+      "と"
+    ],
+    "meaning": "dipper (unit)"
+  },
+  {
+    "kanji": "斜",
+    "readings": [
+      "なな.め",
+      "しゃ"
+    ],
+    "meaning": "diagonal"
+  },
+  {
+    "kanji": "斤",
+    "readings": [
+      "きん"
+    ],
+    "meaning": "unit of weight"
+  },
+  {
+    "kanji": "斥",
+    "readings": [
+      "せき"
+    ],
+    "meaning": "repel"
+  },
+  {
+    "kanji": "斬",
+    "readings": [
+      "き.る",
+      "ざん"
+    ],
+    "meaning": "slash; behead"
+  },
+  {
+    "kanji": "施",
+    "readings": [
+      "ほどこ.す",
+      "し"
+    ],
+    "meaning": "perform; give"
+  },
+  {
+    "kanji": "旋",
+    "readings": [
+      "せん"
+    ],
+    "meaning": "revolve; turn"
+  },
+  {
+    "kanji": "既",
+    "readings": [
+      "すで.に",
+      "き"
+    ],
+    "meaning": "already"
+  },
+  {
+    "kanji": "旦",
+    "readings": [
+      "たん"
+    ],
+    "meaning": "dawn; day"
+  },
+  {
+    "kanji": "旨",
+    "readings": [
+      "むね",
+      "し"
+    ],
+    "meaning": "purport; delicious"
+  },
+  {
+    "kanji": "旬",
+    "readings": [
+      "しゅん"
+    ],
+    "meaning": "season; ten-day period"
+  },
+  {
+    "kanji": "旺",
+    "readings": [
+      "おう"
+    ],
+    "meaning": "flourishing"
+  },
+  {
+    "kanji": "昆",
+    "readings": [
+      "こん"
+    ],
+    "meaning": "insect (as in 昆虫)"
+  },
+  {
+    "kanji": "昇",
+    "readings": [
+      "のぼ.る",
+      "しょう"
+    ],
+    "meaning": "rise; ascend"
+  },
+  {
+    "kanji": "昧",
+    "readings": [
+      "まい"
+    ],
+    "meaning": "dark; obscure"
+  },
+  {
+    "kanji": "是",
+    "readings": [
+      "ぜ"
+    ],
+    "meaning": "right; this"
+  },
+  {
+    "kanji": "普",
+    "readings": [
+      "ふ"
+    ],
+    "meaning": "universal; general"
+  },
+  {
+    "kanji": "晶",
+    "readings": [
+      "しょう"
+    ],
+    "meaning": "crystal"
+  },
+  {
+    "kanji": "暁",
+    "readings": [
+      "あかつき",
+      "ぎょう"
+    ],
+    "meaning": "dawn"
+  },
+  {
+    "kanji": "暇",
+    "readings": [
+      "ひま",
+      "か"
+    ],
+    "meaning": "free time; leisure"
+  },
+  {
+    "kanji": "暦",
+    "readings": [
+      "こよみ",
+      "れき"
+    ],
+    "meaning": "calendar"
+  },
+  {
+    "kanji": "暫",
+    "readings": [
+      "ざん"
+    ],
+    "meaning": "temporarily"
+  },
+  {
+    "kanji": "曇",
+    "readings": [
+      "くも.る",
+      "どん"
+    ],
+    "meaning": "cloudy"
+  },
+  {
+    "kanji": "曖",
+    "readings": [
+      "あい"
+    ],
+    "meaning": "vague"
+  },
+  {
+    "kanji": "更",
+    "readings": [
+      "ふ.ける",
+      "ふ.かす"
+    ],
+    "meaning": "grow late; renew"
+  },
+  {
+    "kanji": "曹",
+    "readings": [
+      "そう"
+    ],
+    "meaning": "officer (military rank)"
+  },
+  {
+    "kanji": "曽",
+    "readings": [
+      "そう"
+    ],
+    "meaning": "once; great- (ancestor)"
+  },
+  {
+    "kanji": "替",
+    "readings": [
+      "か.わる",
+      "か.える"
+    ],
+    "meaning": "substitute; exchange"
+  },
+  {
+    "kanji": "朕",
+    "readings": [
+      "ちん"
+    ],
+    "meaning": "I (imperial)"
+  },
+  {
+    "kanji": "朱",
+    "readings": [
+      "しゅ"
+    ],
+    "meaning": "vermillion"
+  },
+  {
+    "kanji": "朴",
+    "readings": [
+      "ぼく"
+    ],
+    "meaning": "simple; plain"
+  },
+  {
+    "kanji": "朽",
+    "readings": [
+      "く.ちる",
+      "きゅう"
+    ],
+    "meaning": "decay; rot"
+  },
+  {
+    "kanji": "杉",
+    "readings": [
+      "すぎ"
+    ],
+    "meaning": "cedar"
+  },
+  {
+    "kanji": "杯",
+    "readings": [
+      "さかずき",
+      "はい"
+    ],
+    "meaning": "cup; counter for drinks"
+  },
+  {
+    "kanji": "析",
+    "readings": [
+      "せき"
+    ],
+    "meaning": "analyze"
+  },
+  {
+    "kanji": "枕",
+    "readings": [
+      "まくら"
+    ],
+    "meaning": "pillow"
+  },
+  {
+    "kanji": "枠",
+    "readings": [
+      "わく"
+    ],
+    "meaning": "frame"
+  },
+  {
+    "kanji": "枢",
+    "readings": [
+      "すう"
+    ],
+    "meaning": "pivot; center"
+  },
+  {
+    "kanji": "枯",
+    "readings": [
+      "か.れる",
+      "か.らす"
+    ],
+    "meaning": "wither"
+  },
+  {
+    "kanji": "架",
+    "readings": [
+      "か.ける",
+      "か.かる"
+    ],
+    "meaning": "build (a bridge); frame"
+  },
+  {
+    "kanji": "柄",
+    "readings": [
+      "がら",
+      "え"
+    ],
+    "meaning": "pattern; handle"
+  },
+  {
+    "kanji": "某",
+    "readings": [
+      "ぼう"
+    ],
+    "meaning": "a certain (person)"
+  },
+  {
+    "kanji": "柔",
+    "readings": [
+      "やわ.らか",
+      "やわ.らかい"
+    ],
+    "meaning": "soft"
+  },
+  {
+    "kanji": "柳",
+    "readings": [
+      "やなぎ",
+      "りゅう"
+    ],
+    "meaning": "willow"
+  },
+  {
+    "kanji": "柵",
+    "readings": [
+      "さく"
+    ],
+    "meaning": "fence"
+  },
+  {
+    "kanji": "柿",
+    "readings": [
+      "かき"
+    ],
+    "meaning": "persimmon"
+  },
+  {
+    "kanji": "栓",
+    "readings": [
+      "せん"
+    ],
+    "meaning": "stopper; plug"
+  },
+  {
+    "kanji": "核",
+    "readings": [
+      "かく"
+    ],
+    "meaning": "nucleus; core"
+  },
+  {
+    "kanji": "栽",
+    "readings": [
+      "さい"
+    ],
+    "meaning": "planting (as in 栽培)"
+  },
+  {
+    "kanji": "桁",
+    "readings": [
+      "けた"
+    ],
+    "meaning": "digit; girder"
+  },
+  {
+    "kanji": "桃",
+    "readings": [
+      "もも",
+      "とう"
+    ],
+    "meaning": "peach"
+  },
+  {
+    "kanji": "桑",
+    "readings": [
+      "くわ",
+      "そう"
+    ],
+    "meaning": "mulberry"
+  },
+  {
+    "kanji": "桟",
+    "readings": [
+      "さん"
+    ],
+    "meaning": "crosspiece; jetty"
+  },
+  {
+    "kanji": "梗",
+    "readings": [
+      "こう"
+    ],
+    "meaning": "blockage (as in 梗塞)"
+  },
+  {
+    "kanji": "棄",
+    "readings": [
+      "き"
+    ],
+    "meaning": "abandon"
+  },
+  {
+    "kanji": "棋",
+    "readings": [
+      "き"
+    ],
+    "meaning": "chess; shogi"
+  },
+  {
+    "kanji": "棚",
+    "readings": [
+      "たな"
+    ],
+    "meaning": "shelf"
+  },
+  {
+    "kanji": "棟",
+    "readings": [
+      "むね",
+      "むな"
+    ],
+    "meaning": "ridge (of roof); building counter"
+  },
+  {
+    "kanji": "棺",
+    "readings": [
+      "かん"
+    ],
+    "meaning": "coffin"
+  },
+  {
+    "kanji": "椅",
+    "readings": [
+      "い"
+    ],
+    "meaning": "chair"
+  },
+  {
+    "kanji": "椎",
+    "readings": [
+      "つい"
+    ],
+    "meaning": "vertebra"
+  },
+  {
+    "kanji": "楷",
+    "readings": [
+      "かい"
+    ],
+    "meaning": "block style (writing)"
+  },
+  {
+    "kanji": "楼",
+    "readings": [
+      "ろう"
+    ],
+    "meaning": "tower; storied building"
+  },
+  {
+    "kanji": "概",
+    "readings": [
+      "がい"
+    ],
+    "meaning": "general; approximate"
+  },
+  {
+    "kanji": "槽",
+    "readings": [
+      "そう"
+    ],
+    "meaning": "tank; tub"
+  },
+  {
+    "kanji": "欄",
+    "readings": [
+      "らん"
+    ],
+    "meaning": "column; railing"
+  },
+  {
+    "kanji": "欧",
+    "readings": [
+      "おう"
+    ],
+    "meaning": "Europe"
+  },
+  {
+    "kanji": "欺",
+    "readings": [
+      "あざむ.く",
+      "ぎ"
+    ],
+    "meaning": "deceive"
+  },
+  {
+    "kanji": "款",
+    "readings": [
+      "かん"
+    ],
+    "meaning": "article (of a treaty)"
+  },
+  {
+    "kanji": "歓",
+    "readings": [
+      "かん"
+    ],
+    "meaning": "joy; welcome"
+  },
+  {
+    "kanji": "歳",
+    "readings": [
+      "さい"
+    ],
+    "meaning": "year; age (counter)"
+  },
+  {
+    "kanji": "殉",
+    "readings": [
+      "じゅん"
+    ],
+    "meaning": "die for a cause"
+  },
+  {
+    "kanji": "殊",
+    "readings": [
+      "こと",
+      "しゅ"
+    ],
+    "meaning": "especially"
+  },
+  {
+    "kanji": "殖",
+    "readings": [
+      "ふ.える",
+      "ふ.やす"
+    ],
+    "meaning": "increase; breed"
+  },
+  {
+    "kanji": "殴",
+    "readings": [
+      "なぐ.る",
+      "おう"
+    ],
+    "meaning": "strike; hit"
+  },
+  {
+    "kanji": "殻",
+    "readings": [
+      "から",
+      "かく"
+    ],
+    "meaning": "shell"
+  },
+  {
+    "kanji": "殿",
+    "readings": [
+      "との",
+      "どの"
+    ],
+    "meaning": "lord; Mr. (formal)"
+  },
+  {
+    "kanji": "毀",
+    "readings": [
+      "き"
+    ],
+    "meaning": "destroy; damage"
+  },
+  {
+    "kanji": "氾",
+    "readings": [
+      "はん"
+    ],
+    "meaning": "overflow (as in 氾濫)"
+  },
+  {
+    "kanji": "汁",
+    "readings": [
+      "しる",
+      "じゅう"
+    ],
+    "meaning": "juice; broth"
+  },
+  {
+    "kanji": "汎",
+    "readings": [
+      "はん"
+    ],
+    "meaning": "general; pan-"
+  },
+  {
+    "kanji": "汗",
+    "readings": [
+      "あせ",
+      "かん"
+    ],
+    "meaning": "sweat"
+  },
+  {
+    "kanji": "汚",
+    "readings": [
+      "けが.らわしい",
+      "よご.す"
+    ],
+    "meaning": "dirty; disgraceful"
+  },
+  {
+    "kanji": "江",
+    "readings": [
+      "え",
+      "こう"
+    ],
+    "meaning": "inlet; river"
+  },
+  {
+    "kanji": "汰",
+    "readings": [
+      "た"
+    ],
+    "meaning": "selection (as in 淘汰)"
+  },
+  {
+    "kanji": "沃",
+    "readings": [
+      "よく"
+    ],
+    "meaning": "fertile"
+  },
+  {
+    "kanji": "沈",
+    "readings": [
+      "しず.む",
+      "しず.める"
+    ],
+    "meaning": "sink"
+  },
+  {
+    "kanji": "沙",
+    "readings": [
+      "さ"
+    ],
+    "meaning": "sand (as in 沙汰)"
+  },
+  {
+    "kanji": "没",
+    "readings": [
+      "ぼつ"
+    ],
+    "meaning": "sink; die"
+  },
+  {
+    "kanji": "沢",
+    "readings": [
+      "さわ",
+      "たく"
+    ],
+    "meaning": "swamp; abundant"
+  },
+  {
+    "kanji": "沸",
+    "readings": [
+      "わ.く",
+      "わ.かす"
+    ],
+    "meaning": "boil"
+  },
+  {
+    "kanji": "沼",
+    "readings": [
+      "ぬま",
+      "しょう"
+    ],
+    "meaning": "marsh; pond"
+  },
+  {
+    "kanji": "況",
+    "readings": [
+      "きょう"
+    ],
+    "meaning": "condition; circumstance"
+  },
+  {
+    "kanji": "泊",
+    "readings": [
+      "と.まる",
+      "と.める"
+    ],
+    "meaning": "stay overnight"
+  },
+  {
+    "kanji": "泌",
+    "readings": [
+      "ひ"
+    ],
+    "meaning": "secrete"
+  },
+  {
+    "kanji": "泡",
+    "readings": [
+      "あわ",
+      "ほう"
+    ],
+    "meaning": "bubble; foam"
+  },
+  {
+    "kanji": "泥",
+    "readings": [
+      "どろ",
+      "でい"
+    ],
+    "meaning": "mud"
+  },
+  {
+    "kanji": "泰",
+    "readings": [
+      "たい"
+    ],
+    "meaning": "peaceful; grand"
+  },
+  {
+    "kanji": "洞",
+    "readings": [
+      "ほら",
+      "どう"
+    ],
+    "meaning": "cave"
+  },
+  {
+    "kanji": "津",
+    "readings": [
+      "つ",
+      "しん"
+    ],
+    "meaning": "harbor; ferry"
+  },
+  {
+    "kanji": "洪",
+    "readings": [
+      "こう"
+    ],
+    "meaning": "flood"
+  },
+  {
+    "kanji": "浄",
+    "readings": [
+      "じょう"
+    ],
+    "meaning": "pure; purify"
+  },
+  {
+    "kanji": "浜",
+    "readings": [
+      "はま",
+      "ひん"
+    ],
+    "meaning": "beach"
+  },
+  {
+    "kanji": "浦",
+    "readings": [
+      "うら"
+    ],
+    "meaning": "inlet; bay"
+  },
+  {
+    "kanji": "浪",
+    "readings": [
+      "ろう"
+    ],
+    "meaning": "wave; wandering"
+  },
+  {
+    "kanji": "浮",
+    "readings": [
+      "う.かべる",
+      "う.く"
+    ],
+    "meaning": "float"
+  },
+  {
+    "kanji": "浸",
+    "readings": [
+      "ひた.す",
+      "ひた.る"
+    ],
+    "meaning": "soak"
+  },
+  {
+    "kanji": "涙",
+    "readings": [
+      "なみだ",
+      "るい"
+    ],
+    "meaning": "tears"
+  },
+  {
+    "kanji": "涯",
+    "readings": [
+      "がい"
+    ],
+    "meaning": "horizon; boundary"
+  },
+  {
+    "kanji": "涼",
+    "readings": [
+      "すず.しい",
+      "すず.む"
+    ],
+    "meaning": "cool"
+  },
+  {
+    "kanji": "淑",
+    "readings": [
+      "しゅく"
+    ],
+    "meaning": "graceful; virtuous"
+  },
+  {
+    "kanji": "淡",
+    "readings": [
+      "あわ.い",
+      "たん"
+    ],
+    "meaning": "light; faint (color/taste)"
+  },
+  {
+    "kanji": "淫",
+    "readings": [
+      "みだ.ら",
+      "いん"
+    ],
+    "meaning": "lewd"
+  },
+  {
+    "kanji": "添",
+    "readings": [
+      "そ.う",
+      "そ.える"
+    ],
+    "meaning": "add; accompany"
+  },
+  {
+    "kanji": "渇",
+    "readings": [
+      "かわ.く",
+      "かつ"
+    ],
+    "meaning": "thirsty"
+  },
+  {
+    "kanji": "渉",
+    "readings": [
+      "しょう"
+    ],
+    "meaning": "wade; negotiate"
+  },
+  {
+    "kanji": "渋",
+    "readings": [
+      "しぶ.い",
+      "しぶ.る"
+    ],
+    "meaning": "astringent; reluctant"
+  },
+  {
+    "kanji": "渓",
+    "readings": [
+      "けい"
+    ],
+    "meaning": "mountain stream; ravine"
+  },
+  {
+    "kanji": "渡",
+    "readings": [
+      "わた.る",
+      "わた.す"
+    ],
+    "meaning": "cross over; hand over"
+  },
+  {
+    "kanji": "渦",
+    "readings": [
+      "うず",
+      "か"
+    ],
+    "meaning": "whirlpool; vortex"
+  },
+  {
+    "kanji": "湧",
+    "readings": [
+      "わ.く",
+      "ゆう"
+    ],
+    "meaning": "gush; well up"
+  },
+  {
+    "kanji": "湾",
+    "readings": [
+      "わん"
+    ],
+    "meaning": "bay; gulf"
+  },
+  {
+    "kanji": "湿",
+    "readings": [
+      "しめ.す",
+      "しめ.る"
+    ],
+    "meaning": "damp; humid"
+  },
+  {
+    "kanji": "溝",
+    "readings": [
+      "みぞ",
+      "こう"
+    ],
+    "meaning": "ditch; gap"
+  },
+  {
+    "kanji": "溶",
+    "readings": [
+      "と.かす",
+      "と.く"
+    ],
+    "meaning": "melt; dissolve"
+  },
+  {
+    "kanji": "溺",
+    "readings": [
+      "おぼ.れる",
+      "でき"
+    ],
+    "meaning": "drown; be addicted to"
+  },
+  {
+    "kanji": "滅",
+    "readings": [
+      "ほろ.びる",
+      "ほろ.ぼす"
+    ],
+    "meaning": "perish; destroy"
+  },
+  {
+    "kanji": "滑",
+    "readings": [
+      "すべ.る",
+      "なめ.らか"
+    ],
+    "meaning": "slip; smooth"
+  },
+  {
+    "kanji": "滝",
+    "readings": [
+      "たき"
+    ],
+    "meaning": "waterfall"
+  },
+  {
+    "kanji": "滞",
+    "readings": [
+      "とどこお.る",
+      "たい"
+    ],
+    "meaning": "stagnate; be delayed"
+  },
+  {
+    "kanji": "滴",
+    "readings": [
+      "したた.る",
+      "てき"
+    ],
+    "meaning": "drip"
+  },
+  {
+    "kanji": "漂",
+    "readings": [
+      "ただよ.う",
+      "ひょう"
+    ],
+    "meaning": "drift; float"
+  },
+  {
+    "kanji": "漆",
+    "readings": [
+      "うるし",
+      "しつ"
+    ],
+    "meaning": "lacquer"
+  },
+  {
+    "kanji": "漏",
+    "readings": [
+      "も.る",
+      "も.れる"
+    ],
+    "meaning": "leak"
+  },
+  {
+    "kanji": "漠",
+    "readings": [
+      "ばく"
+    ],
+    "meaning": "vague; desert"
+  },
+  {
+    "kanji": "漫",
+    "readings": [
+      "まん"
+    ],
+    "meaning": "random; comic"
+  },
+  {
+    "kanji": "漬",
+    "readings": [
+      "つ.ける",
+      "つ.かる"
+    ],
+    "meaning": "pickle; soak"
+  },
+  {
+    "kanji": "漸",
+    "readings": [
+      "ぜん"
+    ],
+    "meaning": "gradually"
+  },
+  {
+    "kanji": "潜",
+    "readings": [
+      "ひそ.む",
+      "もぐ.る"
+    ],
+    "meaning": "hide; dive"
+  },
+  {
+    "kanji": "潤",
+    "readings": [
+      "うるお.う",
+      "うるお.す"
+    ],
+    "meaning": "moisten; enrich"
+  },
+  {
+    "kanji": "潰",
+    "readings": [
+      "つぶ.す",
+      "つぶ.れる"
+    ],
+    "meaning": "crush"
+  },
+  {
+    "kanji": "澄",
+    "readings": [
+      "す.む",
+      "す.ます"
+    ],
+    "meaning": "become clear"
+  },
+  {
+    "kanji": "濁",
+    "readings": [
+      "にご.る",
+      "にご.す"
+    ],
+    "meaning": "become muddy"
+  },
+  {
+    "kanji": "濃",
+    "readings": [
+      "こ.い",
+      "のう"
+    ],
+    "meaning": "thick; dense"
+  },
+  {
+    "kanji": "濫",
+    "readings": [
+      "らん"
+    ],
+    "meaning": "excessive; overflow"
+  },
+  {
+    "kanji": "濯",
+    "readings": [
+      "たく"
+    ],
+    "meaning": "wash (as in 洗濯)"
+  },
+  {
+    "kanji": "瀬",
+    "readings": [
+      "せ"
+    ],
+    "meaning": "shallows; rapids"
+  },
+  {
+    "kanji": "炉",
+    "readings": [
+      "ろ"
+    ],
+    "meaning": "furnace; hearth"
+  },
+  {
+    "kanji": "炊",
+    "readings": [
+      "た.く",
+      "すい"
+    ],
+    "meaning": "cook (rice)"
+  },
+  {
+    "kanji": "炎",
+    "readings": [
+      "ほのお",
+      "えん"
+    ],
+    "meaning": "flame"
+  },
+  {
+    "kanji": "為",
+    "readings": [
+      "い"
+    ],
+    "meaning": "for the sake of; do"
+  },
+  {
+    "kanji": "烈",
+    "readings": [
+      "れつ"
+    ],
+    "meaning": "fierce; intense"
+  },
+  {
+    "kanji": "焦",
+    "readings": [
+      "こ.げる",
+      "こ.がす"
+    ],
+    "meaning": "scorch; be impatient"
+  },
+  {
+    "kanji": "煎",
+    "readings": [
+      "い.る",
+      "せん"
+    ],
+    "meaning": "roast; brew"
+  },
+  {
+    "kanji": "煙",
+    "readings": [
+      "けむ.る",
+      "けむ.い"
+    ],
+    "meaning": "smoke"
+  },
+  {
+    "kanji": "煩",
+    "readings": [
+      "わずら.う",
+      "わずら.わす"
+    ],
+    "meaning": "be annoyed; bother"
+  },
+  {
+    "kanji": "煮",
+    "readings": [
+      "に.える",
+      "に.やす"
+    ],
+    "meaning": "boil; cook"
+  },
+  {
+    "kanji": "燥",
+    "readings": [
+      "そう"
+    ],
+    "meaning": "dry (as in 乾燥)"
+  },
+  {
+    "kanji": "爆",
+    "readings": [
+      "ばく"
+    ],
+    "meaning": "explode"
+  },
+  {
+    "kanji": "爪",
+    "readings": [
+      "つめ",
+      "つま"
+    ],
+    "meaning": "nail; claw"
+  },
+  {
+    "kanji": "爵",
+    "readings": [
+      "しゃく"
+    ],
+    "meaning": "peerage; title"
+  },
+  {
+    "kanji": "爽",
+    "readings": [
+      "さわ.やか",
+      "そう"
+    ],
+    "meaning": "refreshing"
+  },
+  {
+    "kanji": "牙",
+    "readings": [
+      "きば",
+      "げ"
+    ],
+    "meaning": "fang"
+  },
+  {
+    "kanji": "牲",
+    "readings": [
+      "せい"
+    ],
+    "meaning": "sacrifice (as in 犠牲)"
+  },
+  {
+    "kanji": "犠",
+    "readings": [
+      "ぎ"
+    ],
+    "meaning": "sacrifice"
+  },
+  {
+    "kanji": "狂",
+    "readings": [
+      "くる.う",
+      "くる.おしい"
+    ],
+    "meaning": "go mad"
+  },
+  {
+    "kanji": "狙",
+    "readings": [
+      "ねら.う",
+      "そ"
+    ],
+    "meaning": "aim at"
+  },
+  {
+    "kanji": "狩",
+    "readings": [
+      "か.る",
+      "か.り"
+    ],
+    "meaning": "hunt"
+  },
+  {
+    "kanji": "狭",
+    "readings": [
+      "せば.める",
+      "せば.まる"
+    ],
+    "meaning": "narrow"
+  },
+  {
+    "kanji": "猛",
+    "readings": [
+      "もう"
+    ],
+    "meaning": "fierce"
+  },
+  {
+    "kanji": "猟",
+    "readings": [
+      "りょう"
+    ],
+    "meaning": "hunting"
+  },
+  {
+    "kanji": "猫",
+    "readings": [
+      "ねこ",
+      "びょう"
+    ],
+    "meaning": "cat"
+  },
+  {
+    "kanji": "献",
+    "readings": [
+      "こん"
+    ],
+    "meaning": "offer; contribute"
+  },
+  {
+    "kanji": "猶",
+    "readings": [
+      "ゆう"
+    ],
+    "meaning": "still; even more"
+  },
+  {
+    "kanji": "猿",
+    "readings": [
+      "さる",
+      "えん"
+    ],
+    "meaning": "monkey"
+  },
+  {
+    "kanji": "獄",
+    "readings": [
+      "ごく"
+    ],
+    "meaning": "prison"
+  },
+  {
+    "kanji": "獣",
+    "readings": [
+      "けもの",
+      "じゅう"
+    ],
+    "meaning": "beast"
+  },
+  {
+    "kanji": "獲",
+    "readings": [
+      "え.る",
+      "かく"
+    ],
+    "meaning": "catch; obtain"
+  },
+  {
+    "kanji": "玄",
+    "readings": [
+      "げん"
+    ],
+    "meaning": "dark; mysterious"
+  },
+  {
+    "kanji": "玩",
+    "readings": [
+      "がん"
+    ],
+    "meaning": "toy; plaything"
+  },
+  {
+    "kanji": "珍",
+    "readings": [
+      "めずら.しい",
+      "ちん"
+    ],
+    "meaning": "rare; unusual"
+  },
+  {
+    "kanji": "珠",
+    "readings": [
+      "しゅ"
+    ],
+    "meaning": "pearl; gem"
+  },
+  {
+    "kanji": "琴",
+    "readings": [
+      "こと",
+      "きん"
+    ],
+    "meaning": "koto (instrument)"
+  },
+  {
+    "kanji": "瑠",
+    "readings": [
+      "る"
+    ],
+    "meaning": "lapis lazuli (as in 瑠璃)"
+  },
+  {
+    "kanji": "璃",
+    "readings": [
+      "り"
+    ],
+    "meaning": "glass; lapis (as in 瑠璃)"
+  },
+  {
+    "kanji": "璧",
+    "readings": [
+      "へき"
+    ],
+    "meaning": "jewel (as in 完璧)"
+  },
+  {
+    "kanji": "環",
+    "readings": [
+      "かん"
+    ],
+    "meaning": "ring; surround"
+  },
+  {
+    "kanji": "璽",
+    "readings": [
+      "じ"
+    ],
+    "meaning": "seal (imperial)"
+  },
+  {
+    "kanji": "瓦",
+    "readings": [
+      "かわら",
+      "が"
+    ],
+    "meaning": "roof tile"
+  },
+  {
+    "kanji": "瓶",
+    "readings": [
+      "びん"
+    ],
+    "meaning": "bottle"
+  },
+  {
+    "kanji": "甘",
+    "readings": [
+      "あま.やかす",
+      "あま.い"
+    ],
+    "meaning": "sweet"
+  },
+  {
+    "kanji": "甚",
+    "readings": [
+      "はなは.だ",
+      "はなは.だしい"
+    ],
+    "meaning": "extremely"
+  },
+  {
+    "kanji": "甲",
+    "readings": [
+      "こう"
+    ],
+    "meaning": "first (rank A); shell"
+  },
+  {
+    "kanji": "畏",
+    "readings": [
+      "おそ.れる",
+      "い"
+    ],
+    "meaning": "revere; fear"
+  },
+  {
+    "kanji": "畔",
+    "readings": [
+      "はん"
+    ],
+    "meaning": "edge (of field/lake)"
+  },
+  {
+    "kanji": "畜",
+    "readings": [
+      "ちく"
+    ],
+    "meaning": "livestock"
+  },
+  {
+    "kanji": "畝",
+    "readings": [
+      "うね"
+    ],
+    "meaning": "furrow; ridge"
+  },
+  {
+    "kanji": "畳",
+    "readings": [
+      "たた.む",
+      "じょう"
+    ],
+    "meaning": "fold; tatami mat"
+  },
+  {
+    "kanji": "畿",
+    "readings": [
+      "き"
+    ],
+    "meaning": "capital region"
+  },
+  {
+    "kanji": "疎",
+    "readings": [
+      "うと.い",
+      "うと.む"
+    ],
+    "meaning": "estranged; sparse"
+  },
+  {
+    "kanji": "疫",
+    "readings": [
+      "えき"
+    ],
+    "meaning": "epidemic"
+  },
+  {
+    "kanji": "疲",
+    "readings": [
+      "つか.れる",
+      "ひ"
+    ],
+    "meaning": "tired"
+  },
+  {
+    "kanji": "疾",
+    "readings": [
+      "しつ"
+    ],
+    "meaning": "disease; fast"
+  },
+  {
+    "kanji": "症",
+    "readings": [
+      "しょう"
+    ],
+    "meaning": "symptom"
+  },
+  {
+    "kanji": "痕",
+    "readings": [
+      "あと",
+      "こん"
+    ],
+    "meaning": "trace; mark"
+  },
+  {
+    "kanji": "痘",
+    "readings": [
+      "とう"
+    ],
+    "meaning": "pox (as in 天然痘)"
+  },
+  {
+    "kanji": "痢",
+    "readings": [
+      "り"
+    ],
+    "meaning": "diarrhea"
+  },
+  {
+    "kanji": "痩",
+    "readings": [
+      "や.せる",
+      "そう"
+    ],
+    "meaning": "become thin"
+  },
+  {
+    "kanji": "痴",
+    "readings": [
+      "ち"
+    ],
+    "meaning": "foolish"
+  },
+  {
+    "kanji": "瘍",
+    "readings": [
+      "よう"
+    ],
+    "meaning": "ulcer (as in 潰瘍)"
+  },
+  {
+    "kanji": "療",
+    "readings": [
+      "りょう"
+    ],
+    "meaning": "medical treatment"
+  },
+  {
+    "kanji": "癒",
+    "readings": [
+      "い.える",
+      "い.やす"
+    ],
+    "meaning": "heal"
+  },
+  {
+    "kanji": "癖",
+    "readings": [
+      "くせ",
+      "へき"
+    ],
+    "meaning": "habit; quirk"
+  },
+  {
+    "kanji": "皆",
+    "readings": [
+      "みな",
+      "かい"
+    ],
+    "meaning": "all; everyone"
+  },
+  {
+    "kanji": "盆",
+    "readings": [
+      "ぼん"
+    ],
+    "meaning": "tray; Obon festival"
+  },
+  {
+    "kanji": "盗",
+    "readings": [
+      "ぬす.む",
+      "とう"
+    ],
+    "meaning": "steal"
+  },
+  {
+    "kanji": "監",
+    "readings": [
+      "かん"
+    ],
+    "meaning": "supervise"
+  },
+  {
+    "kanji": "盤",
+    "readings": [
+      "ばん"
+    ],
+    "meaning": "board; disk"
+  },
+  {
+    "kanji": "盲",
+    "readings": [
+      "もう"
+    ],
+    "meaning": "blind"
+  },
+  {
+    "kanji": "盾",
+    "readings": [
+      "たて",
+      "じゅん"
+    ],
+    "meaning": "shield"
+  },
+  {
+    "kanji": "眉",
+    "readings": [
+      "まゆ",
+      "び"
+    ],
+    "meaning": "eyebrow"
+  },
+  {
+    "kanji": "眠",
+    "readings": [
+      "ねむ.る",
+      "ねむ.い"
+    ],
+    "meaning": "sleep"
+  },
+  {
+    "kanji": "眺",
+    "readings": [
+      "なが.める",
+      "ちょう"
+    ],
+    "meaning": "view; gaze"
+  },
+  {
+    "kanji": "睡",
+    "readings": [
+      "すい"
+    ],
+    "meaning": "sleep (as in 睡眠)"
+  },
+  {
+    "kanji": "督",
+    "readings": [
+      "とく"
+    ],
+    "meaning": "supervise"
+  },
+  {
+    "kanji": "睦",
+    "readings": [
+      "ぼく"
+    ],
+    "meaning": "harmony; friendly"
+  },
+  {
+    "kanji": "瞬",
+    "readings": [
+      "またた.く",
+      "しゅん"
+    ],
+    "meaning": "blink; instant"
+  },
+  {
+    "kanji": "瞭",
+    "readings": [
+      "りょう"
+    ],
+    "meaning": "clear"
+  },
+  {
+    "kanji": "瞳",
+    "readings": [
+      "ひとみ",
+      "どう"
+    ],
+    "meaning": "pupil (of eye)"
+  },
+  {
+    "kanji": "矛",
+    "readings": [
+      "ほこ",
+      "む"
+    ],
+    "meaning": "spear; halberd"
+  },
+  {
+    "kanji": "矯",
+    "readings": [
+      "た.める",
+      "きょう"
+    ],
+    "meaning": "correct; straighten"
+  },
+  {
+    "kanji": "砕",
+    "readings": [
+      "くだ.く",
+      "くだ.ける"
+    ],
+    "meaning": "smash; break"
+  },
+  {
+    "kanji": "砲",
+    "readings": [
+      "ほう"
+    ],
+    "meaning": "gun; artillery"
+  },
+  {
+    "kanji": "硝",
+    "readings": [
+      "しょう"
+    ],
+    "meaning": "saltpeter (as in 硝酸)"
+  },
+  {
+    "kanji": "硫",
+    "readings": [
+      "りゅう"
+    ],
+    "meaning": "sulfur"
+  },
+  {
+    "kanji": "硬",
+    "readings": [
+      "かた.い",
+      "こう"
+    ],
+    "meaning": "hard; stiff"
+  },
+  {
+    "kanji": "碁",
+    "readings": [
+      "ご"
+    ],
+    "meaning": "go (board game)"
+  },
+  {
+    "kanji": "碑",
+    "readings": [
+      "ひ"
+    ],
+    "meaning": "monument; stone tablet"
+  },
+  {
+    "kanji": "磨",
+    "readings": [
+      "みが.く",
+      "ま"
+    ],
+    "meaning": "polish"
+  },
+  {
+    "kanji": "礁",
+    "readings": [
+      "しょう"
+    ],
+    "meaning": "reef"
+  },
+  {
+    "kanji": "礎",
+    "readings": [
+      "いしずえ",
+      "そ"
+    ],
+    "meaning": "foundation stone"
+  },
+  {
+    "kanji": "祈",
+    "readings": [
+      "いの.る",
+      "き"
+    ],
+    "meaning": "pray"
+  },
+  {
+    "kanji": "祉",
+    "readings": [
+      "し"
+    ],
+    "meaning": "happiness; welfare"
+  },
+  {
+    "kanji": "祥",
+    "readings": [
+      "しょう"
+    ],
+    "meaning": "auspicious"
+  },
+  {
+    "kanji": "禅",
+    "readings": [
+      "ぜん"
+    ],
+    "meaning": "Zen"
+  },
+  {
+    "kanji": "禍",
+    "readings": [
+      "か"
+    ],
+    "meaning": "calamity"
+  },
+  {
+    "kanji": "秀",
+    "readings": [
+      "ひい.でる",
+      "しゅう"
+    ],
+    "meaning": "excel"
+  },
+  {
+    "kanji": "租",
+    "readings": [
+      "そ"
+    ],
+    "meaning": "tax; tribute"
+  },
+  {
+    "kanji": "秩",
+    "readings": [
+      "ちつ"
+    ],
+    "meaning": "order (as in 秩序)"
+  },
+  {
+    "kanji": "称",
+    "readings": [
+      "しょう"
+    ],
+    "meaning": "name; praise"
+  },
+  {
+    "kanji": "稚",
+    "readings": [
+      "ち"
+    ],
+    "meaning": "infant; immature"
+  },
+  {
+    "kanji": "稲",
+    "readings": [
+      "いね",
+      "いな"
+    ],
+    "meaning": "rice plant"
+  },
+  {
+    "kanji": "稼",
+    "readings": [
+      "かせ.ぐ",
+      "か"
+    ],
+    "meaning": "earn"
+  },
+  {
+    "kanji": "稽",
+    "readings": [
+      "けい"
+    ],
+    "meaning": "think (as in 稽古)"
+  },
+  {
+    "kanji": "稿",
+    "readings": [
+      "こう"
+    ],
+    "meaning": "manuscript; draft"
+  },
+  {
+    "kanji": "穂",
+    "readings": [
+      "ほ",
+      "すい"
+    ],
+    "meaning": "ear (of grain)"
+  },
+  {
+    "kanji": "穏",
+    "readings": [
+      "おだ.やか",
+      "おん"
+    ],
+    "meaning": "calm; gentle"
+  },
+  {
+    "kanji": "穫",
+    "readings": [
+      "かく"
+    ],
+    "meaning": "harvest"
+  },
+  {
+    "kanji": "突",
+    "readings": [
+      "つ.く",
+      "とつ"
+    ],
+    "meaning": "thrust; sudden"
+  },
+  {
+    "kanji": "窃",
+    "readings": [
+      "せつ"
+    ],
+    "meaning": "steal secretly"
+  },
+  {
+    "kanji": "窒",
+    "readings": [
+      "ちつ"
+    ],
+    "meaning": "suffocate; nitrogen"
+  },
+  {
+    "kanji": "窟",
+    "readings": [
+      "くつ"
+    ],
+    "meaning": "cave; den"
+  },
+  {
+    "kanji": "窮",
+    "readings": [
+      "きわ.まる",
+      "きわ.める"
+    ],
+    "meaning": "be at an extreme; poor"
+  },
+  {
+    "kanji": "窯",
+    "readings": [
+      "かま",
+      "よう"
+    ],
+    "meaning": "kiln"
+  },
+  {
+    "kanji": "竜",
+    "readings": [
+      "たつ",
+      "りゅう"
+    ],
+    "meaning": "dragon"
+  },
+  {
+    "kanji": "端",
+    "readings": [
+      "はし",
+      "は"
+    ],
+    "meaning": "edge; end"
+  },
+  {
+    "kanji": "符",
+    "readings": [
+      "ふ"
+    ],
+    "meaning": "sign; mark"
+  },
+  {
+    "kanji": "筒",
+    "readings": [
+      "つつ",
+      "とう"
+    ],
+    "meaning": "tube; pipe"
+  },
+  {
+    "kanji": "箇",
+    "readings": [
+      "か"
+    ],
+    "meaning": "counter (item)"
+  },
+  {
+    "kanji": "箋",
+    "readings": [
+      "せん"
+    ],
+    "meaning": "note; label"
+  },
+  {
+    "kanji": "箸",
+    "readings": [
+      "はし"
+    ],
+    "meaning": "chopsticks"
+  },
+  {
+    "kanji": "範",
+    "readings": [
+      "はん"
+    ],
+    "meaning": "example; model"
+  },
+  {
+    "kanji": "篤",
+    "readings": [
+      "とく"
+    ],
+    "meaning": "kind-hearted; serious (illness)"
+  },
+  {
+    "kanji": "簿",
+    "readings": [
+      "ぼ"
+    ],
+    "meaning": "register; ledger"
+  },
+  {
+    "kanji": "籍",
+    "readings": [
+      "せき"
+    ],
+    "meaning": "register (as in 戸籍)"
+  },
+  {
+    "kanji": "籠",
+    "readings": [
+      "こ.もる",
+      "ろう"
+    ],
+    "meaning": "basket; seclude oneself"
+  },
+  {
+    "kanji": "粋",
+    "readings": [
+      "いき",
+      "すい"
+    ],
+    "meaning": "chic; essence"
+  },
+  {
+    "kanji": "粒",
+    "readings": [
+      "つぶ",
+      "りゅう"
+    ],
+    "meaning": "grain"
+  },
+  {
+    "kanji": "粗",
+    "readings": [
+      "あら.い",
+      "そ"
+    ],
+    "meaning": "coarse; rough"
+  },
+  {
+    "kanji": "粘",
+    "readings": [
+      "ねば.る",
+      "ねん"
+    ],
+    "meaning": "sticky"
+  },
+  {
+    "kanji": "粛",
+    "readings": [
+      "しゅく"
+    ],
+    "meaning": "solemn"
+  },
+  {
+    "kanji": "粧",
+    "readings": [
+      "しょう"
+    ],
+    "meaning": "makeup (as in 化粧)"
+  },
+  {
+    "kanji": "糧",
+    "readings": [
+      "かて",
+      "りょう"
+    ],
+    "meaning": "provisions; food"
+  },
+  {
+    "kanji": "糾",
+    "readings": [
+      "きゅう"
+    ],
+    "meaning": "investigate (as in 糾弾)"
+  },
+  {
+    "kanji": "紋",
+    "readings": [
+      "もん"
+    ],
+    "meaning": "crest; pattern"
+  },
+  {
+    "kanji": "紛",
+    "readings": [
+      "まぎ.れる",
+      "まぎ.らす"
+    ],
+    "meaning": "be mistaken for; distract"
+  },
+  {
+    "kanji": "紡",
+    "readings": [
+      "つむ.ぐ",
+      "ぼう"
+    ],
+    "meaning": "spin (thread)"
+  },
+  {
+    "kanji": "索",
+    "readings": [
+      "さく"
+    ],
+    "meaning": "rope; search"
+  },
+  {
+    "kanji": "紫",
+    "readings": [
+      "むらさき",
+      "し"
+    ],
+    "meaning": "purple"
+  },
+  {
+    "kanji": "累",
+    "readings": [
+      "るい"
+    ],
+    "meaning": "accumulate"
+  },
+  {
+    "kanji": "紳",
+    "readings": [
+      "しん"
+    ],
+    "meaning": "gentleman"
+  },
+  {
+    "kanji": "紹",
+    "readings": [
+      "しょう"
+    ],
+    "meaning": "introduce"
+  },
+  {
+    "kanji": "紺",
+    "readings": [
+      "こん"
+    ],
+    "meaning": "dark blue"
+  },
+  {
+    "kanji": "絞",
+    "readings": [
+      "し.まる",
+      "しぼ.る"
+    ],
+    "meaning": "squeeze; strangle"
+  },
+  {
+    "kanji": "絡",
+    "readings": [
+      "から.む",
+      "から.まる"
+    ],
+    "meaning": "entwine"
+  },
+  {
+    "kanji": "継",
+    "readings": [
+      "つ.ぐ",
+      "けい"
+    ],
+    "meaning": "inherit; succeed"
+  }
+]

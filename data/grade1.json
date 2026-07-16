@@ -3,490 +3,570 @@
     "kanji": "一",
     "readings": [
       "いち",
-      "ひとつ"
-    ]
+      "ひと.つ"
+    ],
+    "meaning": "one"
   },
   {
     "kanji": "右",
     "readings": [
       "みぎ"
-    ]
+    ],
+    "meaning": "right"
   },
   {
     "kanji": "雨",
     "readings": [
       "あめ"
-    ]
+    ],
+    "meaning": "rain"
   },
   {
     "kanji": "円",
     "readings": [
       "えん"
-    ]
+    ],
+    "meaning": "yen; circle"
   },
   {
     "kanji": "王",
     "readings": [
       "おう"
-    ]
+    ],
+    "meaning": "king"
   },
   {
     "kanji": "音",
     "readings": [
       "おと"
-    ]
+    ],
+    "meaning": "sound"
   },
   {
     "kanji": "下",
     "readings": [
       "した"
-    ]
+    ],
+    "meaning": "below; under"
   },
   {
     "kanji": "火",
     "readings": [
       "ひ"
-    ]
+    ],
+    "meaning": "fire"
   },
   {
     "kanji": "花",
     "readings": [
       "はな"
-    ]
+    ],
+    "meaning": "flower"
   },
   {
     "kanji": "貝",
     "readings": [
       "かい"
-    ]
+    ],
+    "meaning": "shellfish"
   },
   {
     "kanji": "学",
     "readings": [
       "がく"
-    ]
+    ],
+    "meaning": "study; learning"
   },
   {
     "kanji": "気",
     "readings": [
       "き"
-    ]
+    ],
+    "meaning": "spirit; energy"
   },
   {
     "kanji": "九",
     "readings": [
       "きゅう",
-      "ここのつ"
-    ]
+      "ここの.つ"
+    ],
+    "meaning": "nine"
   },
   {
     "kanji": "休",
     "readings": [
-      "やすむ"
-    ]
+      "やす.む"
+    ],
+    "meaning": "rest"
   },
   {
     "kanji": "玉",
     "readings": [
       "たま"
-    ]
+    ],
+    "meaning": "ball; jewel"
   },
   {
     "kanji": "金",
     "readings": [
       "きん"
-    ]
+    ],
+    "meaning": "gold; money"
   },
   {
     "kanji": "空",
     "readings": [
       "そら"
-    ]
+    ],
+    "meaning": "sky; empty"
   },
   {
     "kanji": "月",
     "readings": [
       "つき"
-    ]
+    ],
+    "meaning": "moon; month"
   },
   {
     "kanji": "犬",
     "readings": [
       "いぬ"
-    ]
+    ],
+    "meaning": "dog"
   },
   {
     "kanji": "見",
     "readings": [
-      "みる"
-    ]
+      "み.る"
+    ],
+    "meaning": "see"
   },
   {
     "kanji": "五",
     "readings": [
       "ご",
-      "いつつ"
-    ]
+      "いつ.つ"
+    ],
+    "meaning": "five"
   },
   {
     "kanji": "口",
     "readings": [
       "くち"
-    ]
+    ],
+    "meaning": "mouth"
   },
   {
     "kanji": "校",
     "readings": [
       "こう"
-    ]
+    ],
+    "meaning": "school"
   },
   {
     "kanji": "左",
     "readings": [
       "ひだり"
-    ]
+    ],
+    "meaning": "left"
   },
   {
     "kanji": "三",
     "readings": [
       "さん",
-      "みっつ"
-    ]
+      "みっ.つ"
+    ],
+    "meaning": "three"
   },
   {
     "kanji": "山",
     "readings": [
       "やま"
-    ]
+    ],
+    "meaning": "mountain"
   },
   {
     "kanji": "子",
     "readings": [
       "こ"
-    ]
+    ],
+    "meaning": "child"
   },
   {
     "kanji": "四",
     "readings": [
       "よん",
-      "よっつ"
-    ]
+      "よっ.つ"
+    ],
+    "meaning": "four"
   },
   {
     "kanji": "糸",
     "readings": [
       "いと"
-    ]
+    ],
+    "meaning": "thread"
   },
   {
     "kanji": "字",
     "readings": [
       "じ"
-    ]
+    ],
+    "meaning": "character; letter"
   },
   {
     "kanji": "耳",
     "readings": [
       "みみ"
-    ]
+    ],
+    "meaning": "ear"
   },
   {
     "kanji": "七",
     "readings": [
       "しち",
-      "ななつ"
-    ]
+      "なな.つ"
+    ],
+    "meaning": "seven"
   },
   {
     "kanji": "車",
     "readings": [
       "くるま"
-    ]
+    ],
+    "meaning": "car; vehicle"
   },
   {
     "kanji": "手",
     "readings": [
       "て"
-    ]
+    ],
+    "meaning": "hand"
   },
   {
     "kanji": "十",
     "readings": [
       "じゅう",
       "とお"
-    ]
+    ],
+    "meaning": "ten"
   },
   {
     "kanji": "出",
     "readings": [
-      "でる"
-    ]
+      "で.る"
+    ],
+    "meaning": "go out; exit"
   },
   {
     "kanji": "女",
     "readings": [
       "おんな"
-    ]
+    ],
+    "meaning": "woman"
   },
   {
     "kanji": "小",
     "readings": [
-      "ちいさい"
-    ]
+      "ちい.さい"
+    ],
+    "meaning": "small"
   },
   {
     "kanji": "上",
     "readings": [
       "うえ"
-    ]
+    ],
+    "meaning": "above; up"
   },
   {
     "kanji": "森",
     "readings": [
       "もり"
-    ]
+    ],
+    "meaning": "forest"
   },
   {
     "kanji": "人",
     "readings": [
       "ひと"
-    ]
+    ],
+    "meaning": "person"
   },
   {
     "kanji": "水",
     "readings": [
       "みず"
-    ]
+    ],
+    "meaning": "water"
   },
   {
     "kanji": "正",
     "readings": [
-      "ただしい"
-    ]
+      "ただ.しい"
+    ],
+    "meaning": "correct; right"
   },
   {
     "kanji": "生",
     "readings": [
       "せい"
-    ]
+    ],
+    "meaning": "life; birth"
   },
   {
     "kanji": "青",
     "readings": [
       "あお"
-    ]
+    ],
+    "meaning": "blue"
   },
   {
     "kanji": "夕",
     "readings": [
       "ゆう"
-    ]
+    ],
+    "meaning": "evening"
   },
   {
     "kanji": "石",
     "readings": [
       "いし"
-    ]
+    ],
+    "meaning": "stone"
   },
   {
     "kanji": "赤",
     "readings": [
       "あか"
-    ]
+    ],
+    "meaning": "red"
   },
   {
     "kanji": "千",
     "readings": [
       "せん"
-    ]
+    ],
+    "meaning": "thousand"
   },
   {
     "kanji": "川",
     "readings": [
       "かわ"
-    ]
+    ],
+    "meaning": "river"
   },
   {
     "kanji": "先",
     "readings": [
       "さき"
-    ]
+    ],
+    "meaning": "previous; ahead"
   },
   {
     "kanji": "早",
     "readings": [
-      "はやい"
-    ]
+      "はや.い"
+    ],
+    "meaning": "early; fast"
   },
   {
     "kanji": "草",
     "readings": [
       "くさ"
-    ]
+    ],
+    "meaning": "grass"
   },
   {
     "kanji": "足",
     "readings": [
       "あし"
-    ]
+    ],
+    "meaning": "foot; leg"
   },
   {
     "kanji": "村",
     "readings": [
       "むら"
-    ]
+    ],
+    "meaning": "village"
   },
   {
     "kanji": "大",
     "readings": [
-      "おおきい"
-    ]
+      "おお.きい"
+    ],
+    "meaning": "big"
   },
   {
     "kanji": "男",
     "readings": [
       "おとこ"
-    ]
+    ],
+    "meaning": "man"
   },
   {
     "kanji": "竹",
     "readings": [
       "たけ"
-    ]
+    ],
+    "meaning": "bamboo"
   },
   {
     "kanji": "中",
     "readings": [
       "なか"
-    ]
+    ],
+    "meaning": "middle; inside"
   },
   {
     "kanji": "虫",
     "readings": [
       "むし"
-    ]
+    ],
+    "meaning": "insect; bug"
   },
   {
     "kanji": "町",
     "readings": [
       "まち"
-    ]
+    ],
+    "meaning": "town"
   },
   {
     "kanji": "天",
     "readings": [
       "てん"
-    ]
+    ],
+    "meaning": "heaven; sky"
   },
   {
     "kanji": "田",
     "readings": [
       "た"
-    ]
+    ],
+    "meaning": "rice field"
   },
   {
     "kanji": "土",
     "readings": [
       "つち"
-    ]
+    ],
+    "meaning": "soil; earth"
   },
   {
     "kanji": "二",
     "readings": [
       "に",
-      "ふたつ"
-    ]
+      "ふた.つ"
+    ],
+    "meaning": "two"
   },
   {
     "kanji": "日",
     "readings": [
       "にち"
-    ]
+    ],
+    "meaning": "sun; day"
   },
   {
     "kanji": "入",
     "readings": [
-      "はいる"
-    ]
+      "はい.る"
+    ],
+    "meaning": "enter"
   },
   {
     "kanji": "年",
     "readings": [
       "ねん"
-    ]
+    ],
+    "meaning": "year"
   },
   {
     "kanji": "白",
     "readings": [
       "しろ"
-    ]
+    ],
+    "meaning": "white"
   },
   {
     "kanji": "八",
     "readings": [
       "はち",
-      "やっつ"
-    ]
+      "やっ.つ"
+    ],
+    "meaning": "eight"
   },
   {
     "kanji": "百",
     "readings": [
       "ひゃく"
-    ]
+    ],
+    "meaning": "hundred"
   },
   {
     "kanji": "文",
     "readings": [
       "ぶん"
-    ]
+    ],
+    "meaning": "sentence; writing"
   },
   {
     "kanji": "木",
     "readings": [
       "もく"
-    ]
+    ],
+    "meaning": "tree; wood"
   },
   {
     "kanji": "本",
     "readings": [
       "ほん"
-    ]
+    ],
+    "meaning": "book; origin"
   },
   {
     "kanji": "名",
     "readings": [
       "な"
-    ]
+    ],
+    "meaning": "name"
   },
   {
     "kanji": "目",
     "readings": [
       "め"
-    ]
+    ],
+    "meaning": "eye"
   },
   {
     "kanji": "立",
     "readings": [
-      "たつ"
-    ]
+      "た.つ"
+    ],
+    "meaning": "stand"
   },
   {
     "kanji": "力",
     "readings": [
       "ちから"
-    ]
+    ],
+    "meaning": "power; strength"
   },
   {
     "kanji": "林",
     "readings": [
       "はやし"
-    ]
+    ],
+    "meaning": "woods; grove"
   },
   {
     "kanji": "六",
     "readings": [
       "ろく",
-      "むっつ"
-    ]
+      "むっ.つ"
+    ],
+    "meaning": "six"
   }
 ]

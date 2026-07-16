@@ -92,14 +92,59 @@ html, body {
   font-size: 0.85rem;
 }
 
+.mode-toggle {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  margin-top: 1.2rem;
+}
+
+.mode-btn {
+  position: relative;
+  flex: 1;
+  max-width: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.6rem 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  color: var(--fg);
+  cursor: pointer;
+}
+
+.mode-btn span {
+  font-size: 0.7rem;
+  font-weight: normal;
+  color: #8a8378;
+}
+
+.mode-btn.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.grade-section-heading {
+  margin: 1.6rem 0 0.6rem;
+  font-size: 0.85rem;
+  color: #8a8378;
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
 .grade-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.8rem;
-  margin-top: 1.5rem;
+  margin-top: 0.8rem;
 }
 
 .grade-btn {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -157,13 +202,33 @@ html, body {
 .quiz-kanji {
   font-size: 5rem;
   line-height: 1;
-  margin-bottom: 1rem;
+  margin-bottom: 0.3rem;
+}
+
+.quiz-kanji.is-word {
+  font-size: 2.6rem;
+}
+
+.quiz-meaning {
+  color: #8a8378;
+  font-size: 1rem;
+  font-style: italic;
+  margin: 0 0 1rem;
 }
 
 .quiz-instruction {
   color: #8a8378;
   font-size: 0.9rem;
   margin: 0 0 1.2rem;
+}
+
+.okurigana {
+  color: var(--accent);
+}
+
+.option-btn.correct .okurigana,
+.option-btn.incorrect .okurigana {
+  color: inherit;
 }
 
 .quiz-options {
@@ -173,6 +238,7 @@ html, body {
 }
 
 .option-btn {
+  position: relative;
   padding: 0.9rem 0.4rem;
   font-size: 1.15rem;
   border: 1px solid var(--border);
@@ -180,6 +246,32 @@ html, body {
   background: var(--bg);
   color: var(--fg);
   cursor: pointer;
+}
+
+.key-badge {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  font-size: 0.65rem;
+  font-variant-numeric: tabular-nums;
+  color: #8a8378;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.key-badge-corner {
+  position: absolute;
+  top: 0.35rem;
+  left: 0.45rem;
+}
+
+.option-btn.correct .key-badge,
+.option-btn.incorrect .key-badge {
+  color: inherit;
+  border-color: rgba(255, 255, 255, 0.6);
 }
 
 .option-btn:hover, .option-btn:focus-visible {
@@ -240,6 +332,7 @@ html, body {
 }
 
 .primary-btn {
+  position: relative;
   padding: 0.9rem;
   font-size: 1.05rem;
   font-weight: bold;
@@ -252,7 +345,29 @@ html, body {
 
 .primary-btn:hover { background: var(--accent-dark); }
 
+.primary-btn .key-badge {
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #fff;
+}
+
+.secondary-btn {
+  position: relative;
+  padding: 0.9rem;
+  font-size: 1.05rem;
+  font-weight: bold;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.secondary-btn:hover { border-color: var(--accent); }
+
 .link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   background: none;
   border: none;
   color: var(--accent);

@@ -1,42 +1,45 @@
-// Per-grade kanji progress, persisted in localStorage.
-// Shape: { [kanji]: { seen: number, correct: number } }
+// Per-grade, per-mode progress, persisted in localStorage.
+// Shape: { [kanjiOrWord]: { seen: number, correct: number } }
 
 const Storage = (() => {
-  const keyFor = (grade) => `kanjidrill:grade${grade}`;
+  const keyFor = (mode, grade) => (mode === 'word' ? `kanjidrill:words${grade}` : `kanjidrill:grade${grade}`);
 
-  function load(grade) {
+  function load(mode, grade) {
     try {
-      const raw = localStorage.getItem(keyFor(grade));
+      const raw = localStorage.getItem(keyFor(mode, grade));
       return raw ? JSON.parse(raw) : {};
     } catch {
       return {};
     }
   }
 
-  function save(grade, progress) {
+  function save(mode, grade, progress) {
     try {
-      localStorage.setItem(keyFor(grade), JSON.stringify(progress));
+      localStorage.setItem(keyFor(mode, grade), JSON.stringify(progress));
     } catch {
       // localStorage unavailable (private mode, quota, etc.) — fail silently
     }
   }
 
-  function recordAnswer(grade, kanji, isCorrect) {
-    const progress = load(grade);
-    const stat = progress[kanji] || { seen: 0, correct: 0 };
+  function recordAnswer(mode, grade, key, isCorrect) {
+    const progress = load(mode, grade);
+    const stat = progress[key] || { seen: 0, correct: 0 };
     stat.seen += 1;
     if (isCorrect) stat.correct += 1;
-    progress[kanji] = stat;
-    save(grade, progress);
+    progress[key] = stat;
+    save(mode, grade, progress);
     return stat;
   }
 
-  function reset(grade) {
-    localStorage.removeItem(keyFor(grade));
+  function reset(mode, grade) {
+    localStorage.removeItem(keyFor(mode, grade));
   }
 
   function resetAll() {
-    for (let g = 1; g <= 6; g++) reset(g);
+    for (let g = 1; g <= 6; g++) {
+      reset('kanji', g);
+      reset('word', g);
+    }
   }
 
   // 'new' -> never seen, 'learning' -> shaky, 'familiar' -> decent, 'mastered' -> solid
@@ -51,13 +54,13 @@ const Storage = (() => {
   // Higher weight = shown more often in future rounds.
   const WEIGHT_BY_MASTERY = { new: 3, learning: 4, familiar: 2, mastered: 1 };
 
-  function weightFor(grade, kanji) {
-    const progress = load(grade);
-    return WEIGHT_BY_MASTERY[mastery(progress[kanji])];
+  function weightFor(mode, grade, key) {
+    const progress = load(mode, grade);
+    return WEIGHT_BY_MASTERY[mastery(progress[key])];
   }
 
-  function stats(grade) {
-    const progress = load(grade);
+  function stats(mode, grade) {
+    const progress = load(mode, grade);
     const entries = Object.entries(progress);
     const seenCount = entries.length;
     const masteredCount = entries.filter(([, s]) => mastery(s) === 'mastered').length;

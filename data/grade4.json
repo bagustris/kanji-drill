@@ -3,1227 +3,1429 @@
     "kanji": "愛",
     "readings": [
       "あい"
-    ]
+    ],
+    "meaning": "love"
   },
   {
     "kanji": "案",
     "readings": [
       "あん"
-    ]
+    ],
+    "meaning": "plan; idea"
   },
   {
     "kanji": "以",
     "readings": [
       "い"
-    ]
+    ],
+    "meaning": "from; by"
   },
   {
     "kanji": "衣",
     "readings": [
       "ころも"
-    ]
+    ],
+    "meaning": "clothing"
   },
   {
     "kanji": "位",
     "readings": [
       "くらい"
-    ]
+    ],
+    "meaning": "rank; about"
   },
   {
     "kanji": "茨",
     "readings": [
       "いばら"
-    ]
+    ],
+    "meaning": "bramble; thorn"
   },
   {
     "kanji": "印",
     "readings": [
       "しるし"
-    ]
+    ],
+    "meaning": "mark; sign"
   },
   {
     "kanji": "英",
     "readings": [
       "えい"
-    ]
+    ],
+    "meaning": "England; excellent"
   },
   {
     "kanji": "栄",
     "readings": [
-      "さかえる"
-    ]
+      "さか.える"
+    ],
+    "meaning": "prosper"
   },
   {
     "kanji": "媛",
     "readings": [
       "えん"
-    ]
+    ],
+    "meaning": "princess"
   },
   {
     "kanji": "塩",
     "readings": [
       "しお"
-    ]
+    ],
+    "meaning": "salt"
   },
   {
     "kanji": "岡",
     "readings": [
       "おか"
-    ]
+    ],
+    "meaning": "hill"
   },
   {
     "kanji": "億",
     "readings": [
       "おく"
-    ]
+    ],
+    "meaning": "hundred million"
   },
   {
     "kanji": "加",
     "readings": [
-      "くわえる"
-    ]
+      "くわ.える"
+    ],
+    "meaning": "add"
   },
   {
     "kanji": "果",
     "readings": [
-      "はたす"
-    ]
+      "は.たす"
+    ],
+    "meaning": "fulfill"
   },
   {
     "kanji": "貨",
     "readings": [
       "か"
-    ]
+    ],
+    "meaning": "goods; currency"
   },
   {
     "kanji": "課",
     "readings": [
       "か"
-    ]
+    ],
+    "meaning": "section; lesson"
   },
   {
     "kanji": "芽",
     "readings": [
       "め"
-    ]
+    ],
+    "meaning": "sprout; bud"
   },
   {
     "kanji": "賀",
     "readings": [
       "が"
-    ]
+    ],
+    "meaning": "congratulations"
   },
   {
     "kanji": "改",
     "readings": [
-      "あらためる"
-    ]
+      "あらた.める"
+    ],
+    "meaning": "revise"
   },
   {
     "kanji": "械",
     "readings": [
       "かい"
-    ]
+    ],
+    "meaning": "tool; instrument"
   },
   {
     "kanji": "害",
     "readings": [
       "がい"
-    ]
+    ],
+    "meaning": "harm"
   },
   {
     "kanji": "街",
     "readings": [
       "まち",
       "がい"
-    ]
+    ],
+    "meaning": "town; street"
   },
   {
     "kanji": "各",
     "readings": [
       "かく"
-    ]
+    ],
+    "meaning": "each"
   },
   {
     "kanji": "覚",
     "readings": [
-      "おぼえる",
+      "おぼ.える",
       "かく"
-    ]
+    ],
+    "meaning": "remember"
   },
   {
     "kanji": "潟",
     "readings": [
       "かた"
-    ]
+    ],
+    "meaning": "lagoon"
   },
   {
     "kanji": "完",
     "readings": [
       "かん"
-    ]
+    ],
+    "meaning": "complete"
   },
   {
     "kanji": "官",
     "readings": [
       "かん"
-    ]
+    ],
+    "meaning": "official"
   },
   {
     "kanji": "管",
     "readings": [
       "くだ"
-    ]
+    ],
+    "meaning": "pipe; tube"
   },
   {
     "kanji": "関",
     "readings": [
       "かん"
-    ]
+    ],
+    "meaning": "connection; barrier"
   },
   {
     "kanji": "観",
     "readings": [
       "かん"
-    ]
+    ],
+    "meaning": "view; outlook"
   },
   {
     "kanji": "願",
     "readings": [
-      "ねがう"
-    ]
+      "ねが.う"
+    ],
+    "meaning": "wish"
   },
   {
     "kanji": "岐",
     "readings": [
       "き"
-    ]
+    ],
+    "meaning": "branch; fork"
   },
   {
     "kanji": "希",
     "readings": [
       "き"
-    ]
+    ],
+    "meaning": "hope"
   },
   {
     "kanji": "季",
     "readings": [
       "き"
-    ]
+    ],
+    "meaning": "season"
   },
   {
     "kanji": "旗",
     "readings": [
       "はた"
-    ]
+    ],
+    "meaning": "flag"
   },
   {
     "kanji": "器",
     "readings": [
       "き"
-    ]
+    ],
+    "meaning": "vessel; instrument"
   },
   {
     "kanji": "機",
     "readings": [
       "き"
-    ]
+    ],
+    "meaning": "machine; opportunity"
   },
   {
     "kanji": "議",
     "readings": [
       "ぎ"
-    ]
+    ],
+    "meaning": "discussion"
   },
   {
     "kanji": "求",
     "readings": [
-      "もとめる"
-    ]
+      "もと.める"
+    ],
+    "meaning": "request"
   },
   {
     "kanji": "泣",
     "readings": [
-      "なく"
-    ]
+      "な.く"
+    ],
+    "meaning": "cry; weep"
   },
   {
     "kanji": "給",
     "readings": [
       "きゅう"
-    ]
+    ],
+    "meaning": "supply"
   },
   {
     "kanji": "挙",
     "readings": [
-      "あげる"
-    ]
+      "あ.げる"
+    ],
+    "meaning": "raise"
   },
   {
     "kanji": "漁",
     "readings": [
       "りょう"
-    ]
+    ],
+    "meaning": "fishing"
   },
   {
     "kanji": "共",
     "readings": [
       "きょう"
-    ]
+    ],
+    "meaning": "together"
   },
   {
     "kanji": "協",
     "readings": [
       "きょう"
-    ]
+    ],
+    "meaning": "cooperation"
   },
   {
     "kanji": "鏡",
     "readings": [
       "かがみ"
-    ]
+    ],
+    "meaning": "mirror"
   },
   {
     "kanji": "競",
     "readings": [
       "きょう"
-    ]
+    ],
+    "meaning": "compete"
   },
   {
     "kanji": "極",
     "readings": [
       "きょく"
-    ]
+    ],
+    "meaning": "extreme; pole"
   },
   {
     "kanji": "熊",
     "readings": [
       "くま"
-    ]
+    ],
+    "meaning": "bear"
   },
   {
     "kanji": "訓",
     "readings": [
       "くん"
-    ]
+    ],
+    "meaning": "kun reading; teaching"
   },
   {
     "kanji": "軍",
     "readings": [
       "ぐん"
-    ]
+    ],
+    "meaning": "army"
   },
   {
     "kanji": "郡",
     "readings": [
       "ぐん"
-    ]
+    ],
+    "meaning": "county"
   },
   {
     "kanji": "群",
     "readings": [
-      "むれ"
-    ]
+      "む.れ"
+    ],
+    "meaning": "flock; group"
   },
   {
     "kanji": "径",
     "readings": [
       "けい"
-    ]
+    ],
+    "meaning": "path; diameter"
   },
   {
     "kanji": "景",
     "readings": [
       "けい"
-    ]
+    ],
+    "meaning": "scenery"
   },
   {
     "kanji": "芸",
     "readings": [
       "げい"
-    ]
+    ],
+    "meaning": "art; performance"
   },
   {
     "kanji": "欠",
     "readings": [
       "けつ"
-    ]
+    ],
+    "meaning": "lack; missing"
   },
   {
     "kanji": "結",
     "readings": [
-      "むすぶ"
-    ]
+      "むす.ぶ"
+    ],
+    "meaning": "tie; connect"
   },
   {
     "kanji": "建",
     "readings": [
-      "たてる",
+      "た.てる",
       "けん"
-    ]
+    ],
+    "meaning": "build"
   },
   {
     "kanji": "健",
     "readings": [
       "けん"
-    ]
+    ],
+    "meaning": "healthy"
   },
   {
     "kanji": "固",
     "readings": [
-      "かたい"
-    ]
+      "かた.い"
+    ],
+    "meaning": "firm; hard"
   },
   {
     "kanji": "功",
     "readings": [
       "こう"
-    ]
+    ],
+    "meaning": "achievement"
   },
   {
     "kanji": "好",
     "readings": [
-      "すき"
-    ]
+      "す.き"
+    ],
+    "meaning": "likable; fond"
   },
   {
     "kanji": "香",
     "readings": [
-      "かおり"
-    ]
+      "かお.り"
+    ],
+    "meaning": "scent"
   },
   {
     "kanji": "候",
     "readings": [
       "こう"
-    ]
+    ],
+    "meaning": "weather; season"
   },
   {
     "kanji": "康",
     "readings": [
       "こう"
-    ]
+    ],
+    "meaning": "peaceful; healthy"
   },
   {
     "kanji": "佐",
     "readings": [
       "さ"
-    ]
+    ],
+    "meaning": "assist"
   },
   {
     "kanji": "差",
     "readings": [
       "さ"
-    ]
+    ],
+    "meaning": "difference"
   },
   {
     "kanji": "菜",
     "readings": [
       "さい"
-    ]
+    ],
+    "meaning": "vegetable"
   },
   {
     "kanji": "最",
     "readings": [
-      "もっとも"
-    ]
+      "もっと.も"
+    ],
+    "meaning": "most"
   },
   {
     "kanji": "埼",
     "readings": [
       "さい"
-    ]
+    ],
+    "meaning": "cape"
   },
   {
     "kanji": "材",
     "readings": [
       "ざい"
-    ]
+    ],
+    "meaning": "material; timber"
   },
   {
     "kanji": "崎",
     "readings": [
       "さき"
-    ]
+    ],
+    "meaning": "cape; peninsula"
   },
   {
     "kanji": "昨",
     "readings": [
       "さく"
-    ]
+    ],
+    "meaning": "previous"
   },
   {
     "kanji": "札",
     "readings": [
       "ふだ"
-    ]
+    ],
+    "meaning": "tag; card"
   },
   {
     "kanji": "刷",
     "readings": [
       "さつ"
-    ]
+    ],
+    "meaning": "print"
   },
   {
     "kanji": "察",
     "readings": [
       "さつ"
-    ]
+    ],
+    "meaning": "guess; sense"
   },
   {
     "kanji": "参",
     "readings": [
       "さん"
-    ]
+    ],
+    "meaning": "participate"
   },
   {
     "kanji": "産",
     "readings": [
       "さん",
-      "うまれる"
-    ]
+      "う.まれる"
+    ],
+    "meaning": "give birth; produce"
   },
   {
     "kanji": "散",
     "readings": [
-      "ちる"
-    ]
+      "ち.る"
+    ],
+    "meaning": "scatter"
   },
   {
     "kanji": "残",
     "readings": [
-      "のこる"
-    ]
+      "のこ.る"
+    ],
+    "meaning": "remain"
   },
   {
     "kanji": "氏",
     "readings": [
       "し"
-    ]
+    ],
+    "meaning": "family name; Mr."
   },
   {
     "kanji": "司",
     "readings": [
       "し"
-    ]
+    ],
+    "meaning": "administer"
   },
   {
     "kanji": "試",
     "readings": [
       "し"
-    ]
+    ],
+    "meaning": "try; test"
   },
   {
     "kanji": "児",
     "readings": [
       "じ"
-    ]
+    ],
+    "meaning": "child"
   },
   {
     "kanji": "治",
     "readings": [
-      "なおる"
-    ]
+      "なお.る"
+    ],
+    "meaning": "heal; be cured"
   },
   {
     "kanji": "滋",
     "readings": [
       "じ"
-    ]
+    ],
+    "meaning": "nourishing"
   },
   {
     "kanji": "辞",
     "readings": [
       "じ"
-    ]
+    ],
+    "meaning": "word; resign"
   },
   {
     "kanji": "鹿",
     "readings": [
       "しか"
-    ]
+    ],
+    "meaning": "deer"
   },
   {
     "kanji": "失",
     "readings": [
       "しつ"
-    ]
+    ],
+    "meaning": "lose; error"
   },
   {
     "kanji": "借",
     "readings": [
-      "かりる"
-    ]
+      "か.りる"
+    ],
+    "meaning": "borrow"
   },
   {
     "kanji": "種",
     "readings": [
       "たね"
-    ]
+    ],
+    "meaning": "seed; kind"
   },
   {
     "kanji": "周",
     "readings": [
-      "まわり"
-    ]
+      "まわ.り"
+    ],
+    "meaning": "surroundings"
   },
   {
     "kanji": "祝",
     "readings": [
-      "いわう"
-    ]
+      "いわ.う"
+    ],
+    "meaning": "celebrate"
   },
   {
     "kanji": "順",
     "readings": [
       "じゅん"
-    ]
+    ],
+    "meaning": "order; sequence"
   },
   {
     "kanji": "初",
     "readings": [
-      "はじめ",
+      "はじ.め",
       "しょ"
-    ]
+    ],
+    "meaning": "beginning"
   },
   {
     "kanji": "松",
     "readings": [
       "まつ"
-    ]
+    ],
+    "meaning": "pine tree"
   },
   {
     "kanji": "笑",
     "readings": [
-      "わらう"
-    ]
+      "わら.う"
+    ],
+    "meaning": "laugh"
   },
   {
     "kanji": "唱",
     "readings": [
       "しょう",
-      "となえる"
-    ]
+      "とな.える"
+    ],
+    "meaning": "recite; chant"
   },
   {
     "kanji": "焼",
     "readings": [
-      "やく"
-    ]
+      "や.く"
+    ],
+    "meaning": "burn; grill"
   },
   {
     "kanji": "照",
     "readings": [
-      "てる"
-    ]
+      "て.る"
+    ],
+    "meaning": "shine"
   },
   {
     "kanji": "城",
     "readings": [
       "しろ"
-    ]
+    ],
+    "meaning": "castle"
   },
   {
     "kanji": "縄",
     "readings": [
       "なわ"
-    ]
+    ],
+    "meaning": "rope"
   },
   {
     "kanji": "臣",
     "readings": [
       "しん"
-    ]
+    ],
+    "meaning": "retainer; vassal"
   },
   {
     "kanji": "信",
     "readings": [
       "しん"
-    ]
+    ],
+    "meaning": "trust; faith"
   },
   {
     "kanji": "井",
     "readings": [
       "い"
-    ]
+    ],
+    "meaning": "well"
   },
   {
     "kanji": "成",
     "readings": [
-      "なる",
+      "な.る",
       "せい"
-    ]
+    ],
+    "meaning": "become"
   },
   {
     "kanji": "省",
     "readings": [
       "せい"
-    ]
+    ],
+    "meaning": "ministry; reflect"
   },
   {
     "kanji": "清",
     "readings": [
       "せい"
-    ]
+    ],
+    "meaning": "pure; clear"
   },
   {
     "kanji": "静",
     "readings": [
-      "しずか"
-    ]
+      "しず.か"
+    ],
+    "meaning": "quiet"
   },
   {
     "kanji": "席",
     "readings": [
       "せき"
-    ]
+    ],
+    "meaning": "seat"
   },
   {
     "kanji": "積",
     "readings": [
       "せき",
-      "つむ"
-    ]
+      "つ.む"
+    ],
+    "meaning": "pile up; accumulate"
   },
   {
     "kanji": "折",
     "readings": [
-      "おる"
-    ]
+      "お.る"
+    ],
+    "meaning": "fold; break"
   },
   {
     "kanji": "節",
     "readings": [
       "せつ"
-    ]
+    ],
+    "meaning": "season; joint"
   },
   {
     "kanji": "説",
     "readings": [
       "せつ"
-    ]
+    ],
+    "meaning": "theory; opinion"
   },
   {
     "kanji": "浅",
     "readings": [
-      "あさい"
-    ]
+      "あさ.い"
+    ],
+    "meaning": "shallow"
   },
   {
     "kanji": "戦",
     "readings": [
-      "たたかう",
+      "たたか.う",
       "せん"
-    ]
+    ],
+    "meaning": "fight"
   },
   {
     "kanji": "選",
     "readings": [
-      "えらぶ",
+      "えら.ぶ",
       "せん"
-    ]
+    ],
+    "meaning": "choose"
   },
   {
     "kanji": "然",
     "readings": [
       "ぜん"
-    ]
+    ],
+    "meaning": "so; like that"
   },
   {
     "kanji": "争",
     "readings": [
-      "あらそう"
-    ]
+      "あらそ.う"
+    ],
+    "meaning": "dispute"
   },
   {
     "kanji": "倉",
     "readings": [
       "くら"
-    ]
+    ],
+    "meaning": "storehouse"
   },
   {
     "kanji": "巣",
     "readings": [
       "す"
-    ]
+    ],
+    "meaning": "nest"
   },
   {
     "kanji": "束",
     "readings": [
       "たば"
-    ]
+    ],
+    "meaning": "bundle"
   },
   {
     "kanji": "側",
     "readings": [
       "がわ"
-    ]
+    ],
+    "meaning": "side"
   },
   {
     "kanji": "続",
     "readings": [
-      "つづく"
-    ]
+      "つづ.く"
+    ],
+    "meaning": "continue"
   },
   {
     "kanji": "卒",
     "readings": [
       "そつ"
-    ]
+    ],
+    "meaning": "graduate"
   },
   {
     "kanji": "孫",
     "readings": [
       "まご"
-    ]
+    ],
+    "meaning": "grandchild"
   },
   {
     "kanji": "帯",
     "readings": [
       "おび"
-    ]
+    ],
+    "meaning": "sash; belt"
   },
   {
     "kanji": "隊",
     "readings": [
       "たい"
-    ]
+    ],
+    "meaning": "group; unit"
   },
   {
     "kanji": "達",
     "readings": [
       "たつ"
-    ]
+    ],
+    "meaning": "reach; attain"
   },
   {
     "kanji": "単",
     "readings": [
       "たん"
-    ]
+    ],
+    "meaning": "simple; single"
   },
   {
     "kanji": "置",
     "readings": [
-      "おく"
-    ]
+      "お.く"
+    ],
+    "meaning": "put; place"
   },
   {
     "kanji": "仲",
     "readings": [
       "なか"
-    ]
+    ],
+    "meaning": "relationship"
   },
   {
     "kanji": "沖",
     "readings": [
       "おき"
-    ]
+    ],
+    "meaning": "offshore"
   },
   {
     "kanji": "兆",
     "readings": [
       "ちょう"
-    ]
+    ],
+    "meaning": "sign; trillion"
   },
   {
     "kanji": "低",
     "readings": [
-      "ひくい"
-    ]
+      "ひく.い"
+    ],
+    "meaning": "low"
   },
   {
     "kanji": "底",
     "readings": [
       "そこ"
-    ]
+    ],
+    "meaning": "bottom"
   },
   {
     "kanji": "的",
     "readings": [
       "てき"
-    ]
+    ],
+    "meaning": "target; -like"
   },
   {
     "kanji": "典",
     "readings": [
       "てん"
-    ]
+    ],
+    "meaning": "code; ceremony"
   },
   {
     "kanji": "伝",
     "readings": [
-      "つたえる"
-    ]
+      "つた.える"
+    ],
+    "meaning": "convey"
   },
   {
     "kanji": "徒",
     "readings": [
       "と"
-    ]
+    ],
+    "meaning": "follower; on foot"
   },
   {
     "kanji": "努",
     "readings": [
       "ど"
-    ]
+    ],
+    "meaning": "endeavor"
   },
   {
     "kanji": "灯",
     "readings": [
       "とう"
-    ]
+    ],
+    "meaning": "lamp"
   },
   {
     "kanji": "働",
     "readings": [
-      "はたらく"
-    ]
+      "はたら.く"
+    ],
+    "meaning": "work"
   },
   {
     "kanji": "特",
     "readings": [
       "とく"
-    ]
+    ],
+    "meaning": "special"
   },
   {
     "kanji": "徳",
     "readings": [
       "とく"
-    ]
+    ],
+    "meaning": "virtue"
   },
   {
     "kanji": "栃",
     "readings": [
       "とち"
-    ]
+    ],
+    "meaning": "horse chestnut"
   },
   {
     "kanji": "奈",
     "readings": [
       "な"
-    ]
+    ],
+    "meaning": "(place name use)"
   },
   {
     "kanji": "梨",
     "readings": [
       "なし"
-    ]
+    ],
+    "meaning": "pear"
   },
   {
     "kanji": "熱",
     "readings": [
       "ねつ",
-      "あつい"
-    ]
+      "あつ.い"
+    ],
+    "meaning": "heat; hot"
   },
   {
     "kanji": "念",
     "readings": [
       "ねん"
-    ]
+    ],
+    "meaning": "sense; thought"
   },
   {
     "kanji": "敗",
     "readings": [
       "はい"
-    ]
+    ],
+    "meaning": "defeat"
   },
   {
     "kanji": "梅",
     "readings": [
       "うめ"
-    ]
+    ],
+    "meaning": "plum"
   },
   {
     "kanji": "博",
     "readings": [
       "はく"
-    ]
+    ],
+    "meaning": "wide; extensive knowledge"
   },
   {
     "kanji": "阪",
     "readings": [
       "はん"
-    ]
+    ],
+    "meaning": "slope"
   },
   {
     "kanji": "飯",
     "readings": [
       "はん"
-    ]
+    ],
+    "meaning": "meal; cooked rice"
   },
   {
     "kanji": "飛",
     "readings": [
-      "とぶ"
-    ]
+      "と.ぶ"
+    ],
+    "meaning": "fly"
   },
   {
     "kanji": "必",
     "readings": [
-      "かならず"
-    ]
+      "かなら.ず"
+    ],
+    "meaning": "certainly"
   },
   {
     "kanji": "票",
     "readings": [
       "ひょう"
-    ]
+    ],
+    "meaning": "vote"
   },
   {
     "kanji": "標",
     "readings": [
       "ひょう"
-    ]
+    ],
+    "meaning": "sign; mark"
   },
   {
     "kanji": "不",
     "readings": [
       "ふ"
-    ]
+    ],
+    "meaning": "negative prefix"
   },
   {
     "kanji": "夫",
     "readings": [
       "おっと"
-    ]
+    ],
+    "meaning": "husband"
   },
   {
     "kanji": "付",
     "readings": [
-      "つける"
-    ]
+      "つ.ける"
+    ],
+    "meaning": "attach"
   },
   {
     "kanji": "府",
     "readings": [
       "ふ"
-    ]
+    ],
+    "meaning": "prefecture"
   },
   {
     "kanji": "阜",
     "readings": [
       "ふ"
-    ]
+    ],
+    "meaning": "hill"
   },
   {
     "kanji": "富",
     "readings": [
       "ふ"
-    ]
+    ],
+    "meaning": "wealth"
   },
   {
     "kanji": "副",
     "readings": [
       "ふく"
-    ]
+    ],
+    "meaning": "vice-; sub-"
   },
   {
     "kanji": "兵",
     "readings": [
       "へい"
-    ]
+    ],
+    "meaning": "soldier"
   },
   {
     "kanji": "別",
     "readings": [
       "べつ"
-    ]
+    ],
+    "meaning": "separate"
   },
   {
     "kanji": "辺",
     "readings": [
       "へん"
-    ]
+    ],
+    "meaning": "area; vicinity"
   },
   {
     "kanji": "変",
     "readings": [
-      "かわる",
+      "か.わる",
       "へん"
-    ]
+    ],
+    "meaning": "change"
   },
   {
     "kanji": "便",
     "readings": [
       "べん",
       "びん"
-    ]
+    ],
+    "meaning": "convenience; mail"
   },
   {
     "kanji": "包",
     "readings": [
-      "つつむ"
-    ]
+      "つつ.む"
+    ],
+    "meaning": "wrap"
   },
   {
     "kanji": "法",
     "readings": [
       "ほう"
-    ]
+    ],
+    "meaning": "law; method"
   },
   {
     "kanji": "望",
     "readings": [
-      "のぞむ",
+      "のぞ.む",
       "ぼう"
-    ]
+    ],
+    "meaning": "wish; hope"
   },
   {
     "kanji": "牧",
     "readings": [
       "ぼく"
-    ]
+    ],
+    "meaning": "pasture"
   },
   {
     "kanji": "末",
     "readings": [
       "まつ"
-    ]
+    ],
+    "meaning": "end"
   },
   {
     "kanji": "満",
     "readings": [
       "まん"
-    ]
+    ],
+    "meaning": "full"
   },
   {
     "kanji": "未",
     "readings": [
       "み"
-    ]
+    ],
+    "meaning": "not yet"
   },
   {
     "kanji": "民",
     "readings": [
       "みん"
-    ]
+    ],
+    "meaning": "people; citizen"
   },
   {
     "kanji": "無",
     "readings": [
       "む"
-    ]
+    ],
+    "meaning": "nothing; negative"
   },
   {
     "kanji": "約",
     "readings": [
       "やく"
-    ]
+    ],
+    "meaning": "approximately; promise"
   },
   {
     "kanji": "勇",
     "readings": [
       "ゆう"
-    ]
+    ],
+    "meaning": "courage"
   },
   {
     "kanji": "要",
     "readings": [
       "よう"
-    ]
+    ],
+    "meaning": "need; important"
   },
   {
     "kanji": "養",
     "readings": [
       "よう"
-    ]
+    ],
+    "meaning": "nurture"
   },
   {
     "kanji": "浴",
     "readings": [
-      "あびる"
-    ]
+      "あ.びる"
+    ],
+    "meaning": "bathe"
   },
   {
     "kanji": "利",
     "readings": [
       "り"
-    ]
+    ],
+    "meaning": "advantage; profit"
   },
   {
     "kanji": "陸",
     "readings": [
       "りく"
-    ]
+    ],
+    "meaning": "land"
   },
   {
     "kanji": "良",
     "readings": [
-      "よい"
-    ]
+      "よ.い"
+    ],
+    "meaning": "good"
   },
   {
     "kanji": "料",
     "readings": [
       "りょう"
-    ]
+    ],
+    "meaning": "fee; material"
   },
   {
     "kanji": "量",
     "readings": [
       "りょう"
-    ]
+    ],
+    "meaning": "quantity"
   },
   {
     "kanji": "輪",
     "readings": [
       "わ"
-    ]
+    ],
+    "meaning": "ring; wheel"
   },
   {
     "kanji": "類",
     "readings": [
       "るい"
-    ]
+    ],
+    "meaning": "kind; type"
   },
   {
     "kanji": "令",
     "readings": [
       "れい"
-    ]
+    ],
+    "meaning": "command; order"
   },
   {
     "kanji": "冷",
     "readings": [
-      "つめたい",
+      "つめ.たい",
       "れい"
-    ]
+    ],
+    "meaning": "cold (to touch)"
   },
   {
     "kanji": "例",
     "readings": [
       "れい"
-    ]
+    ],
+    "meaning": "example"
   },
   {
     "kanji": "連",
     "readings": [
       "れん"
-    ]
+    ],
+    "meaning": "connect; series"
   },
   {
     "kanji": "老",
     "readings": [
       "ろう"
-    ]
+    ],
+    "meaning": "old age"
   },
   {
     "kanji": "労",
     "readings": [
       "ろう"
-    ]
+    ],
+    "meaning": "labor"
   },
   {
     "kanji": "録",
     "readings": [
       "ろく"
-    ]
+    ],
+    "meaning": "record"
   },
   {
     "kanji": "験",
     "readings": [
       "けん"
-    ]
+    ],
+    "meaning": "test; effect"
   }
 ]
