@@ -220,7 +220,7 @@ function showSummary() {
   el.summaryMissed.innerHTML = '';
   if (state.missed.length > 0) {
     const heading = document.createElement('h3');
-    heading.innerHTML = 'まちがえたもの<span>Words you missed</span>';
+    heading.textContent = 'まちがえたもの';
     el.summaryMissed.appendChild(heading);
     state.missed.forEach((q) => {
       const row = document.createElement('div');

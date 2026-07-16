@@ -329,14 +329,8 @@ html, body {
   color: #8a8378;
 }
 
-.summary-missed h3 span {
-  display: block;
-  font-size: 0.65rem;
-  font-weight: normal;
-  margin-top: 0.1rem;
-}
-
 .summary-score span {
+  display: block;
   font-size: 0.7rem;
   font-weight: normal;
   color: #8a8378;
@@ -420,12 +414,6 @@ html, body {
   font-size: 0.95rem;
   cursor: pointer;
   padding: 0.4rem;
-}
-
-.link-btn .btn-sub {
-  font-size: 0.7rem;
-  font-weight: normal;
-  color: #8a8378;
 }
 
 @media (min-width: 480px) {

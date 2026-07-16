@@ -40,6 +40,16 @@ python3 -m http.server 8000
 Then open `http://localhost:8000` in a browser. Any static file server works
 just as well — `npx serve`, `php -S localhost:8000`, etc.
 
+If port 8000 is already in use (`OSError: [Errno 98] Address already in
+use`), find and stop whatever's holding it:
+
+```bash
+lsof -i :8000 -sTCP:LISTEN -P -n   # shows the PID
+kill <PID>                         # or `kill -9 <PID>` if it won't stop
+```
+
+Or just serve on a different port with `python3 -m http.server 8001`.
+
 ## Project structure
 
 ```
