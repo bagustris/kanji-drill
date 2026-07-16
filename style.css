@@ -136,6 +136,13 @@ html, body {
   letter-spacing: 0.05em;
 }
 
+.grade-section-heading span {
+  display: block;
+  font-size: 0.65rem;
+  letter-spacing: normal;
+  margin-top: 0.1rem;
+}
+
 .grade-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -220,6 +227,12 @@ html, body {
   color: #8a8378;
   font-size: 0.9rem;
   margin: 0 0 1.2rem;
+}
+
+.quiz-instruction span {
+  display: block;
+  font-size: 0.7rem;
+  margin-top: 0.15rem;
 }
 
 .okurigana {
@@ -316,6 +329,19 @@ html, body {
   color: #8a8378;
 }
 
+.summary-missed h3 span {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: normal;
+  margin-top: 0.1rem;
+}
+
+.summary-score span {
+  font-size: 0.7rem;
+  font-weight: normal;
+  color: #8a8378;
+}
+
 .missed-item {
   display: flex;
   justify-content: space-between;
@@ -333,6 +359,10 @@ html, body {
 
 .primary-btn {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
   padding: 0.9rem;
   font-size: 1.05rem;
   font-weight: bold;
@@ -350,8 +380,18 @@ html, body {
   color: #fff;
 }
 
+.primary-btn span {
+  font-size: 0.7rem;
+  font-weight: normal;
+  color: rgba(255, 255, 255, 0.75);
+}
+
 .secondary-btn {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
   padding: 0.9rem;
   font-size: 1.05rem;
   font-weight: bold;
@@ -364,6 +404,12 @@ html, body {
 
 .secondary-btn:hover { border-color: var(--accent); }
 
+.secondary-btn span {
+  font-size: 0.7rem;
+  font-weight: normal;
+  color: #8a8378;
+}
+
 .link-btn {
   display: inline-flex;
   align-items: center;
@@ -374,6 +420,12 @@ html, body {
   font-size: 0.95rem;
   cursor: pointer;
   padding: 0.4rem;
+}
+
+.link-btn .btn-sub {
+  font-size: 0.7rem;
+  font-weight: normal;
+  color: #8a8378;
 }
 
 @media (min-width: 480px) {

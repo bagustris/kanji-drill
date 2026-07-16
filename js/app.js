@@ -216,11 +216,11 @@ function handleAnswer(selected, btnEl) {
 
 function showSummary() {
   showScreen('summary');
-  el.summaryScore.textContent = `${state.score} / ${state.questions.length} 正解`;
+  el.summaryScore.innerHTML = `${state.score} / ${state.questions.length} 正解<span>Correct</span>`;
   el.summaryMissed.innerHTML = '';
   if (state.missed.length > 0) {
     const heading = document.createElement('h3');
-    heading.textContent = 'まちがえたもの';
+    heading.innerHTML = 'まちがえたもの<span>Words you missed</span>';
     el.summaryMissed.appendChild(heading);
     state.missed.forEach((q) => {
       const row = document.createElement('div');
