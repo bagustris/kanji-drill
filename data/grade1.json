@@ -73,6 +73,7 @@
   {
     "kanji": "学",
     "readings": [
+      "まな.ぶ",
       "がく"
     ],
     "meaning": "study; learning"
@@ -254,6 +255,7 @@
   {
     "kanji": "出",
     "readings": [
+      "だ.す",
       "で.る"
     ],
     "meaning": "go out; exit"
@@ -310,6 +312,8 @@
   {
     "kanji": "生",
     "readings": [
+      "う.ま",
+      "う.まれる",
       "せい"
     ],
     "meaning": "life; birth"
@@ -338,7 +342,10 @@
   {
     "kanji": "赤",
     "readings": [
-      "あか"
+      "あか",
+      "あか.い",
+      "あか.らむ",
+      "あか.らめる"
     ],
     "meaning": "red"
   },
@@ -366,7 +373,9 @@
   {
     "kanji": "早",
     "readings": [
-      "はや.い"
+      "はや.い",
+      "はや.まる",
+      "はや.める"
     ],
     "meaning": "early; fast"
   },
@@ -472,6 +481,8 @@
   {
     "kanji": "入",
     "readings": [
+      "い.れる",
+      "い.る",
       "はい.る"
     ],
     "meaning": "enter"
@@ -543,7 +554,8 @@
   {
     "kanji": "立",
     "readings": [
-      "た.つ"
+      "た.つ",
+      "た.てる"
     ],
     "meaning": "stand"
   },
