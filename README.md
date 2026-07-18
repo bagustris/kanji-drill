@@ -56,7 +56,7 @@ Or just serve on a different port with `python3 -m http.server 8001`.
 index.html        Markup for the three screens (grade picker, quiz, summary)
 style.css          Layout and theming
 js/app.js          Screen navigation, question generation, quiz flow
-js/storage.js       Per-kanji progress tracking (localStorage)
+js/progress.js      Progress tracking (localStorage), via ProgressManager
 data/grade1.json … grade6.json   Kanji + reading data, one file per grade
 ```
 
@@ -77,6 +77,29 @@ reading and a counting word (一 → いち / ひとつ) from day one.
 > multiple kanji reference sites — not copied verbatim from an official MEXT
 > answer key. If you spot one that feels off for a given grade, the JSON
 > files are plain data and easy to hand-edit.
+
+## Progress tracking
+
+Your answer history is saved automatically after every question, entirely in
+your browser — there's no backend or account, so it works the same on
+GitHub Pages as it does locally.
+
+- Everything is stored under a single `localStorage` key:
+  **`kanji-drill-progress`**. It holds per-question stats (times seen,
+  correct/wrong, last seen) and per-grade totals (answered/correct), used
+  both for the "Progress" summary on the home screen and to prioritize kanji
+  you're shaky on in later rounds.
+- All reads/writes go through the `ProgressManager` module
+  (`js/progress.js`) — no other file touches `localStorage` directly.
+- **To reset your progress**, open your browser's DevTools console on this
+  site and run:
+
+  ```js
+  localStorage.removeItem('kanji-drill-progress')
+  ```
+
+  (or clear all site data for this domain from your browser settings). The
+  app will start with a clean slate on the next reload.
 
 ## Deployment
 

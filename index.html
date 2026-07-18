@@ -26,6 +26,11 @@
   <section id="screen-home" class="screen">
     <h2>学年を選んでください</h2>
     <p class="subtitle">Choose a grade to start drilling</p>
+    <div id="progress-summary" class="progress-summary">
+      <span class="progress-stat"><strong id="progress-answered">0</strong>問<span>Answered</span></span>
+      <span class="progress-stat"><strong id="progress-correct">0</strong>正解<span>Correct</span></span>
+      <span class="progress-stat"><strong id="progress-accuracy">0%</strong>正答率<span>Accuracy</span></span>
+    </div>
     <div class="mode-toggle" role="tablist">
       <button class="mode-btn active" data-mode="kanji"><span class="key-badge key-badge-corner">K</span>漢字クイズ<span>Kanji reading</span></button>
       <button class="mode-btn" data-mode="word"><span class="key-badge key-badge-corner">W</span>言葉クイズ<span>Word reading</span></button>
@@ -73,7 +78,7 @@
 
 </main>
 
-<script src="js/storage.js"></script>
+<script src="js/progress.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

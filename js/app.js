@@ -32,7 +32,19 @@ const el = {
   summaryMissed: document.getElementById('summary-missed'),
   fileWarning: document.getElementById('file-protocol-warning'),
   loadError: document.getElementById('load-error-banner'),
+  progressAnswered: document.getElementById('progress-answered'),
+  progressCorrect: document.getElementById('progress-correct'),
+  progressAccuracy: document.getElementById('progress-accuracy'),
 };
+
+function renderProgressSummary() {
+  const { answered, correct, accuracy } = ProgressManager.overallStats();
+  el.progressAnswered.textContent = answered;
+  el.progressCorrect.textContent = correct;
+  el.progressAccuracy.textContent = `${accuracy}%`;
+}
+
+renderProgressSummary();
 
 if (location.protocol === 'file:') {
   el.fileWarning.classList.remove('hidden');
@@ -72,7 +84,7 @@ function readingHTML(reading) {
 function weightedSample(itemList, mode, grade, count) {
   const pool = [];
   itemList.forEach((entry) => {
-    const weight = Storage.weightFor(mode, grade, itemText(entry));
+    const weight = ProgressManager.weightFor(mode, grade, itemText(entry));
     for (let i = 0; i < weight; i++) pool.push(entry);
   });
   const shuffled = shuffle(pool);
@@ -203,9 +215,11 @@ function handleAnswer(selected, btnEl) {
     else if (btn === btnEl) btn.classList.add('incorrect');
   });
 
-  Storage.recordAnswer(state.mode, state.grade, q.text, isCorrect);
+  ProgressManager.recordAnswer(state.mode, state.grade, q.text, isCorrect);
   if (isCorrect) state.score++;
   else state.missed.push(q);
+
+  renderProgressSummary();
 
   setTimeout(() => {
     state.index++;
