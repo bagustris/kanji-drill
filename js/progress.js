@@ -107,20 +107,54 @@ const ProgressManager = (() => {
     return WEIGHT_BY_MASTERY[mastery(progress.questions[qId])];
   }
 
-  function gradeStats(mode, grade) {
+  // One-decimal accuracy percentage (e.g. 89.6), 0 when nothing answered yet.
+  function getAccuracy(stats) {
+    if (!stats || stats.answered === 0) return 0;
+    return Math.round((stats.correct / stats.answered) * 1000) / 10;
+  }
+
+  function getAnswered(stats) {
+    return stats ? stats.answered : 0;
+  }
+
+  function getGradeStats(mode, grade) {
     const progress = load();
-    return progress.grades[gradeKey(mode, grade)] || { answered: 0, correct: 0 };
+    const stats = progress.grades[gradeKey(mode, grade)] || { answered: 0, correct: 0 };
+    return { ...stats, accuracy: getAccuracy(stats) };
   }
 
   // Aggregate stats across every grade/mode, for the home-screen summary.
-  function overallStats() {
+  function getOverallStats() {
     const progress = load();
     const totals = Object.values(progress.grades).reduce(
       (acc, g) => ({ answered: acc.answered + g.answered, correct: acc.correct + g.correct }),
       { answered: 0, correct: 0 }
     );
-    const accuracy = totals.answered === 0 ? 0 : Math.round((totals.correct / totals.answered) * 100);
-    return { ...totals, accuracy };
+    return { ...totals, accuracy: getAccuracy(totals) };
+  }
+
+  // Total question counts per grade/mode aren't tracked in localStorage —
+  // they come from the static dataset (already known to the DOM via the
+  // grade buttons' data-kanji-count / data-word-count attributes). Callers
+  // register them once so the dashboard can compute a completion percentage
+  // without ProgressManager needing to know about the DOM or fetch data.
+  const totalQuestionsByGradeKey = {};
+
+  function setTotalQuestions(mode, grade, total) {
+    totalQuestionsByGradeKey[gradeKey(mode, grade)] = total;
+  }
+
+  function getTotalQuestions(mode, grade) {
+    return totalQuestionsByGradeKey[gradeKey(mode, grade)] ?? null;
+  }
+
+  // Percentage of a grade's question pool answered at least once so far, or
+  // null when the total is unknown (caller should hide the percentage then).
+  function getGradeProgressPercent(mode, grade) {
+    const total = getTotalQuestions(mode, grade);
+    if (!total) return null;
+    const { answered } = getGradeStats(mode, grade);
+    return Math.min(100, Math.round((answered / total) * 100));
   }
 
   return {
@@ -131,7 +165,12 @@ const ProgressManager = (() => {
     resetAll,
     mastery,
     weightFor,
-    gradeStats,
-    overallStats,
+    getGradeStats,
+    getOverallStats,
+    getAccuracy,
+    getAnswered,
+    setTotalQuestions,
+    getTotalQuestions,
+    getGradeProgressPercent,
   };
 })();

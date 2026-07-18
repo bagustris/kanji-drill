@@ -57,6 +57,7 @@ index.html        Markup for the three screens (grade picker, quiz, summary)
 style.css          Layout and theming
 js/app.js          Screen navigation, question generation, quiz flow
 js/progress.js      Progress tracking (localStorage), via ProgressManager
+js/progress-view.js Renders the Progress Dashboard from ProgressManager data
 data/grade1.json … grade6.json   Kanji + reading data, one file per grade
 ```
 
@@ -100,6 +101,25 @@ GitHub Pages as it does locally.
 
   (or clear all site data for this domain from your browser settings). The
   app will start with a clean slate on the next reload.
+
+## Progress Dashboard
+
+The home screen shows a small dashboard, powered entirely by the data
+`ProgressManager` already tracks — no extra storage or network calls:
+
+- **Overall** — total questions answered, correct answers, and accuracy
+  across every grade and mode you've played.
+- **Current Grade** — the same three numbers scoped to the grade/mode you
+  last played, plus a completion bar (questions answered at least once ÷
+  total questions in that grade's pool). The bar's percentage is hidden if
+  the total is ever unknown.
+
+Both sections update immediately (no reload needed) whenever you answer a
+question or pick a new grade, and stay accurate across reloads since they're
+just a read-only view over the same `kanji-drill-progress` localStorage
+data described above. Rendering lives in `js/progress-view.js`
+(`ProgressView`), which only displays numbers computed by `ProgressManager`
+— it does no calculation of its own.
 
 ## Deployment
 

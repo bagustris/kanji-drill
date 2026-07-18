@@ -32,19 +32,39 @@ const el = {
   summaryMissed: document.getElementById('summary-missed'),
   fileWarning: document.getElementById('file-protocol-warning'),
   loadError: document.getElementById('load-error-banner'),
-  progressAnswered: document.getElementById('progress-answered'),
-  progressCorrect: document.getElementById('progress-correct'),
-  progressAccuracy: document.getElementById('progress-accuracy'),
 };
 
-function renderProgressSummary() {
-  const { answered, correct, accuracy } = ProgressManager.overallStats();
-  el.progressAnswered.textContent = answered;
-  el.progressCorrect.textContent = correct;
-  el.progressAccuracy.textContent = `${accuracy}%`;
+// The grade name shown in the dashboard (e.g. "3年生") is read straight off
+// the matching grade button rather than duplicated in a lookup table — strip
+// its key-badge/count child spans and what's left is the label text.
+function gradeDisplayName(grade) {
+  const btn = document.querySelector(`.grade-btn[data-grade="${grade}"]`);
+  if (!btn) return '';
+  const clone = btn.cloneNode(true);
+  clone.querySelectorAll('span').forEach((span) => span.remove());
+  return clone.textContent.trim();
 }
 
-renderProgressSummary();
+// Total question counts per grade/mode are already known statically (see the
+// grade-count data attributes in index.html) — register them once so the
+// dashboard can show a completion percentage without fetching any data.
+function registerTotalQuestionCounts() {
+  el.gradeButtons.forEach((btn) => {
+    const grade = Number(btn.dataset.grade);
+    const counts = btn.querySelector('.grade-count');
+    ProgressManager.setTotalQuestions('kanji', grade, parseInt(counts.dataset.kanjiCount, 10));
+    ProgressManager.setTotalQuestions('word', grade, parseInt(counts.dataset.wordCount, 10));
+  });
+}
+
+function renderDashboard() {
+  ProgressView.renderOverall();
+  ProgressView.renderGrade(state.mode, state.grade, gradeDisplayName(state.grade));
+}
+
+registerTotalQuestionCounts();
+ProgressView.init();
+renderDashboard();
 
 if (location.protocol === 'file:') {
   el.fileWarning.classList.remove('hidden');
@@ -126,6 +146,7 @@ async function startGrade(mode, grade) {
     state.mode = mode;
     state.grade = grade;
     state.itemList = await loadData(mode, grade);
+    renderDashboard();
     startRound();
   } catch (err) {
     console.error(err);
@@ -219,7 +240,7 @@ function handleAnswer(selected, btnEl) {
   if (isCorrect) state.score++;
   else state.missed.push(q);
 
-  renderProgressSummary();
+  renderDashboard();
 
   setTimeout(() => {
     state.index++;

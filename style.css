@@ -92,11 +92,26 @@ html, body {
   font-size: 0.85rem;
 }
 
+.progress-heading {
+  margin: 1rem 0 0.4rem;
+  font-size: 0.85rem;
+  color: #8a8378;
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+.progress-heading span {
+  display: block;
+  font-size: 0.65rem;
+  letter-spacing: normal;
+  margin-top: 0.1rem;
+}
+
 .progress-summary {
   display: flex;
   justify-content: center;
   gap: 1.2rem;
-  margin: 0.8rem 0 0;
+  margin: 0.4rem 0 0;
   padding: 0.6rem 0.5rem;
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -116,6 +131,47 @@ html, body {
   font-size: 1.1rem;
   color: var(--fg);
 }
+
+.grade-progress.hidden { display: none; }
+
+.progress-grade-name {
+  text-align: center;
+  margin: 0 0 0.3rem;
+  font-size: 0.8rem;
+  color: #8a8378;
+}
+
+.progress-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width 0.2s ease;
+}
+
+.progress-bar-percent {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8rem;
+  color: #8a8378;
+  min-width: 2.5em;
+  text-align: right;
+}
+
+.progress-bar-percent.hidden { display: none; }
 
 .mode-toggle {
   display: flex;
