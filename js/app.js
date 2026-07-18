@@ -32,6 +32,7 @@ const el = {
   summaryMissed: document.getElementById('summary-missed'),
   fileWarning: document.getElementById('file-protocol-warning'),
   loadError: document.getElementById('load-error-banner'),
+  btnResetGrade: document.getElementById('btn-reset-grade'),
 };
 
 // The grade name shown in the dashboard (e.g. "3年生") is read straight off
@@ -58,13 +59,20 @@ function registerTotalQuestionCounts() {
 }
 
 function renderDashboard() {
-  ProgressView.renderOverall();
-  ProgressView.renderGrade(state.mode, state.grade, gradeDisplayName(state.grade));
+  ProgressView.renderAll(state.mode, state.grade, gradeDisplayName(state.grade));
 }
 
 registerTotalQuestionCounts();
 ProgressView.init();
 renderDashboard();
+
+el.btnResetGrade.addEventListener('click', () => {
+  if (!state.grade) return;
+  const name = gradeDisplayName(state.grade);
+  if (!confirm(`${name}の成績をリセットしますか？\nReset progress for ${name}?`)) return;
+  ProgressManager.reset(state.mode, state.grade);
+  renderDashboard();
+});
 
 if (location.protocol === 'file:') {
   el.fileWarning.classList.remove('hidden');

@@ -104,15 +104,21 @@ GitHub Pages as it does locally.
 
 ## Progress Dashboard
 
-The home screen shows a small dashboard, powered entirely by the data
-`ProgressManager` already tracks — no extra storage or network calls:
+The bottom of the home screen (below the grade picker) shows a small
+dashboard, powered entirely by the data `ProgressManager` already tracks —
+no extra storage or network calls:
 
 - **Overall** — total questions answered, correct answers, and accuracy
-  across every grade and mode you've played.
+  across every grade and mode you've played, plus a breakdown split by quiz
+  mode (kanji vs. word) and a "Recent" sparkline of your last 20 answers
+  (green = correct, red = incorrect).
 - **Current Grade** — the same three numbers scoped to the grade/mode you
-  last played, plus a completion bar (questions answered at least once ÷
-  total questions in that grade's pool). The bar's percentage is hidden if
-  the total is ever unknown.
+  last played, a completion bar (questions answered at least once ÷ total
+  questions in that grade's pool — hidden if the total is ever unknown), and
+  a mastery breakdown (new / learning / familiar / mastered counts, matching
+  the same levels used to weight question selection). A **Reset** button
+  next to this section clears progress for just that grade/mode, after a
+  confirmation prompt.
 
 Both sections update immediately (no reload needed) whenever you answer a
 question or pick a new grade, and stay accurate across reloads since they're

@@ -2,11 +2,14 @@
 // survives reloads, browser restarts, and GitHub Pages redeploys (data lives
 // in the browser, not the deployment).
 // Shape: { version, lastUpdated, grades: { [gradeKey]: {answered, correct} },
-//          questions: { [questionId]: {seen, correct, wrong, lastSeen} } }
+//          questions: { [questionId]: {seen, correct, wrong, lastSeen} },
+//          history: [isCorrect, ...] } (most recent last, capped length)
 
 const ProgressManager = (() => {
   const STORAGE_KEY = 'kanji-drill-progress';
   const VERSION = 1;
+  const HISTORY_LIMIT = 30;
+  const MODE_PREFIX = { kanji: 'grade', word: 'words' };
 
   // Reuses the existing per-mode/grade key naming (kanjidrill:gradeN /
   // kanjidrill:wordsN) as the namespace for a question's stable ID, so we
@@ -21,7 +24,7 @@ const ProgressManager = (() => {
   }
 
   function emptyProgress() {
-    return { version: VERSION, lastUpdated: null, grades: {}, questions: {} };
+    return { version: VERSION, lastUpdated: null, grades: {}, questions: {}, history: [] };
   }
 
   function load() {
@@ -34,6 +37,7 @@ const ProgressManager = (() => {
         lastUpdated: parsed.lastUpdated || null,
         grades: parsed.grades || {},
         questions: parsed.questions || {},
+        history: parsed.history || [],
       };
     } catch {
       return emptyProgress();
@@ -65,6 +69,9 @@ const ProgressManager = (() => {
     gStat.answered += 1;
     if (isCorrect) gStat.correct += 1;
     progress.grades[gKey] = gStat;
+
+    progress.history.push(isCorrect);
+    if (progress.history.length > HISTORY_LIMIT) progress.history.shift();
 
     save(progress);
     return qStat;
@@ -123,13 +130,23 @@ const ProgressManager = (() => {
     return { ...stats, accuracy: getAccuracy(stats) };
   }
 
+  function sumGrades(progress, keyPrefix) {
+    return Object.entries(progress.grades)
+      .filter(([key]) => !keyPrefix || key.startsWith(keyPrefix))
+      .reduce((acc, [, g]) => ({ answered: acc.answered + g.answered, correct: acc.correct + g.correct }), { answered: 0, correct: 0 });
+  }
+
   // Aggregate stats across every grade/mode, for the home-screen summary.
   function getOverallStats() {
     const progress = load();
-    const totals = Object.values(progress.grades).reduce(
-      (acc, g) => ({ answered: acc.answered + g.answered, correct: acc.correct + g.correct }),
-      { answered: 0, correct: 0 }
-    );
+    const totals = sumGrades(progress);
+    return { ...totals, accuracy: getAccuracy(totals) };
+  }
+
+  // Same as getOverallStats(), scoped to a single quiz mode (kanji or word).
+  function getOverallStatsByMode(mode) {
+    const progress = load();
+    const totals = sumGrades(progress, MODE_PREFIX[mode]);
     return { ...totals, accuracy: getAccuracy(totals) };
   }
 
@@ -157,6 +174,31 @@ const ProgressManager = (() => {
     return Math.min(100, Math.round((answered / total) * 100));
   }
 
+  // Count of questions in a grade at each mastery level. Untouched questions
+  // (never answered, so not present in `questions` at all) are counted as
+  // 'new' when the grade's total question count is known.
+  function getMasteryBreakdown(mode, grade) {
+    const progress = load();
+    const prefix = `${gradeKey(mode, grade)}:`;
+    const counts = { new: 0, learning: 0, familiar: 0, mastered: 0 };
+    let tracked = 0;
+    Object.entries(progress.questions).forEach(([id, stat]) => {
+      if (!id.startsWith(prefix)) return;
+      counts[mastery(stat)] += 1;
+      tracked += 1;
+    });
+    const total = getTotalQuestions(mode, grade);
+    if (total !== null) counts.new += Math.max(0, total - tracked);
+    return counts;
+  }
+
+  // Most recent answers (oldest first), correct/incorrect, across every
+  // mode/grade — used for the "recent performance" sparkline.
+  function getRecentHistory(limit = 20) {
+    const progress = load();
+    return progress.history.slice(-limit);
+  }
+
   return {
     load,
     save,
@@ -167,10 +209,14 @@ const ProgressManager = (() => {
     weightFor,
     getGradeStats,
     getOverallStats,
+    getOverallStatsByMode,
     getAccuracy,
     getAnswered,
     setTotalQuestions,
     getTotalQuestions,
     getGradeProgressPercent,
+    getMasteryBreakdown,
+    getRecentHistory,
   };
 })();
+

@@ -27,29 +27,6 @@
     <h2>学年を選んでください</h2>
     <p class="subtitle">Choose a grade to start drilling</p>
 
-    <h3 class="progress-heading">全体の成績<span>Overall</span></h3>
-    <div id="progress-summary" class="progress-summary">
-      <span class="progress-stat"><strong id="progress-answered">0</strong>問<span>Answered</span></span>
-      <span class="progress-stat"><strong id="progress-correct">0</strong>正解<span>Correct</span></span>
-      <span class="progress-stat"><strong id="progress-accuracy">0%</strong>正答率<span>Accuracy</span></span>
-    </div>
-
-    <div id="grade-progress" class="grade-progress hidden">
-      <h3 class="progress-heading">現在の学年<span>Current Grade</span></h3>
-      <p id="grade-progress-name" class="progress-grade-name"></p>
-      <div class="progress-summary">
-        <span class="progress-stat"><strong id="grade-progress-answered">0</strong>問<span>Answered</span></span>
-        <span class="progress-stat"><strong id="grade-progress-correct">0</strong>正解<span>Correct</span></span>
-        <span class="progress-stat"><strong id="grade-progress-accuracy">0%</strong>正答率<span>Accuracy</span></span>
-      </div>
-      <div class="progress-bar-row">
-        <div class="progress-bar">
-          <div id="grade-progress-bar-fill" class="progress-bar-fill" style="width: 0%"></div>
-        </div>
-        <span id="grade-progress-percent" class="progress-bar-percent hidden">0%</span>
-      </div>
-    </div>
-
     <div class="mode-toggle" role="tablist">
       <button class="mode-btn active" data-mode="kanji"><span class="key-badge key-badge-corner">K</span>漢字クイズ<span>Kanji reading</span></button>
       <button class="mode-btn" data-mode="word"><span class="key-badge key-badge-corner">W</span>言葉クイズ<span>Word reading</span></button>
@@ -69,6 +46,38 @@
       <button class="grade-btn" data-grade="7"><span class="key-badge key-badge-corner">7</span>中学1年<span class="grade-count" data-kanji-count="370字" data-word-count="157語">370字</span></button>
       <button class="grade-btn" data-grade="8"><span class="key-badge key-badge-corner">8</span>中学2年<span class="grade-count" data-kanji-count="370字" data-word-count="150語">370字</span></button>
       <button class="grade-btn" data-grade="9"><span class="key-badge key-badge-corner">9</span>中学3年<span class="grade-count" data-kanji-count="370字" data-word-count="148語">370字</span></button>
+    </div>
+
+    <h3 class="progress-heading">全体の成績<span>Overall</span></h3>
+    <div id="progress-summary" class="progress-summary">
+      <span class="progress-stat"><strong id="progress-answered">0</strong>問<span>Answered</span></span>
+      <span class="progress-stat"><strong id="progress-correct">0</strong>正解<span>Correct</span></span>
+      <span class="progress-stat"><strong id="progress-accuracy">0%</strong>正答率<span>Accuracy</span></span>
+    </div>
+    <div id="progress-mode-breakdown" class="progress-mode-breakdown"></div>
+    <div class="progress-history">
+      <span class="progress-history-label">最近の履歴<span>Recent</span></span>
+      <div id="progress-history-bar" class="progress-history-bar"></div>
+    </div>
+
+    <div id="grade-progress" class="grade-progress hidden">
+      <div class="grade-progress-header">
+        <h3 class="progress-heading">現在の学年<span>Current Grade</span></h3>
+        <button id="btn-reset-grade" type="button" class="reset-btn">リセット<span>Reset</span></button>
+      </div>
+      <p id="grade-progress-name" class="progress-grade-name"></p>
+      <div class="progress-summary">
+        <span class="progress-stat"><strong id="grade-progress-answered">0</strong>問<span>Answered</span></span>
+        <span class="progress-stat"><strong id="grade-progress-correct">0</strong>正解<span>Correct</span></span>
+        <span class="progress-stat"><strong id="grade-progress-accuracy">0%</strong>正答率<span>Accuracy</span></span>
+      </div>
+      <div class="progress-bar-row">
+        <div class="progress-bar">
+          <div id="grade-progress-bar-fill" class="progress-bar-fill" style="width: 0%"></div>
+        </div>
+        <span id="grade-progress-percent" class="progress-bar-percent hidden">0%</span>
+      </div>
+      <div id="grade-mastery-breakdown" class="mastery-breakdown"></div>
     </div>
   </section>
 
