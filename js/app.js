@@ -225,7 +225,7 @@ function showSummary() {
     state.missed.forEach((q) => {
       const row = document.createElement('div');
       row.className = 'missed-item';
-      row.innerHTML = `<span>${q.text}</span><span>${readingHTML(q.correctReading)}</span>`;
+      row.innerHTML = `<span>${q.text}</span><span class="missed-item-meaning">${q.meaning}</span><span>${readingHTML(q.correctReading)}</span>`;
       el.summaryMissed.appendChild(row);
     });
   }

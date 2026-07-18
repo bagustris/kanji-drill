@@ -339,9 +339,19 @@ html, body {
 .missed-item {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
   padding: 0.5rem 0.2rem;
   border-bottom: 1px solid var(--border);
   font-size: 1.05rem;
+}
+
+.missed-item-meaning {
+  flex: 1;
+  color: #8a8378;
+  font-size: 0.85rem;
+  font-style: italic;
+  text-align: center;
 }
 
 .summary-actions {
