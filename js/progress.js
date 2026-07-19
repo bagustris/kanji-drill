@@ -2,7 +2,7 @@
 // survives reloads, browser restarts, and GitHub Pages redeploys (data lives
 // in the browser, not the deployment).
 // Shape: { version, lastUpdated, grades: { [gradeKey]: {answered, correct} },
-//          questions: { [questionId]: {seen, correct, wrong, lastSeen} },
+//          questions: { [questionId]: {seen, correct, wrong, lastSeen, lastCorrect} },
 //          history: [isCorrect, ...] } (most recent last, capped length)
 
 const ProgressManager = (() => {
@@ -53,15 +53,28 @@ const ProgressManager = (() => {
     }
   }
 
-  function recordAnswer(mode, grade, text, isCorrect) {
+  // `selectedReading` is the wrong answer the learner actually clicked
+  // (omitted/ignored when isCorrect is true). Recorded per-question as
+  // `confusions: { [reading]: timesPicked }` so DistractorGenerator can
+  // prioritize resurfacing the specific wrong answers a learner keeps
+  // falling for — see js/learning/distractors/DistractorGenerator.js.
+  function recordAnswer(mode, grade, text, isCorrect, selectedReading) {
     const progress = load();
 
     const qId = questionId(mode, grade, text);
-    const qStat = progress.questions[qId] || { seen: 0, correct: 0, wrong: 0, lastSeen: null };
+    const qStat = progress.questions[qId] || { seen: 0, correct: 0, wrong: 0, lastSeen: null, lastCorrect: null, confusions: {} };
     qStat.seen += 1;
-    if (isCorrect) qStat.correct += 1;
-    else qStat.wrong += 1;
+    if (isCorrect) {
+      qStat.correct += 1;
+    } else {
+      qStat.wrong += 1;
+      if (selectedReading) {
+        qStat.confusions = qStat.confusions || {};
+        qStat.confusions[selectedReading] = (qStat.confusions[selectedReading] || 0) + 1;
+      }
+    }
     qStat.lastSeen = Date.now();
+    qStat.lastCorrect = isCorrect;
     progress.questions[qId] = qStat;
 
     const gKey = gradeKey(mode, grade);
@@ -105,13 +118,64 @@ const ProgressManager = (() => {
     return 'familiar';
   }
 
-  // Higher weight = shown more often in future rounds.
-  const WEIGHT_BY_MASTERY = { new: 3, learning: 4, familiar: 2, mastered: 1 };
+  const DEFAULT_QUESTION_STAT = { seen: 0, correct: 0, wrong: 0, lastSeen: null, lastCorrect: null };
 
-  function weightFor(mode, grade, text) {
+  // Stable per-question identifier, exposed so callers outside this module
+  // (e.g. QuestionSelector) can look up stats without duplicating the
+  // gradeKey/questionId naming scheme.
+  function getQuestionId(mode, grade, text) {
+    return questionId(mode, grade, text);
+  }
+
+  // Raw per-question stats (seen/correct/wrong/lastSeen/lastCorrect), never
+  // null — defaults to a zeroed, never-seen record. Returned object is a
+  // fresh copy so callers can't mutate stored progress by accident.
+  function getQuestionStats(id) {
     const progress = load();
-    const qId = questionId(mode, grade, text);
-    return WEIGHT_BY_MASTERY[mastery(progress.questions[qId])];
+    return { ...DEFAULT_QUESTION_STAT, ...progress.questions[id] };
+  }
+
+  function isSeen(id) {
+    return getQuestionStats(id).seen > 0;
+  }
+
+  function getSeenCount(id) {
+    return getQuestionStats(id).seen;
+  }
+
+  function getCorrectCount(id) {
+    return getQuestionStats(id).correct;
+  }
+
+  function getWrongCount(id) {
+    return getQuestionStats(id).wrong;
+  }
+
+  function getLastSeen(id) {
+    return getQuestionStats(id).lastSeen;
+  }
+
+  // { [wrongReadingPicked]: timesPicked }, {} when the question has never
+  // been answered incorrectly (or never seen at all). Fresh object each
+  // call — safe for callers to read without risk of mutating stored progress.
+  function getConfusions(id) {
+    const progress = load();
+    return { ...(progress.questions[id]?.confusions || {}) };
+  }
+
+  // wrong / seen, 0 when never seen. Range 0–1.
+  function getErrorRate(id) {
+    const stats = getQuestionStats(id);
+    return stats.seen === 0 ? 0 : stats.wrong / stats.seen;
+  }
+
+  // correct / seen, 0 when never seen. Range 0–1. This is the numeric
+  // mastery ratio used by scoring strategies — distinct from the qualitative
+  // new/learning/familiar/mastered bucket returned by mastery() above, which
+  // the Progress Dashboard uses.
+  function getMastery(id) {
+    const stats = getQuestionStats(id);
+    return stats.seen === 0 ? 0 : stats.correct / stats.seen;
   }
 
   // One-decimal accuracy percentage (e.g. 89.6), 0 when nothing answered yet.
@@ -206,7 +270,16 @@ const ProgressManager = (() => {
     reset,
     resetAll,
     mastery,
-    weightFor,
+    getQuestionId,
+    getQuestionStats,
+    isSeen,
+    getSeenCount,
+    getCorrectCount,
+    getWrongCount,
+    getLastSeen,
+    getConfusions,
+    getErrorRate,
+    getMastery,
     getGradeStats,
     getOverallStats,
     getOverallStatsByMode,

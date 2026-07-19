@@ -109,36 +109,40 @@ function readingHTML(reading) {
   return `${core}<span class="okurigana">${okurigana}</span>`;
 }
 
-function weightedSample(itemList, mode, grade, count) {
-  const pool = [];
-  itemList.forEach((entry) => {
-    const weight = ProgressManager.weightFor(mode, grade, itemText(entry));
-    for (let i = 0; i < weight; i++) pool.push(entry);
-  });
-  const shuffled = shuffle(pool);
+// Adaptive replacement for the old random weightedSample(): builds a pool of
+// {id, entry} candidates (id = ProgressManager's stable question ID) and
+// repeatedly asks QuestionSelector for the next best question, removing each
+// pick from the remaining pool so a single round never repeats a question
+// (QuestionSelector's own recent-history queue additionally keeps picks
+// diverse across rounds/retries within the same page session).
+function pickQuestions(itemList, mode, grade, count) {
+  const remaining = itemList.map((entry) => ({ id: ProgressManager.getQuestionId(mode, grade, itemText(entry)), entry }));
   const picked = [];
-  const seen = new Set();
-  for (const entry of shuffled) {
-    const key = itemText(entry);
-    if (seen.has(key)) continue;
-    seen.add(key);
-    picked.push(entry);
-    if (picked.length === count) break;
+  while (picked.length < count && remaining.length > 0) {
+    const choice = QuestionSelector.select(remaining);
+    if (!choice) break;
+    picked.push(choice.entry);
+    remaining.splice(remaining.findIndex((p) => p.id === choice.id), 1);
   }
   return picked;
 }
 
-function buildQuestion(target, itemList) {
+// Distractor selection is delegated to the Adaptive Learning Engine's
+// DistractorGenerator (js/learning/distractors/) instead of a random pick —
+// see README "Adaptive Distractor Generation" for how it ranks candidates.
+function buildQuestion(target, itemList, mode, grade) {
   const correctReading = shuffle(target.readings)[0];
-  const otherReadings = new Set(
-    itemList
-      .filter((e) => itemText(e) !== itemText(target))
-      .flatMap((e) => e.readings)
-      .filter((r) => r !== correctReading)
-  );
-  const distractors = shuffle([...otherReadings]).slice(0, OPTIONS_COUNT - 1);
+  const question = {
+    id: ProgressManager.getQuestionId(mode, grade, itemText(target)),
+    text: itemText(target),
+    reading: correctReading,
+    meaning: target.meaning,
+    grade: target.grade,
+    frequency: target.frequency,
+  };
+  const distractors = DistractorGenerator.generate(question, itemList);
   const options = shuffle([correctReading, ...distractors]);
-  return { text: itemText(target), meaning: target.meaning, correctReading, options };
+  return { text: question.text, meaning: target.meaning, correctReading, options };
 }
 
 async function loadData(mode, grade) {
@@ -167,8 +171,8 @@ async function startGrade(mode, grade) {
 
 function startRound() {
   const count = Math.min(ROUND_SIZE, state.itemList.length);
-  const picks = weightedSample(state.itemList, state.mode, state.grade, count);
-  state.questions = picks.map((entry) => buildQuestion(entry, state.itemList));
+  const picks = pickQuestions(state.itemList, state.mode, state.grade, count);
+  state.questions = picks.map((entry) => buildQuestion(entry, state.itemList, state.mode, state.grade));
   state.index = 0;
   state.score = 0;
   state.missed = [];
@@ -244,7 +248,7 @@ function handleAnswer(selected, btnEl) {
     else if (btn === btnEl) btn.classList.add('incorrect');
   });
 
-  ProgressManager.recordAnswer(state.mode, state.grade, q.text, isCorrect);
+  ProgressManager.recordAnswer(state.mode, state.grade, q.text, isCorrect, selected);
   if (isCorrect) state.score++;
   else state.missed.push(q);
 
