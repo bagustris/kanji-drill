@@ -197,12 +197,111 @@ function renderQuestion() {
   });
 }
 
+// Arrow-key navigation: each screen exposes an ordered list of button
+// groups (each with a column count matching its on-screen grid/row/stack
+// layout). Left/Right move within a group's row; Up/Down move within a
+// group's column and, at a group's top/bottom edge, jump to the
+// neighboring group in the same column. Buttons are real <button>
+// elements, so once focused, Enter/Space activate them via native
+// browser behavior — no extra handling needed here.
+function getNavGroups() {
+  if (state.screen === 'home') {
+    const grids = document.querySelectorAll('.grade-grid');
+    const groups = [
+      { items: [...el.modeButtons], cols: 2 },
+      { items: [...grids[0].children], cols: 2 },
+      { items: [...grids[1].children], cols: 2 },
+    ];
+    const gradeProgress = document.getElementById('grade-progress');
+    if (!gradeProgress.classList.contains('hidden')) {
+      groups.push({ items: [el.btnResetGrade], cols: 1 });
+    }
+    return groups;
+  }
+  if (state.screen === 'quiz') {
+    return [
+      { items: [el.btnQuit], cols: 1 },
+      { items: [...el.quizOptions.children], cols: 2 },
+    ];
+  }
+  if (state.screen === 'summary') {
+    return [{ items: [el.btnRetry, el.btnHome], cols: 1 }];
+  }
+  return [];
+}
+
+function findFocusPosition(groups) {
+  for (let g = 0; g < groups.length; g++) {
+    const i = groups[g].items.indexOf(document.activeElement);
+    if (i !== -1) return { g, i };
+  }
+  return null;
+}
+
+function navigate(dRow, dCol) {
+  const groups = getNavGroups().filter((grp) => grp.items.length > 0);
+  if (groups.length === 0) return;
+
+  const pos = findFocusPosition(groups);
+  if (!pos) {
+    groups[0].items[0].focus();
+    return;
+  }
+
+  const { g, i } = pos;
+  const group = groups[g];
+  const row = Math.floor(i / group.cols);
+  const col = i % group.cols;
+
+  if (dCol !== 0) {
+    const newCol = col + dCol;
+    if (newCol < 0 || newCol >= group.cols) return;
+    const newIndex = row * group.cols + newCol;
+    if (newIndex >= group.items.length) return;
+    group.items[newIndex].focus();
+    return;
+  }
+
+  const newRow = row + dRow;
+  const withinIndex = newRow * group.cols + col;
+  if (newRow >= 0 && withinIndex < group.items.length) {
+    group.items[withinIndex].focus();
+    return;
+  }
+
+  const targetGroupIndex = g + dRow;
+  if (targetGroupIndex < 0 || targetGroupIndex >= groups.length) return;
+  const targetGroup = groups[targetGroupIndex];
+  let targetIndex;
+  if (dRow > 0) {
+    targetIndex = Math.min(col, targetGroup.cols - 1, targetGroup.items.length - 1);
+  } else {
+    const lastRow = Math.floor((targetGroup.items.length - 1) / targetGroup.cols);
+    const candidate = lastRow * targetGroup.cols + Math.min(col, targetGroup.cols - 1);
+    targetIndex = candidate < targetGroup.items.length ? candidate : targetGroup.items.length - 1;
+  }
+  targetGroup.items[targetIndex].focus();
+}
+
+const ARROW_DELTAS = {
+  ArrowUp: [-1, 0],
+  ArrowDown: [1, 0],
+  ArrowLeft: [0, -1],
+  ArrowRight: [0, 1],
+};
+
 // Keyboard shortcuts, mirrored by the on-screen key-badges: k/w switch mode
 // and 1-9 pick a grade on the home screen, 1-4 pick a quiz option (matching
 // the 2x2 grid order) and 0 quits, 1/2 retry or return home on the summary
-// screen.
+// screen. Arrow keys move focus between on-screen buttons on every screen.
 document.addEventListener('keydown', (e) => {
   if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+  if (ARROW_DELTAS[e.key]) {
+    e.preventDefault();
+    navigate(...ARROW_DELTAS[e.key]);
+    return;
+  }
 
   if (state.screen === 'home') {
     const key = e.key.toLowerCase();
