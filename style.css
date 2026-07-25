@@ -36,6 +36,8 @@ html, body {
 
 .app-header {
   position: relative;
+  max-width: 480px;
+  margin: 0 auto;
   text-align: center;
   padding: 1.2rem 1rem 0.6rem;
 }
