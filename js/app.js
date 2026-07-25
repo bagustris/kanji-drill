@@ -1,4 +1,3 @@
-const ROUND_SIZE = 10;
 const OPTIONS_COUNT = 4;
 
 const state = {
@@ -33,6 +32,13 @@ const el = {
   fileWarning: document.getElementById('file-protocol-warning'),
   loadError: document.getElementById('load-error-banner'),
   btnResetGrade: document.getElementById('btn-reset-grade'),
+  btnSettings: document.getElementById('btn-settings'),
+  btnSettingsClose: document.getElementById('btn-settings-close'),
+  settingsOverlay: document.getElementById('settings-overlay'),
+  settingShowMeaning: document.getElementById('setting-show-meaning'),
+  settingRoundSizeButtons: document.querySelectorAll('#setting-round-size .segmented-btn'),
+  installButton: document.getElementById('btn-install'),
+  installHint: document.getElementById('settings-install-hint'),
 };
 
 // The grade name shown in the dashboard (e.g. "3年生") is read straight off
@@ -62,6 +68,109 @@ function renderDashboard() {
   ProgressView.renderAll(state.mode, state.grade, gradeDisplayName(state.grade));
 }
 
+// Settings dialog: a plain modal (backdrop click / Escape / close button
+// dismiss it) rather than something wired into the arrow-key nav groups —
+// it's reached by mouse/touch or Tab, matching how a native <dialog> would
+// behave, without the added complexity of a full focus trap.
+function applyMeaningVisibility() {
+  el.quizMeaning.classList.toggle('hidden', !SettingsManager.get('showMeaning'));
+}
+
+function isSettingsOpen() {
+  return !el.settingsOverlay.classList.contains('hidden');
+}
+
+function openSettings() {
+  el.settingsOverlay.classList.remove('hidden');
+  renderInstallRow();
+  el.btnSettingsClose.focus();
+}
+
+function closeSettings() {
+  el.settingsOverlay.classList.add('hidden');
+  el.btnSettings.focus();
+}
+
+// PWA install: Chrome/Edge/Android fire `beforeinstallprompt`, which we
+// stash until the user taps the Settings button. Browsers with no such
+// event (iOS Safari, desktop Safari/Firefox) get manual "Add to Home
+// Screen" instructions instead, since there's no install API to call there.
+let deferredInstallPrompt = null;
+
+function isStandaloneDisplay() {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+
+function renderInstallRow() {
+  if (isStandaloneDisplay()) {
+    el.installButton.classList.add('hidden');
+    el.installHint.textContent = 'インストール済み — Already installed';
+    el.installHint.classList.remove('hidden');
+    return;
+  }
+  if (deferredInstallPrompt) {
+    el.installButton.classList.remove('hidden');
+    el.installHint.classList.add('hidden');
+    return;
+  }
+  el.installButton.classList.add('hidden');
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  el.installHint.textContent = isIOS
+    ? '共有ボタン → ホーム画面に追加 — Share button → Add to Home Screen'
+    : 'ブラウザメニューの「インストール」から追加できます — Use your browser menu → Install app';
+  el.installHint.classList.remove('hidden');
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  renderInstallRow();
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null;
+  renderInstallRow();
+});
+
+function initSettingsPanel() {
+  el.settingShowMeaning.checked = SettingsManager.get('showMeaning');
+  applyMeaningVisibility();
+
+  const roundSize = String(SettingsManager.get('roundSize'));
+  el.settingRoundSizeButtons.forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.value === roundSize);
+  });
+
+  el.settingShowMeaning.addEventListener('change', () => {
+    SettingsManager.set('showMeaning', el.settingShowMeaning.checked);
+    applyMeaningVisibility();
+  });
+
+  el.settingRoundSizeButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      el.settingRoundSizeButtons.forEach((b) => b.classList.toggle('active', b === btn));
+      SettingsManager.set('roundSize', btn.dataset.value === 'all' ? 'all' : Number(btn.dataset.value));
+    });
+  });
+
+  el.btnSettings.addEventListener('click', openSettings);
+  el.btnSettingsClose.addEventListener('click', closeSettings);
+  el.settingsOverlay.addEventListener('click', (e) => {
+    if (e.target === el.settingsOverlay) closeSettings();
+  });
+
+  el.installButton.addEventListener('click', async () => {
+    if (!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    renderInstallRow();
+  });
+
+  renderInstallRow();
+}
+
+initSettingsPanel();
 registerTotalQuestionCounts();
 ProgressView.init();
 renderDashboard();
@@ -170,7 +279,9 @@ async function startGrade(mode, grade) {
 }
 
 function startRound() {
-  const count = Math.min(ROUND_SIZE, state.itemList.length);
+  const configuredSize = SettingsManager.get('roundSize');
+  const roundSize = configuredSize === 'all' ? state.itemList.length : configuredSize;
+  const count = Math.min(roundSize, state.itemList.length);
   const picks = pickQuestions(state.itemList, state.mode, state.grade, count);
   state.questions = picks.map((entry) => buildQuestion(entry, state.itemList, state.mode, state.grade));
   state.index = 0;
@@ -295,6 +406,11 @@ const ARROW_DELTAS = {
 // the 2x2 grid order) and 0 quits, 1/2 retry or return home on the summary
 // screen. Arrow keys move focus between on-screen buttons on every screen.
 document.addEventListener('keydown', (e) => {
+  if (isSettingsOpen()) {
+    if (e.key === 'Escape') closeSettings();
+    return;
+  }
+
   if (e.ctrlKey || e.metaKey || e.altKey) return;
 
   if (ARROW_DELTAS[e.key]) {

@@ -1,10 +1,11 @@
-const CACHE_VERSION = 'kanji-drill-v1';
+const CACHE_VERSION = 'kanji-drill-v2';
 
 const CORE_ASSETS = [
   '.',
   'index.html',
   'style.css',
   'manifest.json',
+  'js/settings.js',
   'js/progress.js',
   'js/progress-view.js',
   'js/learning/QuestionSelectionStrategy.js',

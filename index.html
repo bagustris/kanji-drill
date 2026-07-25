@@ -12,8 +12,44 @@
 <body>
 
 <header class="app-header">
+  <button id="btn-settings" type="button" class="icon-btn settings-btn" aria-haspopup="dialog" aria-label="設定 Settings">
+    <span class="hamburger-icon"><span></span><span></span><span></span></span>
+  </button>
   <h1>漢字ドリル</h1>
 </header>
+
+<div id="settings-overlay" class="settings-overlay hidden">
+  <div id="settings-panel" class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="settings-header">
+      <h2 id="settings-title">設定<span>Settings</span></h2>
+      <button id="btn-settings-close" type="button" class="icon-btn" aria-label="閉じる Close">&times;</button>
+    </div>
+
+    <div class="settings-row">
+      <span class="settings-row-label" id="setting-show-meaning-label">意味を表示<span>Show meaning during quiz</span></span>
+      <label class="switch">
+        <input type="checkbox" id="setting-show-meaning" aria-labelledby="setting-show-meaning-label">
+        <span class="switch-slider"></span>
+      </label>
+    </div>
+
+    <div class="settings-row settings-row-column">
+      <span class="settings-row-label">1回の問題数<span>Questions per round</span></span>
+      <div id="setting-round-size" class="settings-segmented" role="radiogroup" aria-label="Questions per round">
+        <button type="button" class="segmented-btn" data-value="5">5<span>問</span></button>
+        <button type="button" class="segmented-btn active" data-value="10">10<span>問</span></button>
+        <button type="button" class="segmented-btn" data-value="20">20<span>問</span></button>
+        <button type="button" class="segmented-btn" data-value="all">全部<span>All</span></button>
+      </div>
+    </div>
+
+    <div class="settings-row settings-row-column">
+      <span class="settings-row-label">アプリとしてインストール<span>Install on PC &amp; smartphone</span></span>
+      <button id="btn-install" type="button" class="settings-install-btn hidden">インストール<span>Install</span></button>
+      <p id="settings-install-hint" class="settings-install-hint hidden"></p>
+    </div>
+  </div>
+</div>
 
 <main id="app">
 
@@ -108,6 +144,7 @@
 
 </main>
 
+<script src="js/settings.js"></script>
 <script src="js/progress.js"></script>
 <script src="js/progress-view.js"></script>
 <script src="js/learning/QuestionSelectionStrategy.js"></script>
