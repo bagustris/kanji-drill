@@ -268,28 +268,35 @@ function itemText(entry) {
   return entry.kanji ?? entry.word ?? entry.sentence;
 }
 
-// Wraps the target span (a word or okurigana-inflected kanji, e.g. "立てる")
-// in a highlight so sentence-mode questions show which part is being quizzed
-// — everything else in the sentence is plain context. `innerHTML` replaces
-// the target text itself (used to swap in furigana once answered).
-function highlightTarget(sentence, target, innerHTML) {
+// Splits a target (a word or okurigana-inflected kanji, e.g. "立てる") into
+// its kanji part and trailing okurigana kana.
+function splitOkurigana(target) {
+  const okurigana = (target.match(/[ぁ-ゟ]+$/) || [''])[0];
+  const kanjiPart = okurigana ? target.slice(0, -okurigana.length) : target;
+  return { kanjiPart, okurigana };
+}
+
+// Wraps just the kanji part of the target in a highlight so sentence-mode
+// questions show which reading is being quizzed — the okurigana and the
+// rest of the sentence stay plain, unstyled context. `kanjiHTML` replaces
+// the kanji part's own display (used to swap in furigana once answered).
+function highlightTarget(sentence, target, kanjiHTML) {
   const start = sentence.indexOf(target);
   if (start === -1) return sentence;
   const end = start + target.length;
-  return `${sentence.slice(0, start)}<span class="quiz-sentence-target">${innerHTML ?? target}</span>${sentence.slice(end)}`;
+  const { kanjiPart, okurigana } = splitOkurigana(target);
+  const highlighted = `<span class="quiz-sentence-target">${kanjiHTML ?? kanjiPart}</span>${okurigana}`;
+  return `${sentence.slice(0, start)}${highlighted}${sentence.slice(end)}`;
 }
 
-// Ruby annotation over just the kanji part of a target, matching how both
+// Ruby annotation over the kanji part of a target, matching how both
 // こくご textbooks and くりかえし漢字ドリル print furigana: the reading sits
-// above the kanji only, while okurigana stays plain kana beside it
-// (立てる -> ruby "た" over 立, then てる). Shown after answering so the
-// learner sees the reading attached to the kanji in its sentence, which is
-// the association the drill books are built around.
-function furiganaHTML(target, reading) {
-  const okurigana = (target.match(/[ぁ-ゟ]+$/) || [''])[0];
-  const kanjiPart = okurigana ? target.slice(0, -okurigana.length) : target;
-  if (!kanjiPart) return target;
-  return `<ruby>${kanjiPart}<rt>${reading}</rt></ruby>${okurigana}`;
+// above the kanji only. Shown after answering so the learner sees the
+// reading attached to the kanji in its sentence, which is the association
+// the drill books are built around.
+function furiganaHTML(kanjiPart, reading) {
+  if (!kanjiPart) return kanjiPart;
+  return `<ruby>${kanjiPart}<rt>${reading}</rt></ruby>`;
 }
 
 // A reading like "おぼ.える" marks where kanji-derived reading ends and
@@ -403,7 +410,7 @@ function startRound() {
 }
 
 const INSTRUCTION_TEXT = {
-  sentence: ['下線部の読み方は？', 'Choose the reading for the underlined part'],
+  sentence: ['赤字の読み方は？', 'Choose the reading for the bold red part'],
 };
 const DEFAULT_INSTRUCTION = ['正しい読み方は？', 'Choose the correct reading'];
 
@@ -591,7 +598,8 @@ function handleAnswer(selected, btnEl) {
   });
 
   if (state.mode === 'sentence') {
-    el.quizKanji.innerHTML = highlightTarget(q.sentence, q.target, furiganaHTML(q.target, q.correctReading));
+    const { kanjiPart } = splitOkurigana(q.target);
+    el.quizKanji.innerHTML = highlightTarget(q.sentence, q.target, furiganaHTML(kanjiPart, q.correctReading));
   }
 
   ProgressManager.recordAnswer(state.mode, state.grade, q.text, isCorrect, selected);
