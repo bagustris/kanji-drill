@@ -68,22 +68,23 @@
     <div class="mode-toggle" role="tablist">
       <button class="mode-btn active" data-mode="kanji"><span class="key-badge key-badge-corner">K</span>漢字クイズ<span>Kanji reading</span></button>
       <button class="mode-btn" data-mode="word"><span class="key-badge key-badge-corner">W</span>言葉クイズ<span>Word reading</span></button>
+      <button class="mode-btn" data-mode="sentence"><span class="key-badge key-badge-corner">S</span>文章クイズ<span>Sentence reading</span></button>
     </div>
     <h3 class="grade-section-heading">小学校<span>Elementary School</span></h3>
     <div class="grade-grid">
-      <button class="grade-btn" data-grade="1"><span class="key-badge key-badge-corner">1</span>1年生<span class="grade-count" data-kanji-count="80字" data-word-count="80語">80字</span></button>
-      <button class="grade-btn" data-grade="2"><span class="key-badge key-badge-corner">2</span>2年生<span class="grade-count" data-kanji-count="160字" data-word-count="147語">160字</span></button>
-      <button class="grade-btn" data-grade="3"><span class="key-badge key-badge-corner">3</span>3年生<span class="grade-count" data-kanji-count="200字" data-word-count="281語">200字</span></button>
-      <button class="grade-btn" data-grade="4"><span class="key-badge key-badge-corner">4</span>4年生<span class="grade-count" data-kanji-count="202字" data-word-count="266語">202字</span></button>
-      <button class="grade-btn" data-grade="5"><span class="key-badge key-badge-corner">5</span>5年生<span class="grade-count" data-kanji-count="193字" data-word-count="285語">193字</span></button>
-      <button class="grade-btn" data-grade="6"><span class="key-badge key-badge-corner">6</span>6年生<span class="grade-count" data-kanji-count="191字" data-word-count="225語">191字</span></button>
+      <button class="grade-btn" data-grade="1"><span class="key-badge key-badge-corner">1</span>1年生<span class="grade-count" data-kanji-count="80字" data-word-count="80語" data-sentence-count="80文">80字</span></button>
+      <button class="grade-btn" data-grade="2"><span class="key-badge key-badge-corner">2</span>2年生<span class="grade-count" data-kanji-count="160字" data-word-count="147語" data-sentence-count="準備中">160字</span></button>
+      <button class="grade-btn" data-grade="3"><span class="key-badge key-badge-corner">3</span>3年生<span class="grade-count" data-kanji-count="200字" data-word-count="281語" data-sentence-count="準備中">200字</span></button>
+      <button class="grade-btn" data-grade="4"><span class="key-badge key-badge-corner">4</span>4年生<span class="grade-count" data-kanji-count="202字" data-word-count="266語" data-sentence-count="準備中">202字</span></button>
+      <button class="grade-btn" data-grade="5"><span class="key-badge key-badge-corner">5</span>5年生<span class="grade-count" data-kanji-count="193字" data-word-count="285語" data-sentence-count="準備中">193字</span></button>
+      <button class="grade-btn" data-grade="6"><span class="key-badge key-badge-corner">6</span>6年生<span class="grade-count" data-kanji-count="191字" data-word-count="225語" data-sentence-count="準備中">191字</span></button>
     </div>
 
     <h3 class="grade-section-heading">中学校<span>Junior High School</span></h3>
     <div class="grade-grid">
-      <button class="grade-btn" data-grade="7"><span class="key-badge key-badge-corner">7</span>中学1年<span class="grade-count" data-kanji-count="370字" data-word-count="157語">370字</span></button>
-      <button class="grade-btn" data-grade="8"><span class="key-badge key-badge-corner">8</span>中学2年<span class="grade-count" data-kanji-count="370字" data-word-count="150語">370字</span></button>
-      <button class="grade-btn" data-grade="9"><span class="key-badge key-badge-corner">9</span>中学3年<span class="grade-count" data-kanji-count="370字" data-word-count="148語">370字</span></button>
+      <button class="grade-btn" data-grade="7"><span class="key-badge key-badge-corner">7</span>中学1年<span class="grade-count" data-kanji-count="370字" data-word-count="157語" data-sentence-count="準備中">370字</span></button>
+      <button class="grade-btn" data-grade="8"><span class="key-badge key-badge-corner">8</span>中学2年<span class="grade-count" data-kanji-count="370字" data-word-count="150語" data-sentence-count="準備中">370字</span></button>
+      <button class="grade-btn" data-grade="9"><span class="key-badge key-badge-corner">9</span>中学3年<span class="grade-count" data-kanji-count="370字" data-word-count="148語" data-sentence-count="準備中">370字</span></button>
     </div>
 
     <h3 class="progress-heading">全体の成績<span>Overall</span></h3>
@@ -98,25 +99,8 @@
       <div id="progress-history-bar" class="progress-history-bar"></div>
     </div>
 
-    <div id="grade-progress" class="grade-progress hidden">
-      <div class="grade-progress-header">
-        <h3 class="progress-heading">現在の学年<span>Current Grade</span></h3>
-        <button id="btn-reset-grade" type="button" class="reset-btn">リセット<span>Reset</span></button>
-      </div>
-      <p id="grade-progress-name" class="progress-grade-name"></p>
-      <div class="progress-summary">
-        <span class="progress-stat"><strong id="grade-progress-answered">0</strong>問<span>Answered</span></span>
-        <span class="progress-stat"><strong id="grade-progress-correct">0</strong>正解<span>Correct</span></span>
-        <span class="progress-stat"><strong id="grade-progress-accuracy">0%</strong>正答率<span>Accuracy</span></span>
-      </div>
-      <div class="progress-bar-row">
-        <div class="progress-bar">
-          <div id="grade-progress-bar-fill" class="progress-bar-fill" style="width: 0%"></div>
-        </div>
-        <span id="grade-progress-percent" class="progress-bar-percent hidden">0%</span>
-      </div>
-      <div id="grade-mastery-breakdown" class="mastery-breakdown"></div>
-    </div>
+    <h3 class="progress-heading">学年別の成績<span>Progress by Grade</span></h3>
+    <div id="grade-progress-list" class="grade-progress-list"></div>
   </section>
 
   <section id="screen-quiz" class="screen hidden">
@@ -127,7 +111,7 @@
     <div class="quiz-card">
       <div id="quiz-kanji" class="quiz-kanji">漢</div>
       <p id="quiz-meaning" class="quiz-meaning"></p>
-      <p class="quiz-instruction">正しい読み方は？<span>Choose the correct reading</span></p>
+      <p id="quiz-instruction" class="quiz-instruction">正しい読み方は？<span>Choose the correct reading</span></p>
       <div id="quiz-options" class="quiz-options"></div>
     </div>
   </section>

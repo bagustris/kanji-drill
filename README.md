@@ -1,12 +1,18 @@
 # 漢字ドリル — Kanji Drill
 
-A static, browser-only kanji quiz covering all six years of Japanese elementary
-school. Pick a grade, answer multiple-choice reading questions, and the app
-quietly tracks which kanji you're shaky on so they come up more often next
-time.
+The goal of this project is to help learners of Japanese Kanji (漢字) by **mimicking the way Japanese elementary school students are taught**. The main concept is to focus on associating the kanji directly with meaningful words. There are no on'yomi/kun'yomi distinctions (as in elementary school), you will learn which reading is used in which word, and the app will adaptively prioritize kanji you struggle with.
+
+It is a static, browser-only kanji quiz covering all six years of Japanese elementary school and three years of junior high school. Pick a grade, answer multiple-choice reading questions, and the app quietly tracks which kanji you're shaky on so they come up more often next time.
 
 No backend, no build step, no framework — just HTML, CSS, and JavaScript,
 designed to run as-is on GitHub Pages.
+
+The app currently has three drill types with focus on reading:  
+1. Recognition recall (Kanji)
+2. Reading in context (words) 
+3. Sentences reading (sentences)  
+
+The main concept is "how kanji is read in particular words" and "how to associate kanji with useful words". 
 
 ## Features
 
@@ -16,6 +22,11 @@ designed to run as-is on GitHub Pages.
   hiragana options. Wrong answers aren't random: a small adaptive engine
   ranks candidates by reading/meaning similarity so the distractors are
   ones you're actually likely to confuse the answer with.
+- **Sentence reading quiz** — the same multiple-choice format, but the
+  question is a short original example sentence with one word or inflected
+  kanji underlined, so you practice the reading in context instead of in
+  isolation. Currently seeded for grade 1 only (80 sentences, one per
+  grade-1 kanji) as a pilot — see "Sentence data" below.
 - **Adaptive review** — kanji you get wrong (or haven't seen yet) are weighted
   to show up more often in later rounds; progress is saved per kanji in
   `localStorage`, so it persists across sessions on the same device.
@@ -61,7 +72,9 @@ js/app.js          Screen navigation, question generation, quiz flow
 js/progress.js      Progress tracking (localStorage), via ProgressManager
 js/progress-view.js Renders the Progress Dashboard from ProgressManager data
 js/learning/         Adaptive Learning Engine (question selection, distractor generation)
-data/grade1.json … grade6.json   Kanji + reading data, one file per grade
+data/grade1.json … grade9.json      Kanji + reading data, one file per grade
+data/words1.json … words9.json     Word + reading data, one file per grade
+data/sentences1.json                Sentence + reading data (grade 1 only so far)
 ```
 
 Each entry in a `data/gradeN.json` file looks like:
@@ -81,6 +94,30 @@ reading and a counting word (一 → いち / ひとつ) from day one.
 > multiple kanji reference sites — not copied verbatim from an official MEXT
 > answer key. If you spot one that feels off for a given grade, the JSON
 > files are plain data and easy to hand-edit.
+
+### Sentence data
+
+Each entry in `data/sentencesN.json` looks like:
+
+```json
+{ "sentence": "学校へいく。", "target": "学校", "readings": ["がっこう"], "meaning": "school" }
+```
+
+`target` is the exact substring of `sentence` being quizzed — either a bare
+kanji, a kanji plus its okurigana (e.g. `"立てる"` with reading `"た.てる"`), or
+a two-kanji word — and gets underlined in the quiz card. Every other word in
+the sentence is plain hiragana (or another already-covered kanji used as
+natural context), keeping each sentence readable at that grade level.
+
+> [!NOTE]
+> These are original example sentences written for this project, not
+> excerpts from any commercial textbook (e.g. くりかえし漢字ドリル or こくご) —
+> reproducing copyrighted textbook text wasn't an option, so each sentence
+> was written from scratch to exercise the same kanji/reading in a similarly
+> simple, everyday context. Only grade 1 is populated right now (80
+> sentences, one per grade-1 kanji); grades 2-9 show "準備中" (not ready) and
+> their grade buttons are disabled while Sentence mode is selected, until
+> more sentence data is added.
 
 ## Progress tracking
 
@@ -115,16 +152,19 @@ no extra storage or network calls:
 
 - **Overall** — total questions answered, correct answers, and accuracy
   across every grade and mode you've played, plus a breakdown split by quiz
-  mode (kanji vs. word) and a "Recent" sparkline of your last 20 answers
-  (green = correct, red = incorrect).
-- **Current Grade** — the same three numbers scoped to the grade/mode you
-  last played, a completion bar (questions answered at least once ÷ total
-  questions in that grade's pool — hidden if the total is ever unknown), and
-  a mastery breakdown (new / learning / familiar / mastered counts, matching
-  the same levels the Adaptive Learning Engine uses to prioritize questions).
-  A **Reset** button
-  next to this section clears progress for just that grade/mode, after a
-  confirmation prompt.
+  mode (kanji vs. word vs. sentence) and a "Recent" sparkline of your last 20
+  answers (green = correct, red = incorrect).
+- **Progress by Grade** — one row per grade for the currently selected mode
+  (kanji, word, or sentence), each with a completion bar (questions answered
+  at least once ÷ total questions in that grade's pool), the completion percentage,
+  and accuracy so far. A colored dot per row shows the grade's status — new
+  (gray, untouched), learning (red, accuracy below 50% — needs more
+  practice), familiar (yellow), or mastered (green, high completion and
+  accuracy) — the same levels the Adaptive Learning Engine uses to
+  prioritize questions, now surfaced per grade so you can spot which grades
+  need work at a glance instead of only seeing whichever grade you played
+  most recently. A small **×** button on each row resets progress for just
+  that grade/mode, after a confirmation prompt.
 
 Both sections update immediately (no reload needed) whenever you answer a
 question or pick a new grade, and stay accurate across reloads since they're

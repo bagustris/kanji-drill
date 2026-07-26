@@ -22,9 +22,10 @@
 // as before — this module only decides *which* distractors to use.
 
 const DistractorGenerator = (() => {
-  // Kanji entries use `kanji`, word entries use `word` — same shape otherwise.
+  // Kanji entries use `kanji`, word entries use `word`, sentence entries use
+  // `sentence` — same shape otherwise.
   function itemText(entry) {
-    return entry.kanji ?? entry.word;
+    return entry.kanji ?? entry.word ?? entry.sentence;
   }
 
   // Every reading of every other item is a candidate, tagged with its

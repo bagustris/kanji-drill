@@ -26,12 +26,13 @@ const el = {
   quizProgress: document.getElementById('quiz-progress'),
   quizKanji: document.getElementById('quiz-kanji'),
   quizMeaning: document.getElementById('quiz-meaning'),
+  quizInstruction: document.getElementById('quiz-instruction'),
   quizOptions: document.getElementById('quiz-options'),
   summaryScore: document.getElementById('summary-score'),
   summaryMissed: document.getElementById('summary-missed'),
   fileWarning: document.getElementById('file-protocol-warning'),
   loadError: document.getElementById('load-error-banner'),
-  btnResetGrade: document.getElementById('btn-reset-grade'),
+  gradeProgressList: document.getElementById('grade-progress-list'),
   btnSettings: document.getElementById('btn-settings'),
   btnSettingsClose: document.getElementById('btn-settings-close'),
   settingsOverlay: document.getElementById('settings-overlay'),
@@ -40,6 +41,46 @@ const el = {
   installButton: document.getElementById('btn-install'),
   installHint: document.getElementById('settings-install-hint'),
 };
+
+// Core screen navigation is wired up first, before dashboard rendering or
+// any other setup below — so a bug (or a stale-cache version mismatch
+// between index.html and this script, see js/sw.js's CACHE_VERSION) in
+// that later code can never leave the grade/mode buttons unresponsive.
+
+// data-*-count attributes hold the exact label text to display (e.g.
+// "80字"); sentence-count instead reads "準備中" (not ready yet) for grades
+// that don't have sentence data (only grade 1 does, for now — see
+// data/sentences1.json), which parseInt() naturally turns into NaN/falsy
+// everywhere a total is checked, so those grades just show "no total" —
+// see registerTotalQuestionCounts() below.
+const COUNT_ATTR = { kanji: 'kanjiCount', word: 'wordCount', sentence: 'sentenceCount' };
+
+el.modeButtons.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    if (btn.classList.contains('active')) return;
+    el.modeButtons.forEach((b) => b.classList.toggle('active', b === btn));
+    const mode = btn.dataset.mode;
+    el.gradeCounts.forEach((span) => {
+      span.textContent = span.dataset[COUNT_ATTR[mode]];
+    });
+    el.gradeButtons.forEach((gbtn) => {
+      gbtn.dataset.mode = mode;
+      const counts = gbtn.querySelector('.grade-count');
+      const available = mode !== 'sentence' || parseInt(counts.dataset.sentenceCount, 10) > 0;
+      gbtn.disabled = !available;
+    });
+    renderDashboard();
+  });
+});
+
+el.gradeButtons.forEach((btn) => {
+  btn.dataset.mode = 'kanji';
+  btn.addEventListener('click', () => startGrade(btn.dataset.mode, Number(btn.dataset.grade)));
+});
+
+el.btnQuit.addEventListener('click', () => showScreen('home'));
+el.btnHome.addEventListener('click', () => showScreen('home'));
+el.btnRetry.addEventListener('click', () => startRound());
 
 // The grade name shown in the dashboard (e.g. "3年生") is read straight off
 // the matching grade button rather than duplicated in a lookup table — strip
@@ -61,11 +102,25 @@ function registerTotalQuestionCounts() {
     const counts = btn.querySelector('.grade-count');
     ProgressManager.setTotalQuestions('kanji', grade, parseInt(counts.dataset.kanjiCount, 10));
     ProgressManager.setTotalQuestions('word', grade, parseInt(counts.dataset.wordCount, 10));
+    ProgressManager.setTotalQuestions('sentence', grade, parseInt(counts.dataset.sentenceCount, 10));
   });
 }
 
+// The mode toggle only flips which mode the grade buttons will launch (see
+// its click handler below) — state.mode itself isn't set until a grade is
+// actually started, so the dashboard reads the active toggle directly to
+// know which mode's per-grade progress to show.
+function getSelectedMode() {
+  return document.querySelector('.mode-btn.active').dataset.mode;
+}
+
 function renderDashboard() {
-  ProgressView.renderAll(state.mode, state.grade, gradeDisplayName(state.grade));
+  const mode = getSelectedMode();
+  const grades = [...el.gradeButtons].map((btn) => {
+    const grade = Number(btn.dataset.grade);
+    return { grade, name: gradeDisplayName(grade) };
+  });
+  ProgressView.renderAll(mode, grades);
 }
 
 // Settings dialog: a plain modal (backdrop click / Escape / close button
@@ -175,11 +230,14 @@ registerTotalQuestionCounts();
 ProgressView.init();
 renderDashboard();
 
-el.btnResetGrade.addEventListener('click', () => {
-  if (!state.grade) return;
-  const name = gradeDisplayName(state.grade);
+el.gradeProgressList.addEventListener('click', (e) => {
+  const btn = e.target.closest('.grade-row-reset');
+  if (!btn) return;
+  const grade = Number(btn.dataset.grade);
+  const mode = getSelectedMode();
+  const name = gradeDisplayName(grade);
   if (!confirm(`${name}の成績をリセットしますか？\nReset progress for ${name}?`)) return;
-  ProgressManager.reset(state.mode, state.grade);
+  ProgressManager.reset(mode, grade);
   renderDashboard();
 });
 
@@ -203,9 +261,21 @@ function shuffle(array) {
   return a;
 }
 
-// Kanji entries use `kanji`, word entries use `word` — same shape otherwise.
+// Kanji entries use `kanji`, word entries use `word`, sentence entries use
+// `sentence` (the full example sentence, unique per entry) — same shape
+// otherwise.
 function itemText(entry) {
-  return entry.kanji ?? entry.word;
+  return entry.kanji ?? entry.word ?? entry.sentence;
+}
+
+// Wraps the target span (a word or okurigana-inflected kanji, e.g. "立てる")
+// in a highlight so sentence-mode questions show which part is being quizzed
+// — everything else in the sentence is plain context.
+function highlightTarget(sentence, target) {
+  const start = sentence.indexOf(target);
+  if (start === -1) return sentence;
+  const end = start + target.length;
+  return `${sentence.slice(0, start)}<span class="quiz-sentence-target">${target}</span>${sentence.slice(end)}`;
 }
 
 // A reading like "おぼ.える" marks where kanji-derived reading ends and
@@ -251,11 +321,20 @@ function buildQuestion(target, itemList, mode, grade) {
   };
   const distractors = DistractorGenerator.generate(question, itemList);
   const options = shuffle([correctReading, ...distractors]);
-  return { text: question.text, meaning: target.meaning, correctReading, options };
+  return {
+    text: question.text,
+    sentence: target.sentence,
+    target: target.target,
+    meaning: target.meaning,
+    correctReading,
+    options,
+  };
 }
 
+const MODE_FILE_PREFIX = { kanji: 'grade', word: 'words', sentence: 'sentences' };
+
 async function loadData(mode, grade) {
-  const file = mode === 'word' ? `words${grade}` : `grade${grade}`;
+  const file = `${MODE_FILE_PREFIX[mode]}${grade}`;
   const res = await fetch(`data/${file}.json`);
   if (!res.ok) throw new Error(`Failed to load ${file} data (HTTP ${res.status})`);
   return res.json();
@@ -291,12 +370,20 @@ function startRound() {
   renderQuestion();
 }
 
+const INSTRUCTION_TEXT = {
+  sentence: ['下線部の読み方は？', 'Choose the reading for the underlined part'],
+};
+const DEFAULT_INSTRUCTION = ['正しい読み方は？', 'Choose the correct reading'];
+
 function renderQuestion() {
   const q = state.questions[state.index];
   el.quizProgress.textContent = `${state.index + 1} / ${state.questions.length}`;
-  el.quizKanji.textContent = q.text;
   el.quizKanji.classList.toggle('is-word', state.mode === 'word');
+  el.quizKanji.classList.toggle('is-sentence', state.mode === 'sentence');
+  el.quizKanji.innerHTML = state.mode === 'sentence' ? highlightTarget(q.sentence, q.target) : q.text;
   el.quizMeaning.textContent = q.meaning;
+  const [instructionMain, instructionSub] = INSTRUCTION_TEXT[state.mode] || DEFAULT_INSTRUCTION;
+  el.quizInstruction.innerHTML = `${instructionMain}<span>${instructionSub}</span>`;
   el.quizOptions.innerHTML = '';
   q.options.forEach((reading, i) => {
     const btn = document.createElement('button');
@@ -318,16 +405,11 @@ function renderQuestion() {
 function getNavGroups() {
   if (state.screen === 'home') {
     const grids = document.querySelectorAll('.grade-grid');
-    const groups = [
+    return [
       { items: [...el.modeButtons], cols: 2 },
       { items: [...grids[0].children], cols: 2 },
       { items: [...grids[1].children], cols: 2 },
     ];
-    const gradeProgress = document.getElementById('grade-progress');
-    if (!gradeProgress.classList.contains('hidden')) {
-      groups.push({ items: [el.btnResetGrade], cols: 1 });
-    }
-    return groups;
   }
   if (state.screen === 'quiz') {
     return [
@@ -429,6 +511,10 @@ document.addEventListener('keydown', (e) => {
       document.querySelector('.mode-btn[data-mode="word"]').click();
       return;
     }
+    if (key === 's') {
+      document.querySelector('.mode-btn[data-mode="sentence"]').click();
+      return;
+    }
     const btn = document.querySelector(`.grade-btn[data-grade="${e.key}"]`);
     if (btn) btn.click();
     return;
@@ -487,29 +573,9 @@ function showSummary() {
     state.missed.forEach((q) => {
       const row = document.createElement('div');
       row.className = 'missed-item';
-      row.innerHTML = `<span>${q.text}</span><span class="missed-item-meaning">${q.meaning}</span><span>${readingHTML(q.correctReading)}</span>`;
+      const display = state.mode === 'sentence' ? highlightTarget(q.sentence, q.target) : q.text;
+      row.innerHTML = `<span>${display}</span><span class="missed-item-meaning">${q.meaning}</span><span>${readingHTML(q.correctReading)}</span>`;
       el.summaryMissed.appendChild(row);
     });
   }
 }
-
-el.modeButtons.forEach((btn) => {
-  btn.addEventListener('click', () => {
-    if (btn.classList.contains('active')) return;
-    el.modeButtons.forEach((b) => b.classList.toggle('active', b === btn));
-    const mode = btn.dataset.mode;
-    el.gradeCounts.forEach((span) => {
-      span.textContent = mode === 'word' ? span.dataset.wordCount : span.dataset.kanjiCount;
-    });
-    el.gradeButtons.forEach((gbtn) => { gbtn.dataset.mode = mode; });
-  });
-});
-
-el.gradeButtons.forEach((btn) => {
-  btn.dataset.mode = 'kanji';
-  btn.addEventListener('click', () => startGrade(btn.dataset.mode, Number(btn.dataset.grade)));
-});
-
-el.btnQuit.addEventListener('click', () => showScreen('home'));
-el.btnHome.addEventListener('click', () => showScreen('home'));
-el.btnRetry.addEventListener('click', () => startRound());

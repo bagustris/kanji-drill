@@ -145,5 +145,6 @@
   { "word": "南風", "readings": ["みなみかぜ"], "meaning": "south wind" },
   { "word": "強風", "readings": ["きょうふう"], "meaning": "strong wind" },
   { "word": "弱肉強食", "readings": ["じゃくにくきょうしょく"], "meaning": "survival of the fittest" },
-  { "word": "図書室", "readings": ["としょしつ"], "meaning": "library room" }
+  { "word": "図書室", "readings": ["としょしつ"], "meaning": "library room" },
+  { "word": "学校", "readings": ["がっこう"], "meaning": "school" },
 ]

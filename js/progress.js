@@ -9,14 +9,15 @@ const ProgressManager = (() => {
   const STORAGE_KEY = 'kanji-drill-progress';
   const VERSION = 1;
   const HISTORY_LIMIT = 30;
-  const MODE_PREFIX = { kanji: 'grade', word: 'words' };
+  const MODE_PREFIX = { kanji: 'grade', word: 'words', sentence: 'sentences' };
 
   // Reuses the existing per-mode/grade key naming (kanjidrill:gradeN /
-  // kanjidrill:wordsN) as the namespace for a question's stable ID, so we
-  // don't invent a new identifier scheme — the kanji/word text itself
-  // (see itemText() in app.js) is still the identifying key.
+  // kanjidrill:wordsN / kanjidrill:sentencesN) as the namespace for a
+  // question's stable ID, so we don't invent a new identifier scheme — the
+  // kanji/word/sentence text itself (see itemText() in app.js) is still the
+  // identifying key.
   function gradeKey(mode, grade) {
-    return mode === 'word' ? `words${grade}` : `grade${grade}`;
+    return `${MODE_PREFIX[mode] || 'grade'}${grade}`;
   }
 
   function questionId(mode, grade, text) {
@@ -238,22 +239,17 @@ const ProgressManager = (() => {
     return Math.min(100, Math.round((answered / total) * 100));
   }
 
-  // Count of questions in a grade at each mastery level. Untouched questions
-  // (never answered, so not present in `questions` at all) are counted as
-  // 'new' when the grade's total question count is known.
-  function getMasteryBreakdown(mode, grade) {
-    const progress = load();
-    const prefix = `${gradeKey(mode, grade)}:`;
-    const counts = { new: 0, learning: 0, familiar: 0, mastered: 0 };
-    let tracked = 0;
-    Object.entries(progress.questions).forEach(([id, stat]) => {
-      if (!id.startsWith(prefix)) return;
-      counts[mastery(stat)] += 1;
-      tracked += 1;
-    });
-    const total = getTotalQuestions(mode, grade);
-    if (total !== null) counts.new += Math.max(0, total - tracked);
-    return counts;
+  // Grade-level status, analogous to mastery() above but computed from the
+  // grade's aggregate answered/correct counts rather than a single
+  // question's history. Powers the home-screen per-grade breakdown so a
+  // learner can see which grades are weak without opening each one.
+  function getGradeStatus(mode, grade) {
+    const stats = getGradeStats(mode, grade);
+    if (stats.answered === 0) return 'new';
+    if (stats.accuracy < 50) return 'learning';
+    const percent = getGradeProgressPercent(mode, grade);
+    if (stats.accuracy >= 90 && percent !== null && percent >= 90) return 'mastered';
+    return 'familiar';
   }
 
   // Most recent answers (oldest first), correct/incorrect, across every
@@ -281,6 +277,7 @@ const ProgressManager = (() => {
     getErrorRate,
     getMastery,
     getGradeStats,
+    getGradeStatus,
     getOverallStats,
     getOverallStatsByMode,
     getAccuracy,
@@ -288,7 +285,6 @@ const ProgressManager = (() => {
     setTotalQuestions,
     getTotalQuestions,
     getGradeProgressPercent,
-    getMasteryBreakdown,
     getRecentHistory,
   };
 })();

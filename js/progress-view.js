@@ -2,7 +2,6 @@
 // shown here comes from ProgressManager — no stats are computed in this file.
 
 const ProgressView = (() => {
-  const MASTERY_ORDER = ['new', 'learning', 'familiar', 'mastered'];
   const MASTERY_LABEL = { new: '新規', learning: '要復習', familiar: '定着中', mastered: 'マスター' };
   const MASTERY_TITLE = { new: 'New', learning: 'Learning', familiar: 'Familiar', mastered: 'Mastered' };
 
@@ -15,14 +14,7 @@ const ProgressView = (() => {
       accuracy: document.getElementById('progress-accuracy'),
       modeBreakdown: document.getElementById('progress-mode-breakdown'),
       history: document.getElementById('progress-history-bar'),
-      gradeSection: document.getElementById('grade-progress'),
-      gradeName: document.getElementById('grade-progress-name'),
-      gradeAnswered: document.getElementById('grade-progress-answered'),
-      gradeCorrect: document.getElementById('grade-progress-correct'),
-      gradeAccuracy: document.getElementById('grade-progress-accuracy'),
-      gradeBarFill: document.getElementById('grade-progress-bar-fill'),
-      gradePercent: document.getElementById('grade-progress-percent'),
-      gradeMastery: document.getElementById('grade-mastery-breakdown'),
+      gradeList: document.getElementById('grade-progress-list'),
     };
   }
 
@@ -33,7 +25,7 @@ const ProgressView = (() => {
     els.accuracy.textContent = `${stats.accuracy}%`;
 
     els.modeBreakdown.innerHTML = '';
-    [['kanji', '漢字', 'Kanji'], ['word', '言葉', 'Word']].forEach(([mode, label, title]) => {
+    [['kanji', '漢字', 'Kanji'], ['word', '言葉', 'Word'], ['sentence', '文章', 'Sentence']].forEach(([mode, label, title]) => {
       const modeStats = ProgressManager.getOverallStatsByMode(mode);
       const row = document.createElement('div');
       row.className = 'progress-mode-row';
@@ -59,43 +51,37 @@ const ProgressView = (() => {
     });
   }
 
-  // gradeName is the display label for the currently selected grade (e.g.
-  // "3年生"), resolved by the caller so this module doesn't need to know
-  // about grade-button markup.
-  function renderGrade(mode, grade, gradeName) {
-    if (!grade) {
-      els.gradeSection.classList.add('hidden');
-      return;
-    }
-    els.gradeSection.classList.remove('hidden');
+  // One row per grade (in the order given), instead of just the grade the
+  // learner last played, so weak grades are visible at a glance. `grades` is
+  // [{grade, name}, ...] with `name` resolved by the caller (e.g. "3年生")
+  // so this module doesn't need to know about grade-button markup.
+  function renderGradeList(mode, grades) {
+    els.gradeList.innerHTML = '';
+    grades.forEach(({ grade, name }) => {
+      const stats = ProgressManager.getGradeStats(mode, grade);
+      const percent = ProgressManager.getGradeProgressPercent(mode, grade);
+      const status = ProgressManager.getGradeStatus(mode, grade);
 
-    const stats = ProgressManager.getGradeStats(mode, grade);
-    els.gradeName.textContent = gradeName;
-    els.gradeAnswered.textContent = stats.answered;
-    els.gradeCorrect.textContent = stats.correct;
-    els.gradeAccuracy.textContent = `${stats.accuracy}%`;
-
-    const percent = ProgressManager.getGradeProgressPercent(mode, grade);
-    els.gradeBarFill.style.width = `${percent ?? 0}%`;
-    els.gradePercent.classList.toggle('hidden', percent === null);
-    if (percent !== null) els.gradePercent.textContent = `${percent}%`;
-
-    const breakdown = ProgressManager.getMasteryBreakdown(mode, grade);
-    els.gradeMastery.innerHTML = '';
-    MASTERY_ORDER.forEach((level) => {
-      const chip = document.createElement('span');
-      chip.className = 'mastery-chip';
-      chip.title = MASTERY_TITLE[level];
-      chip.innerHTML = `<span class="mastery-dot mastery-${level}"></span>${MASTERY_LABEL[level]} ${breakdown[level]}`;
-      els.gradeMastery.appendChild(chip);
+      const row = document.createElement('div');
+      row.className = 'grade-row';
+      row.dataset.status = status;
+      row.innerHTML = `
+        <span class="mastery-dot mastery-${status}" title="${MASTERY_TITLE[status]} / ${MASTERY_LABEL[status]}"></span>
+        <span class="grade-row-name">${name}</span>
+        <div class="progress-bar"><div class="progress-bar-fill" style="width: ${percent ?? 0}%"></div></div>
+        <span class="grade-row-percent">${percent === null ? '—' : `${percent}%`}</span>
+        <span class="grade-row-accuracy">${stats.answered > 0 ? `${stats.accuracy}%` : '—'}</span>
+        <button type="button" class="grade-row-reset" data-grade="${grade}" aria-label="Reset ${name} progress">&times;</button>
+      `;
+      els.gradeList.appendChild(row);
     });
   }
 
-  function renderAll(mode, grade, gradeName) {
+  function renderAll(mode, grades) {
     renderOverall();
     renderHistory();
-    renderGrade(mode, grade, gradeName);
+    renderGradeList(mode, grades);
   }
 
-  return { init, renderOverall, renderHistory, renderGrade, renderAll };
+  return { init, renderOverall, renderHistory, renderGradeList, renderAll };
 })();
