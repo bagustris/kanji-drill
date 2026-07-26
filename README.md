@@ -24,9 +24,10 @@ The main concept is "how kanji is read in particular words" and "how to associat
   ones you're actually likely to confuse the answer with.
 - **Sentence reading quiz** — the same multiple-choice format, but the
   question is a short original example sentence with one word or inflected
-  kanji underlined, so you practice the reading in context instead of in
-  isolation. Currently seeded for grade 1 only (80 sentences, one per
-  grade-1 kanji) as a pilot — see "Sentence data" below.
+  kanji highlighted (bold, colored), so you practice the reading in context
+  instead of in isolation. Currently seeded for grades 1-2 (one sentence per
+  kanji, 80 + 160), organized into the same kind of thematic units a real
+  kokugo textbook uses — see "Sentence data" below.
 - **Adaptive review** — kanji you get wrong (or haven't seen yet) are weighted
   to show up more often in later rounds; progress is saved per kanji in
   `localStorage`, so it persists across sessions on the same device.
@@ -74,7 +75,7 @@ js/progress-view.js Renders the Progress Dashboard from ProgressManager data
 js/learning/         Adaptive Learning Engine (question selection, distractor generation)
 data/grade1.json … grade9.json      Kanji + reading data, one file per grade
 data/words1.json … words9.json     Word + reading data, one file per grade
-data/sentences1.json                Sentence + reading data (grade 1 only so far)
+data/sentences1.json, sentences2.json  Sentence + reading data (grades 1-2 so far)
 ```
 
 Each entry in a `data/gradeN.json` file looks like:
@@ -100,24 +101,53 @@ reading and a counting word (一 → いち / ひとつ) from day one.
 Each entry in `data/sentencesN.json` looks like:
 
 ```json
-{ "sentence": "学校へいく。", "target": "学校", "readings": ["がっこう"], "meaning": "school" }
+{ "sentence": "学校へいく。", "target": "学校", "readings": ["がっこう"], "meaning": "school", "translation": "I go to school." }
 ```
 
 `target` is the exact substring of `sentence` being quizzed — either a bare
 kanji, a kanji plus its okurigana (e.g. `"立てる"` with reading `"た.てる"`), or
-a two-kanji word — and gets underlined in the quiz card. Every other word in
-the sentence is plain hiragana (or another already-covered kanji used as
-natural context), keeping each sentence readable at that grade level.
+a two-kanji word — and gets colored (not underlined) in the quiz card. Every
+other word in the sentence is plain hiragana (or another already-covered
+kanji used as natural context), keeping each sentence readable at that grade
+level.
+
+Two fields carry different kinds of "meaning" on purpose:
+
+- `meaning` is the target's own word/kanji gloss (e.g. `"school"`) — same as
+  in `data/gradeN.json`/`data/wordsN.json` — and is what the distractor
+  engine's meaning-similarity scoring uses under the hood, so it stays
+  word-level instead of being diluted by English function words shared
+  across unrelated sentence translations.
+- `translation` is an English translation of the whole `sentence`, and is
+  what's actually shown on the quiz card (the "Show meaning" setting
+  displays this instead of `meaning` when in Sentence mode).
+
+For a `target` with okurigana (a dot-notation reading like `"た.てる"`),
+Sentence mode's answer choices only show the part before the dot (`"た"`) —
+the trailing okurigana kana is already written out in the sentence itself,
+so only the kanji's own reading is actually being quizzed, the same way
+furigana only annotates the kanji portion of an inflected word.
+
+Once a sentence question is answered, the reading is revealed as **furigana
+in place** (ruby text over the kanji, okurigana left plain beside it), and a
+wrong answer holds that reveal on screen noticeably longer than a correct
+one. Both mirror how くりかえし漢字ドリル and こくご work: readings are printed
+above the kanji inside a real sentence, and the kanji you miss are the ones
+you spend more time on.
 
 > [!NOTE]
 > These are original example sentences written for this project, not
 > excerpts from any commercial textbook (e.g. くりかえし漢字ドリル or こくご) —
 > reproducing copyrighted textbook text wasn't an option, so each sentence
 > was written from scratch to exercise the same kanji/reading in a similarly
-> simple, everyday context. Only grade 1 is populated right now (80
-> sentences, one per grade-1 kanji); grades 2-9 show "準備中" (not ready) and
-> their grade buttons are disabled while Sentence mode is selected, until
-> more sentence data is added.
+> simple, everyday context. The ordering of entries within each
+> `sentencesN.json` is grouped into thematic units (new term & school life,
+> family & body, spring/weather, then a broader sweep of nature/town/number
+> kanji) rather than dictionary order — inspired by how a real kokugo
+> textbook sequences vocabulary by theme and season, without copying its
+> actual text. Grades 1-2 are populated so far (80 + 160 sentences); grades
+> 3-9 show "準備中" (not ready) and their grade buttons are disabled while
+> Sentence mode is selected, until more sentence data is added.
 
 ## Progress tracking
 

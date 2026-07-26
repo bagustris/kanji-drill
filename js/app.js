@@ -270,12 +270,26 @@ function itemText(entry) {
 
 // Wraps the target span (a word or okurigana-inflected kanji, e.g. "立てる")
 // in a highlight so sentence-mode questions show which part is being quizzed
-// — everything else in the sentence is plain context.
-function highlightTarget(sentence, target) {
+// — everything else in the sentence is plain context. `innerHTML` replaces
+// the target text itself (used to swap in furigana once answered).
+function highlightTarget(sentence, target, innerHTML) {
   const start = sentence.indexOf(target);
   if (start === -1) return sentence;
   const end = start + target.length;
-  return `${sentence.slice(0, start)}<span class="quiz-sentence-target">${target}</span>${sentence.slice(end)}`;
+  return `${sentence.slice(0, start)}<span class="quiz-sentence-target">${innerHTML ?? target}</span>${sentence.slice(end)}`;
+}
+
+// Ruby annotation over just the kanji part of a target, matching how both
+// こくご textbooks and くりかえし漢字ドリル print furigana: the reading sits
+// above the kanji only, while okurigana stays plain kana beside it
+// (立てる -> ruby "た" over 立, then てる). Shown after answering so the
+// learner sees the reading attached to the kanji in its sentence, which is
+// the association the drill books are built around.
+function furiganaHTML(target, reading) {
+  const okurigana = (target.match(/[ぁ-ゟ]+$/) || [''])[0];
+  const kanjiPart = okurigana ? target.slice(0, -okurigana.length) : target;
+  if (!kanjiPart) return target;
+  return `<ruby>${kanjiPart}<rt>${reading}</rt></ruby>${okurigana}`;
 }
 
 // A reading like "おぼ.える" marks where kanji-derived reading ends and
@@ -286,6 +300,16 @@ function readingHTML(reading) {
   const core = reading.slice(0, dot);
   const okurigana = reading.slice(dot + 1);
   return `${core}<span class="okurigana">${okurigana}</span>`;
+}
+
+// The part of a reading before the okurigana dot, e.g. "まな.ぶ" -> "まな".
+// In sentence mode the trailing okurigana is already written out as plain
+// kana in the sentence itself (it's not being quizzed, only the kanji's
+// reading is), so answer choices only need this core part — unlike
+// kanji/word mode, where there's no surrounding sentence to show it.
+function coreReading(reading) {
+  const dot = reading.indexOf('.');
+  return dot === -1 ? reading : reading.slice(0, dot);
 }
 
 // Adaptive replacement for the old random weightedSample(): builds a pool of
@@ -325,7 +349,12 @@ function buildQuestion(target, itemList, mode, grade) {
     text: question.text,
     sentence: target.sentence,
     target: target.target,
-    meaning: target.meaning,
+    // Sentence mode shows a translation of the whole sentence instead of
+    // the target's own word/kanji gloss (still used above for `question`,
+    // which feeds the distractor engine's meaning-similarity scoring —
+    // that stays word-level so it isn't diluted by shared English function
+    // words across unrelated sentence translations).
+    meaning: mode === 'sentence' ? (target.translation || target.meaning) : target.meaning,
     correctReading,
     options,
   };
@@ -346,6 +375,9 @@ async function startGrade(mode, grade) {
     state.mode = mode;
     state.grade = grade;
     state.itemList = await loadData(mode, grade);
+    if (mode === 'sentence') {
+      state.itemList = state.itemList.map((entry) => ({ ...entry, readings: entry.readings.map(coreReading) }));
+    }
     renderDashboard();
     startRound();
   } catch (err) {
@@ -402,13 +434,22 @@ function renderQuestion() {
 // neighboring group in the same column. Buttons are real <button>
 // elements, so once focused, Enter/Space activate them via native
 // browser behavior — no extra handling needed here.
+// Disabled buttons are dropped: focus() is a no-op on them, so leaving them
+// in a group would strand arrow-key navigation on a dead cell (Sentence mode
+// disables every grade that has no sentence data yet).
+function enabledItems(items) {
+  return [...items].filter((item) => !item.disabled);
+}
+
 function getNavGroups() {
   if (state.screen === 'home') {
     const grids = document.querySelectorAll('.grade-grid');
     return [
-      { items: [...el.modeButtons], cols: 2 },
-      { items: [...grids[0].children], cols: 2 },
-      { items: [...grids[1].children], cols: 2 },
+      // cols tracks the on-screen layout: the mode toggle is a single flex
+      // row, so its column count is however many mode buttons there are.
+      { items: enabledItems(el.modeButtons), cols: el.modeButtons.length },
+      { items: enabledItems(grids[0].children), cols: 2 },
+      { items: enabledItems(grids[1].children), cols: 2 },
     ];
   }
   if (state.screen === 'quiz') {
@@ -549,17 +590,24 @@ function handleAnswer(selected, btnEl) {
     else if (btn === btnEl) btn.classList.add('incorrect');
   });
 
+  if (state.mode === 'sentence') {
+    el.quizKanji.innerHTML = highlightTarget(q.sentence, q.target, furiganaHTML(q.target, q.correctReading));
+  }
+
   ProgressManager.recordAnswer(state.mode, state.grade, q.text, isCorrect, selected);
   if (isCorrect) state.score++;
   else state.missed.push(q);
 
   renderDashboard();
 
+  // A wrong answer gets a longer pause than a correct one: that's the moment
+  // the revealed reading actually needs to be read, and it mirrors how the
+  // drill books give extra repetitions to the kanji you missed.
   setTimeout(() => {
     state.index++;
     if (state.index < state.questions.length) renderQuestion();
     else showSummary();
-  }, 700);
+  }, isCorrect ? 700 : 1800);
 }
 
 function showSummary() {

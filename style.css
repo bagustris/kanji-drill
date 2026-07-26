@@ -701,9 +701,16 @@ html, body {
 
 .quiz-sentence-target {
   color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-  text-decoration-thickness: 2px;
+  font-weight: bold;
+}
+
+/* Furigana revealed over the target once the question is answered. The
+   sentence line already reserves space above it (is-sentence line-height),
+   so adding ruby doesn't shift the rest of the card. */
+.quiz-kanji rt {
+  font-size: 0.4em;
+  font-weight: normal;
+  color: var(--accent);
 }
 
 .quiz-meaning {
