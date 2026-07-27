@@ -32,15 +32,19 @@ const DistractorConfig = {
 
   selection: {
     distractorCount: 3, // number of wrong options to generate (OPTIONS_COUNT - 1 in app.js)
-    // Set well above the largest real candidate pool (grade 9 tops out
-    // around 560 reading candidates) so this never truncates today's
-    // data — it's a safety valve against a future, much larger dataset
-    // (e.g. corpus-occurrence pools), not a routine filter. A lower value
-    // here previously caused a real bug: candidates are built in
+    // Set well above the largest real candidate pool so this never truncates
+    // today's data — it's a safety valve against a future, much larger
+    // dataset (e.g. corpus-occurrence pools), not a routine filter. A lower
+    // value here previously caused a real bug: candidates are built in
     // itemList's fixed array order, so a low cap always scored roughly
     // the same early slice of the file regardless of the target,
     // collapsing distractor variety (grade 7 offered only ~48 distinct
     // readings across all 370 questions).
-    maxCandidates: 1000,
+    //
+    // Raised from 1000 when cumulative mode landed: a 全部 round over grades
+    // 1-9 pools 2,136 kanji (~3,000 readings), which the old cap truncated —
+    // reproducing exactly that collapse (30 questions offered only 24
+    // distinct distractors instead of 30).
+    maxCandidates: 5000,
   },
 };

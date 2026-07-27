@@ -2,13 +2,26 @@
 // survives reloads, browser restarts, and GitHub Pages redeploys (data lives
 // in the browser, not the deployment).
 // Shape: { version, lastUpdated, grades: { [gradeKey]: {answered, correct} },
-//          questions: { [questionId]: {seen, correct, wrong, lastSeen, lastCorrect} },
+//          questions: { [questionId]: {seen, correct, wrong, lastSeen, lastCorrect,
+//                                      confusions, interval, dueAt, latencies} },
 //          history: [isCorrect, ...] } (most recent last, capped length)
 
 const ProgressManager = (() => {
   const STORAGE_KEY = 'kanji-drill-progress';
   const VERSION = 1;
   const HISTORY_LIMIT = 30;
+  const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
+  // Answer-latency samples kept per question, newest last. A short window
+  // rather than a running average, so improving fluency shows up quickly
+  // instead of being anchored by how slow you were a month ago.
+  const LATENCY_SAMPLE_LIMIT = 5;
+
+  // Latencies above this are discarded rather than clamped: past ~30s the
+  // learner almost certainly walked away or switched tabs, and that isn't a
+  // measurement of anything. Clamping would silently record a fake 30s
+  // "answer"; dropping keeps the median honest.
+  const MAX_LATENCY_MS = 30000;
   const MODE_PREFIX = { kanji: 'grade', word: 'words', sentence: 'sentences' };
 
   // Reuses the existing per-mode/grade key naming (kanjidrill:gradeN /
@@ -28,18 +41,59 @@ const ProgressManager = (() => {
     return { version: VERSION, lastUpdated: null, grades: {}, questions: {}, history: [] };
   }
 
+  // Defensive shaping: older stored blobs may predate any of these keys, so
+  // every one is defaulted rather than assumed. Keep this pattern when
+  // extending the shape — there's no migration step, old data must just load.
+  function normalize(parsed) {
+    return {
+      version: parsed.version || VERSION,
+      lastUpdated: parsed.lastUpdated || null,
+      grades: parsed.grades || {},
+      questions: parsed.questions || {},
+      history: parsed.history || [],
+    };
+  }
+
+  // Always parses fresh and returns a mutable object safe to modify — used by
+  // the write paths (recordAnswer/reset) and exported for the same purpose.
+  // Read-only callers should use readSnapshot() instead.
   function load() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return emptyProgress();
-      const parsed = JSON.parse(raw);
-      return {
-        version: parsed.version || VERSION,
-        lastUpdated: parsed.lastUpdated || null,
-        grades: parsed.grades || {},
-        questions: parsed.questions || {},
-        history: parsed.history || [],
-      };
+      return normalize(JSON.parse(raw));
+    } catch {
+      return emptyProgress();
+    }
+  }
+
+  let cachedRaw = null;
+  let cachedSnapshot = null;
+
+  // Read-only view of stored progress, memoized against the raw string it was
+  // parsed from.
+  //
+  // Why this exists: every getter below used to re-parse the entire blob, and
+  // QuestionSelector asks for stats once per candidate per question. That's
+  // fine for a 200-kanji grade, but a cumulative round over grades 1-9 (2,136
+  // candidates × 10 questions against a ~250KB blob) took ~34 seconds — the
+  // parsing, not the scoring, was the whole cost.
+  //
+  // Invalidation is by string comparison rather than a manual dirty flag, so a
+  // write from this tab *or another one* is picked up automatically; getItem
+  // is cheap next to JSON.parse.
+  //
+  // The returned object is SHARED and must never be mutated. Every getter
+  // below hands back a copy (`{...stat}`, `.slice()`, or a derived number).
+  function readSnapshot() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw === null) return emptyProgress();
+      if (raw !== cachedRaw) {
+        cachedSnapshot = normalize(JSON.parse(raw));
+        cachedRaw = raw;
+      }
+      return cachedSnapshot;
     } catch {
       return emptyProgress();
     }
@@ -59,11 +113,20 @@ const ProgressManager = (() => {
   // `confusions: { [reading]: timesPicked }` so DistractorGenerator can
   // prioritize resurfacing the specific wrong answers a learner keeps
   // falling for — see js/learning/distractors/DistractorGenerator.js.
-  function recordAnswer(mode, grade, text, isCorrect, selectedReading) {
+  // `latencyMs` is how long the learner took to answer (null when not
+  // measured). It feeds two things: the stored `latencies` window, and
+  // ReviewScheduler's decision about how much to grow the interval — a
+  // correct-but-slow answer is treated as weaker evidence than a fluent one.
+  function recordAnswer(mode, grade, text, isCorrect, selectedReading, latencyMs) {
     const progress = load();
 
     const qId = questionId(mode, grade, text);
     const qStat = progress.questions[qId] || { seen: 0, correct: 0, wrong: 0, lastSeen: null, lastCorrect: null, confusions: {} };
+
+    // Read before the counters below are mutated: the scheduler needs the
+    // interval as it stood *going into* this answer.
+    const previousInterval = typeof qStat.interval === 'number' ? qStat.interval : 0;
+
     qStat.seen += 1;
     if (isCorrect) {
       qStat.correct += 1;
@@ -76,6 +139,30 @@ const ProgressManager = (() => {
     }
     qStat.lastSeen = Date.now();
     qStat.lastCorrect = isCorrect;
+
+    const validLatency = typeof latencyMs === 'number' && latencyMs > 0 && latencyMs <= MAX_LATENCY_MS
+      ? Math.round(latencyMs)
+      : null;
+    if (validLatency !== null) {
+      qStat.latencies = Array.isArray(qStat.latencies) ? qStat.latencies : [];
+      qStat.latencies.push(validLatency);
+      while (qStat.latencies.length > LATENCY_SAMPLE_LIMIT) qStat.latencies.shift();
+    }
+
+    // Guarded because the standalone test harnesses load progress.js without
+    // the learning modules; without a scheduler the app still works, it just
+    // stops spacing reviews (every answered question stays due immediately,
+    // which is the pre-scheduling behavior).
+    if (typeof ReviewScheduler !== 'undefined') {
+      const interval = ReviewScheduler.nextIntervalDays(
+        { interval: previousInterval },
+        isCorrect,
+        validLatency
+      );
+      qStat.interval = interval;
+      qStat.dueAt = qStat.lastSeen + interval * MS_PER_DAY;
+    }
+
     progress.questions[qId] = qStat;
 
     const gKey = gradeKey(mode, grade);
@@ -119,7 +206,14 @@ const ProgressManager = (() => {
     return 'familiar';
   }
 
-  const DEFAULT_QUESTION_STAT = { seen: 0, correct: 0, wrong: 0, lastSeen: null, lastCorrect: null };
+  // `interval` is in days and `dueAt` is an epoch-ms timestamp, both written
+  // by ReviewScheduler via recordAnswer. Defaults leave a never-seen question
+  // un-scheduled (dueAt null), which QuestionSelector reads as "no due date
+  // to measure against" rather than "overdue".
+  const DEFAULT_QUESTION_STAT = {
+    seen: 0, correct: 0, wrong: 0, lastSeen: null, lastCorrect: null,
+    interval: 0, dueAt: null, latencies: [],
+  };
 
   // Stable per-question identifier, exposed so callers outside this module
   // (e.g. QuestionSelector) can look up stats without duplicating the
@@ -128,12 +222,22 @@ const ProgressManager = (() => {
     return questionId(mode, grade, text);
   }
 
-  // Raw per-question stats (seen/correct/wrong/lastSeen/lastCorrect), never
-  // null — defaults to a zeroed, never-seen record. Returned object is a
-  // fresh copy so callers can't mutate stored progress by accident.
+  // Raw per-question stats, never null — defaults to a zeroed, never-seen
+  // record. The returned object is a fresh copy so callers can't mutate
+  // stored progress by accident.
+  //
+  // The nested `latencies`/`confusions` are copied explicitly, not left to the
+  // spread: a spread is shallow, and since readSnapshot() hands back a shared
+  // memoized object, aliasing them would let a caller silently corrupt the
+  // cache (and, for `latencies`, the single array literal on
+  // DEFAULT_QUESTION_STAT shared by every never-seen question).
   function getQuestionStats(id) {
-    const progress = load();
-    return { ...DEFAULT_QUESTION_STAT, ...progress.questions[id] };
+    const progress = readSnapshot();
+    const stored = progress.questions[id];
+    const stat = { ...DEFAULT_QUESTION_STAT, ...stored };
+    stat.latencies = Array.isArray(stat.latencies) ? [...stat.latencies] : [];
+    stat.confusions = { ...(stat.confusions || {}) };
+    return stat;
   }
 
   function isSeen(id) {
@@ -160,7 +264,7 @@ const ProgressManager = (() => {
   // been answered incorrectly (or never seen at all). Fresh object each
   // call — safe for callers to read without risk of mutating stored progress.
   function getConfusions(id) {
-    const progress = load();
+    const progress = readSnapshot();
     return { ...(progress.questions[id]?.confusions || {}) };
   }
 
@@ -190,7 +294,7 @@ const ProgressManager = (() => {
   }
 
   function getGradeStats(mode, grade) {
-    const progress = load();
+    const progress = readSnapshot();
     const stats = progress.grades[gradeKey(mode, grade)] || { answered: 0, correct: 0 };
     return { ...stats, accuracy: getAccuracy(stats) };
   }
@@ -203,14 +307,14 @@ const ProgressManager = (() => {
 
   // Aggregate stats across every grade/mode, for the home-screen summary.
   function getOverallStats() {
-    const progress = load();
+    const progress = readSnapshot();
     const totals = sumGrades(progress);
     return { ...totals, accuracy: getAccuracy(totals) };
   }
 
   // Same as getOverallStats(), scoped to a single quiz mode (kanji or word).
   function getOverallStatsByMode(mode) {
-    const progress = load();
+    const progress = readSnapshot();
     const totals = sumGrades(progress, MODE_PREFIX[mode]);
     return { ...totals, accuracy: getAccuracy(totals) };
   }
@@ -255,7 +359,7 @@ const ProgressManager = (() => {
   // Most recent answers (oldest first), correct/incorrect, across every
   // mode/grade — used for the "recent performance" sparkline.
   function getRecentHistory(limit = 20) {
-    const progress = load();
+    const progress = readSnapshot();
     return progress.history.slice(-limit);
   }
 

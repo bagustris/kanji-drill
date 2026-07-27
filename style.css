@@ -661,6 +661,54 @@ html, body {
   box-shadow: none;
 }
 
+/* Cumulative review is one full-width button rather than a 2-up cell. */
+.grade-grid-single {
+  grid-template-columns: 1fr;
+}
+
+/* Deliberately not .grade-btn: that class is queried to enumerate the real
+   grades (progress rows, totals, display names), and review isn't one. It
+   borrows the same visual treatment, tinted toward the accent so it reads as
+   a different kind of action. */
+.review-btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 1.4rem 0.5rem;
+  font-size: 1.3rem;
+  font-weight: bold;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.review-btn span {
+  font-size: 0.75rem;
+  font-weight: normal;
+  color: #8a8378;
+}
+
+.review-btn:hover:not(:disabled), .review-btn:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.review-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.review-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  border-color: var(--border);
+  color: var(--fg);
+}
+
 /* --- Quiz screen --- */
 
 .quiz-topbar {
@@ -851,6 +899,22 @@ html, body {
   font-size: 0.85rem;
   font-style: italic;
   text-align: center;
+}
+
+.summary-correct {
+  text-align: left;
+  margin: 1rem 0;
+}
+
+.summary-correct-details summary {
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #8a8378;
+  padding: 0.3rem 0;
+}
+
+.summary-correct-details[open] summary {
+  margin-bottom: 0.3rem;
 }
 
 .summary-actions {

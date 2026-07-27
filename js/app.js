@@ -2,12 +2,20 @@ const OPTIONS_COUNT = 4;
 
 const state = {
   mode: 'kanji',
+  // The single grade being drilled, or null in cumulative review mode (where
+  // the pool spans several grades and each *item* carries its own grade —
+  // see sourceGrade in loadData/pickQuestions).
   grade: null,
+  isReview: false,
   itemList: [],
   questions: [],
   index: 0,
   score: 0,
   missed: [],
+  correctItems: [],
+  // performance.now() stamp taken when the current question finished
+  // rendering; nulled once consumed so a re-render can't double-count.
+  questionShownAt: null,
   screen: 'home',
 };
 
@@ -28,8 +36,11 @@ const el = {
   quizMeaning: document.getElementById('quiz-meaning'),
   quizInstruction: document.getElementById('quiz-instruction'),
   quizOptions: document.getElementById('quiz-options'),
+  btnReview: document.getElementById('btn-review'),
+  reviewCount: document.getElementById('review-count'),
   summaryScore: document.getElementById('summary-score'),
   summaryMissed: document.getElementById('summary-missed'),
+  summaryCorrect: document.getElementById('summary-correct'),
   fileWarning: document.getElementById('file-protocol-warning'),
   loadError: document.getElementById('load-error-banner'),
   gradeProgressList: document.getElementById('grade-progress-list'),
@@ -65,9 +76,7 @@ el.modeButtons.forEach((btn) => {
     });
     el.gradeButtons.forEach((gbtn) => {
       gbtn.dataset.mode = mode;
-      const counts = gbtn.querySelector('.grade-count');
-      const available = mode !== 'sentence' || parseInt(counts.dataset.sentenceCount, 10) > 0;
-      gbtn.disabled = !available;
+      gbtn.disabled = !isGradeAvailable(gbtn, mode);
     });
     renderDashboard();
   });
@@ -77,6 +86,8 @@ el.gradeButtons.forEach((btn) => {
   btn.dataset.mode = 'kanji';
   btn.addEventListener('click', () => startGrade(btn.dataset.mode, Number(btn.dataset.grade)));
 });
+
+el.btnReview.addEventListener('click', () => startReview(getSelectedMode()));
 
 el.btnQuit.addEventListener('click', () => showScreen('home'));
 el.btnHome.addEventListener('click', () => showScreen('home'));
@@ -121,6 +132,10 @@ function renderDashboard() {
     return { grade, name: gradeDisplayName(grade) };
   });
   ProgressView.renderAll(mode, grades);
+  // Kept in step with the dashboard rather than called separately: the two
+  // read the same progress data, and finishing a grade for the first time is
+  // exactly what flips review from unavailable to available.
+  renderReviewButton();
 }
 
 // Settings dialog: a plain modal (backdrop click / Escape / close button
@@ -325,8 +340,13 @@ function coreReading(reading) {
 // pick from the remaining pool so a single round never repeats a question
 // (QuestionSelector's own recent-history queue additionally keeps picks
 // diverse across rounds/retries within the same page session).
-function pickQuestions(itemList, mode, grade, count) {
-  const remaining = itemList.map((entry) => ({ id: ProgressManager.getQuestionId(mode, grade, itemText(entry)), entry }));
+// `entry.sourceGrade` rather than a single round-wide grade: in cumulative
+// review the pool spans several grades, and a question's progress must stay
+// under the grade it actually belongs to (grade2:山 whether it was drilled
+// from the grade-2 button or a review round). Keying it any other way would
+// fork one kanji's history into two records.
+function pickQuestions(itemList, mode, count) {
+  const remaining = itemList.map((entry) => ({ id: ProgressManager.getQuestionId(mode, entry.sourceGrade, itemText(entry)), entry }));
   const picked = [];
   while (picked.length < count && remaining.length > 0) {
     const choice = QuestionSelector.select(remaining);
@@ -340,20 +360,25 @@ function pickQuestions(itemList, mode, grade, count) {
 // Distractor selection is delegated to the Adaptive Learning Engine's
 // DistractorGenerator (js/learning/distractors/) instead of a random pick —
 // see README "Adaptive Distractor Generation" for how it ranks candidates.
-function buildQuestion(target, itemList, mode, grade) {
+function buildQuestion(target, itemList, mode) {
   const correctReading = shuffle(target.readings)[0];
   const question = {
-    id: ProgressManager.getQuestionId(mode, grade, itemText(target)),
+    id: ProgressManager.getQuestionId(mode, target.sourceGrade, itemText(target)),
     text: itemText(target),
     reading: correctReading,
     meaning: target.meaning,
-    grade: target.grade,
+    // Feeds SimilarityFeatures' grade-proximity term. In a single-grade round
+    // every candidate shares one grade, so it contributes a constant and
+    // changes no ranking; in review it usefully prefers same-grade wrong
+    // answers over ones drawn from a distant grade.
+    grade: target.sourceGrade,
     frequency: target.frequency,
   };
   const distractors = DistractorGenerator.generate(question, itemList);
   const options = shuffle([correctReading, ...distractors]);
   return {
     text: question.text,
+    sourceGrade: target.sourceGrade,
     sentence: target.sentence,
     target: target.target,
     // Sentence mode shows a translation of the whole sentence instead of
@@ -369,22 +394,72 @@ function buildQuestion(target, itemList, mode, grade) {
 
 const MODE_FILE_PREFIX = { kanji: 'grade', word: 'words', sentence: 'sentences' };
 
+// Every entry is tagged with the grade whose file it came from, in both
+// single-grade and review rounds, so nothing downstream needs to branch on
+// which kind of round it is — see pickQuestions().
 async function loadData(mode, grade) {
   const file = `${MODE_FILE_PREFIX[mode]}${grade}`;
   const res = await fetch(`data/${file}.json`);
   if (!res.ok) throw new Error(`Failed to load ${file} data (HTTP ${res.status})`);
-  return res.json();
+  const entries = await res.json();
+  return entries.map((entry) => ({
+    ...entry,
+    sourceGrade: grade,
+    // Sentence answers only quiz the kanji's own reading; the okurigana is
+    // already written out in the sentence, so options drop it.
+    readings: mode === 'sentence' ? entry.readings.map(coreReading) : entry.readings,
+  }));
+}
+
+// Grades that both have data for this mode and have actually been drilled.
+// This is what makes review *cumulative* rather than a firehose: it pools
+// only what you've already started, so it never introduces new material —
+// it just stops earlier grades from decaying while you work on a later one.
+function studiedGrades(mode) {
+  return [...el.gradeButtons]
+    .map((btn) => ({ grade: Number(btn.dataset.grade), disabled: !isGradeAvailable(btn, mode) }))
+    .filter(({ grade, disabled }) => !disabled && ProgressManager.getGradeStats(mode, grade).answered > 0)
+    .map(({ grade }) => grade);
+}
+
+function isGradeAvailable(btn, mode) {
+  const counts = btn.querySelector('.grade-count');
+  return mode !== 'sentence' || parseInt(counts.dataset.sentenceCount, 10) > 0;
+}
+
+// Enables/labels the review button for the currently selected mode. Called on
+// mode switch and after every round, since finishing a grade for the first
+// time is exactly what makes review become available.
+function renderReviewButton() {
+  const mode = getSelectedMode();
+  const grades = studiedGrades(mode);
+  el.btnReview.disabled = grades.length === 0;
+  el.reviewCount.textContent = grades.length === 0
+    ? '学年を1つ終えると使えます'
+    : `${grades.map(gradeDisplayName).join('・')}`;
 }
 
 async function startGrade(mode, grade) {
+  await startSession(mode, { grade, load: () => loadData(mode, grade) });
+}
+
+async function startReview(mode) {
+  const grades = studiedGrades(mode);
+  if (grades.length === 0) return;
+  await startSession(mode, {
+    grade: null,
+    isReview: true,
+    load: async () => (await Promise.all(grades.map((g) => loadData(mode, g)))).flat(),
+  });
+}
+
+async function startSession(mode, { grade, isReview = false, load }) {
   el.loadError.classList.add('hidden');
   try {
     state.mode = mode;
     state.grade = grade;
-    state.itemList = await loadData(mode, grade);
-    if (mode === 'sentence') {
-      state.itemList = state.itemList.map((entry) => ({ ...entry, readings: entry.readings.map(coreReading) }));
-    }
+    state.isReview = isReview;
+    state.itemList = await load();
     renderDashboard();
     startRound();
   } catch (err) {
@@ -400,11 +475,12 @@ function startRound() {
   const configuredSize = SettingsManager.get('roundSize');
   const roundSize = configuredSize === 'all' ? state.itemList.length : configuredSize;
   const count = Math.min(roundSize, state.itemList.length);
-  const picks = pickQuestions(state.itemList, state.mode, state.grade, count);
-  state.questions = picks.map((entry) => buildQuestion(entry, state.itemList, state.mode, state.grade));
+  const picks = pickQuestions(state.itemList, state.mode, count);
+  state.questions = picks.map((entry) => buildQuestion(entry, state.itemList, state.mode));
   state.index = 0;
   state.score = 0;
   state.missed = [];
+  state.correctItems = [];
   showScreen('quiz');
   renderQuestion();
 }
@@ -416,7 +492,10 @@ const DEFAULT_INSTRUCTION = ['正しい読み方は？', 'Choose the correct rea
 
 function renderQuestion() {
   const q = state.questions[state.index];
-  el.quizProgress.textContent = `${state.index + 1} / ${state.questions.length}`;
+  // Flagged in review mode: the pool spans grades there, so without this a
+  // grade-5 kanji surfacing mid-round just looks like a bug.
+  const counter = `${state.index + 1} / ${state.questions.length}`;
+  el.quizProgress.textContent = state.isReview ? `ふくしゅう ${counter}` : counter;
   el.quizKanji.classList.toggle('is-word', state.mode === 'word');
   el.quizKanji.classList.toggle('is-sentence', state.mode === 'sentence');
   el.quizKanji.innerHTML = state.mode === 'sentence' ? highlightTarget(q.sentence, q.target) : q.text;
@@ -432,6 +511,10 @@ function renderQuestion() {
     btn.addEventListener('click', () => handleAnswer(reading, btn));
     el.quizOptions.appendChild(btn);
   });
+
+  // Stamped last, once the options are actually on screen, so the measured
+  // latency is time-to-answer rather than time-to-answer plus render.
+  state.questionShownAt = performance.now();
 }
 
 // Arrow-key navigation: each screen exposes an ordered list of button
@@ -457,7 +540,11 @@ function getNavGroups() {
       { items: enabledItems(el.modeButtons), cols: el.modeButtons.length },
       { items: enabledItems(grids[0].children), cols: 2 },
       { items: enabledItems(grids[1].children), cols: 2 },
-    ];
+      // The review row is a single full-width button, and it's disabled until
+      // a grade has been studied — so this group is empty on a fresh install
+      // and gets dropped below rather than stranding focus on a dead cell.
+      { items: enabledItems(grids[2].children), cols: 1 },
+    ].filter((group) => group.items.length > 0);
   }
   if (state.screen === 'quiz') {
     return [
@@ -563,6 +650,10 @@ document.addEventListener('keydown', (e) => {
       document.querySelector('.mode-btn[data-mode="sentence"]').click();
       return;
     }
+    if (key === 'r') {
+      if (!el.btnReview.disabled) el.btnReview.click();
+      return;
+    }
     const btn = document.querySelector(`.grade-btn[data-grade="${e.key}"]`);
     if (btn) btn.click();
     return;
@@ -591,6 +682,9 @@ function handleAnswer(selected, btnEl) {
   const q = state.questions[state.index];
   const isCorrect = selected === q.correctReading;
 
+  const latencyMs = state.questionShownAt === null ? null : performance.now() - state.questionShownAt;
+  state.questionShownAt = null;
+
   [...el.quizOptions.children].forEach((btn) => {
     btn.disabled = true;
     if (btn.dataset.reading === q.correctReading) btn.classList.add('correct');
@@ -602,8 +696,10 @@ function handleAnswer(selected, btnEl) {
     el.quizKanji.innerHTML = highlightTarget(q.sentence, q.target, furiganaHTML(kanjiPart, q.correctReading));
   }
 
-  ProgressManager.recordAnswer(state.mode, state.grade, q.text, isCorrect, selected);
-  if (isCorrect) state.score++;
+  // q.sourceGrade, not state.grade — in review mode state.grade is null and
+  // each question belongs to its own grade's progress record.
+  ProgressManager.recordAnswer(state.mode, q.sourceGrade, q.text, isCorrect, selected, latencyMs);
+  if (isCorrect) { state.score++; state.correctItems.push(q); }
   else state.missed.push(q);
 
   renderDashboard();
@@ -633,5 +729,22 @@ function showSummary() {
       row.innerHTML = `<span>${display}</span><span class="missed-item-meaning">${q.meaning}</span><span>${readingHTML(q.correctReading)}</span>`;
       el.summaryMissed.appendChild(row);
     });
+  }
+
+  el.summaryCorrect.innerHTML = '';
+  if (state.correctItems.length > 0) {
+    const details = document.createElement('details');
+    details.className = 'summary-correct-details';
+    const summary = document.createElement('summary');
+    summary.textContent = `せいかいしたもの（${state.correctItems.length}）`;
+    details.appendChild(summary);
+    state.correctItems.forEach((q) => {
+      const row = document.createElement('div');
+      row.className = 'missed-item';
+      const display = state.mode === 'sentence' ? highlightTarget(q.sentence, q.target) : q.text;
+      row.innerHTML = `<span>${display}</span><span class="missed-item-meaning">${q.meaning}</span><span>${readingHTML(q.correctReading)}</span>`;
+      details.appendChild(row);
+    });
+    el.summaryCorrect.appendChild(details);
   }
 }

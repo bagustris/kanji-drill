@@ -28,9 +28,20 @@ The main concept is "how kanji is read in particular words" and "how to associat
   instead of in isolation. Currently seeded for grades 1-2 (one sentence per
   kanji, 80 + 160), organized into the same kind of thematic units a real
   kokugo textbook uses — see "Sentence data" below.
-- **Adaptive review** — kanji you get wrong (or haven't seen yet) are weighted
-  to show up more often in later rounds; progress is saved per kanji in
+- **Spaced repetition** — every kanji carries its own review interval that
+  grows as you answer it correctly (1 → 2.5 → 6.25 → 15.6 days …) and resets
+  when you miss it, so you spend your time on what you're about to forget
+  rather than re-drilling what you already own. Progress is saved per kanji in
   `localStorage`, so it persists across sessions on the same device.
+- **Fluency-aware, not just accuracy-aware** — answer latency is tracked per
+  kanji. A reading you get right but have to *think* about earns a much
+  smaller interval bump than one you read instantly, and keeps coming back
+  until it's automatic — which is the actual goal of drilling.
+- **Cumulative review (ふくしゅう)** — a round that pools every grade you've
+  already studied, instead of drilling one grade in isolation. Real schooling
+  never drops earlier kanji; this is what keeps grade 1-2 from decaying while
+  you work through grade 5. It introduces **no new material** — only grades
+  you've already started are pooled — so it stays a review, not a firehose.
 - **Mobile-first UI** — a single quiz card and a two-column answer grid that
   works comfortably on a phone.
 
@@ -72,7 +83,7 @@ style.css          Layout and theming
 js/app.js          Screen navigation, question generation, quiz flow
 js/progress.js      Progress tracking (localStorage), via ProgressManager
 js/progress-view.js Renders the Progress Dashboard from ProgressManager data
-js/learning/         Adaptive Learning Engine (question selection, distractor generation)
+js/learning/         Adaptive Learning Engine (question selection, review scheduling, distractor generation)
 data/grade1.json … grade9.json      Kanji + reading data, one file per grade
 data/words1.json … words9.json     Word + reading data, one file per grade
 data/sentences1.json, sentences2.json  Sentence + reading data (grades 1-2 so far)
@@ -157,13 +168,26 @@ GitHub Pages as it does locally.
 
 - Everything is stored under a single `localStorage` key:
   **`kanji-drill-progress`**. It holds per-question stats (times seen,
-  correct/wrong, last seen, and which wrong readings you've actually picked
-  before) and per-grade totals (answered/correct), used both for the
+  correct/wrong, last seen, which wrong readings you've actually picked
+  before, the current review interval and due date, and a rolling window of
+  your last 5 answer latencies) and per-grade totals (answered/correct), used
+  both for the
   "Progress" summary on the home screen, to prioritize kanji you're shaky on
   in later rounds, and to steer which wrong answers show up as multiple-choice
   distractors (see "Adaptive Distractor Generation" below).
 - All reads/writes go through the `ProgressManager` module
   (`js/progress.js`) — no other file touches `localStorage` directly.
+- Read-only getters go through a memoized snapshot (`readSnapshot()`), while
+  the write paths (`recordAnswer`/`reset`) always parse fresh via `load()`.
+  This isn't a micro-optimization: `QuestionSelector` asks for stats once per
+  candidate per question, and re-parsing the whole blob each time made a
+  cumulative round over grades 1-9 (2,136 candidates × 10 questions against a
+  ~250KB blob) take **~34 seconds**. Memoizing the parse brought the same
+  round to ~230ms. The cache is invalidated by comparing the raw stored
+  string, so a write from another tab is picked up automatically.
+- The snapshot is **shared and must never be mutated**. Getters copy what they
+  hand out, including nested `latencies`/`confusions` — a bare spread is
+  shallow, and aliasing those would let a caller silently corrupt the cache.
 - **To reset your progress**, open your browser's DevTools console on this
   site and run:
 
@@ -219,7 +243,7 @@ QuestionSelector.select(pool)                    js/learning/QuestionSelector.js
   ↓
 ProgressManager.getQuestionStats(question.id)     js/progress.js
   ↓
-config.strategy.score(question, stats, config)    js/learning/strategies/WeightedScoreStrategy.js
+config.strategy.score(question, stats, config)    js/learning/strategies/SpacedRepetitionStrategy.js
   ↓
 rank candidates → keep top N% → pick one at random (avoiding recent repeats)
   ↓
@@ -229,7 +253,8 @@ return the next question
 - **`js/learning/QuestionSelector.js`** — the only file that touches
   `ProgressManager`, and it owns both randomness and the "recently shown"
   queue. It builds each
-  question's stats (adding a precomputed `daysSinceLastSeen` so the strategy
+  question's stats (adding precomputed `daysSinceLastSeen`, `daysUntilDue`,
+  and `medianLatencyMs` so the strategy
   itself never needs the system clock), scores every candidate through the
   configured strategy, ranks them, keeps the top
   `selection.topCandidateRatio` slice, and picks randomly from that slice —
@@ -253,8 +278,44 @@ return the next question
   `localStorage` access, no randomness, no mutating its arguments, and
   identical inputs always produce the identical output. That's what makes it
   independently unit-testable, benchmarkable, and swappable.
-- **`js/learning/strategies/WeightedScoreStrategy.js`** — the default,
-  deterministic strategy. For each candidate:
+- **`js/learning/strategies/SpacedRepetitionStrategy.js`** — the **default**
+  strategy. Instead of nudging questions up as time passes, it asks the
+  spaced-repetition question — *is this due?* — where every question carries
+  its own interval, set by `ReviewScheduler` (see "Review scheduling" below).
+  For each candidate:
+
+  ```
+  score = weights.unseen  (flat, for never-answered questions — no other term applies)
+
+  score = weights.due           * dueness
+        + weights.recentMistake * recentMistake
+        + weights.errorRate     * errorRate
+        + weights.hesitancy     * hesitancy
+  ```
+
+  `dueness` is `-daysUntilDue / interval`, clamped to
+  `[normalization.minDuenessFactor, normalization.maxOverdueFactor]` — so it's
+  positive once a question is overdue, scaled by how overdue it is *relative
+  to the interval it had earned*, and negative when it isn't due yet. Being
+  five days late matters far more for a 1-day interval than a 60-day one.
+  `hesitancy` scales 0→1 as the question's median answer latency runs from
+  `normalization.fluentAnswerMs` to `normalization.hesitantAnswerMs`, so a
+  reading you get right but have to *think* about keeps coming back.
+
+  With the default weights that yields the ordering:
+
+  ```
+  heavily overdue (240)  >  unseen (100)  >  just due (0)  >  not yet due (-60)
+  ```
+
+  Overdue material deliberately outranks new material: rescuing a kanji
+  you're about to forget beats stacking another one on top of it.
+
+  Questions with no `dueAt` (progress saved before scheduling existed) are
+  treated as due now, so old `localStorage` data migrates itself simply by
+  being answered once — there's no migration step.
+- **`js/learning/strategies/WeightedScoreStrategy.js`** — the previous
+  default, kept as a swappable alternative. For each candidate:
 
   ```
   score = weights.unseen        * unseen
@@ -276,16 +337,96 @@ return the next question
 
   | Key | Meaning |
   | --- | --- |
-  | `strategy` | The active `QuestionSelectionStrategy` implementation (`WeightedScoreStrategy` by default). |
+  Both bundled strategies read from the same `weights`/`normalization`
+  objects, so switching `strategy` needs no other edit. Keys used by only one
+  of them are marked.
+
+  | Key | Meaning |
+  | --- | --- |
+  | `strategy` | The active `QuestionSelectionStrategy` implementation (`SpacedRepetitionStrategy` by default). |
   | `weights.unseen` | Multiplier prioritizing never-answered questions. |
   | `weights.recentMistake` | Multiplier boosting a question missed on its last attempt. |
   | `weights.errorRate` | Multiplier scaling with a question's wrong/seen ratio. |
-  | `weights.reviewDelay` | Multiplier scaling with time since the question was last seen (spaced review). |
-  | `weights.masteryPenalty` | Multiplier reducing the score of well-known (high correct/seen) questions. |
+  | `weights.due` | *(SpacedRepetition)* Multiplier on the dueness factor. |
+  | `weights.hesitancy` | *(SpacedRepetition)* Multiplier boosting questions answered correctly but slowly. |
+  | `weights.reviewDelay` | *(WeightedScore)* Multiplier scaling with time since the question was last seen. |
+  | `weights.masteryPenalty` | *(WeightedScore)* Multiplier reducing the score of well-known (high correct/seen) questions. |
   | `selection.topCandidateRatio` | Fraction of ranked candidates eligible for the final random pick (e.g. `0.20` = top 20%). |
   | `selection.recentHistorySize` | Size of the in-memory "recently shown" queue `QuestionSelector` avoids repeating. |
-  | `normalization.reviewDelayDays` | Number of days considered "one review cycle" when normalizing review delay. |
-  | `normalization.maxReviewDelayFactor` | Caps the normalized review-delay term so long-untouched questions don't dominate scoring indefinitely. |
+  | `normalization.maxOverdueFactor` | *(SpacedRepetition)* Caps dueness so long-untouched questions don't dominate indefinitely. |
+  | `normalization.minDuenessFactor` | *(SpacedRepetition)* Floors dueness for questions that aren't due yet. |
+  | `normalization.fluentAnswerMs` | *(SpacedRepetition)* At or below this median latency, hesitancy is 0. |
+  | `normalization.hesitantAnswerMs` | *(SpacedRepetition)* At or above this median latency, hesitancy is 1. |
+  | `normalization.reviewDelayDays` | *(WeightedScore)* Number of days considered "one review cycle". |
+  | `normalization.maxReviewDelayFactor` | *(WeightedScore)* Caps the normalized review-delay term. |
+
+### Review scheduling
+
+**`js/learning/review/ReviewScheduler.js`** decides *when* a question comes
+back, using an SM-2-style ladder minus the per-item ease adjustment. It's pure
+in the same way strategies are: it returns an **interval in days**, never a
+due date, so it never reads the system clock. Stamping
+`dueAt = lastSeen + interval` is `ProgressManager.recordAnswer`'s job — which
+is what keeps the scheduler independently testable.
+
+| Answer | Next interval |
+| --- | --- |
+| Wrong | `lapseIntervalDays` (0 — due immediately, back in rotation now) |
+| First correct | `graduatingIntervalDays` (1 day) |
+| Correct, fluent | `previous × easeFactor` (2.5×) |
+| Correct, slower than `slowAnswerMs` | `previous × hesitantEaseFactor` (1.2×) |
+
+capped at `maxIntervalDays`. So a kanji answered fluently four times running
+climbs 1 → 2.5 → 6.25 → 15.6 days and stays out of your way, while one you
+keep hesitating over creeps up at 1.2× and stays in rotation.
+
+Latency carries the signal that per-item ease would otherwise carry: the goal
+here is *reading fluency*, not just accuracy, so a correct-but-slow answer is
+treated as weaker evidence than a fluent one. Tunables live in
+`js/learning/review/ReviewSchedulerConfig.js`.
+
+Answer latency is measured in `js/app.js` (a `performance.now()` stamp taken
+once the options are on screen, so it's time-to-answer rather than
+time-to-render) and stored by `ProgressManager` as a rolling window of the
+last 5 samples per question. Two deliberate choices there:
+
+- **Median, not mean** — one answer interrupted by a phone call shouldn't make
+  a kanji look permanently shaky.
+- **Samples over 30s are dropped, not clamped** — past that the learner almost
+  certainly switched tabs, and that isn't a measurement of anything. Clamping
+  would silently record a fake 30-second "answer".
+
+### Cumulative review
+
+The **ふくしゅう** button under the grade pickers starts a round pooling every
+grade you've already drilled in the current mode (it stays disabled, showing
+`学年を1つ終えると使えます`, until at least one grade has progress; once
+enabled it lists which grades it will cover, e.g. `1年生・3年生`).
+
+Only *studied* grades are pooled, deliberately. Pooling all nine would flood a
+beginner: unseen questions score `weights.unseen` (100), so a grade-1 learner
+would get a round of mostly never-seen junior-high kanji. Restricting the pool
+to grades already started means review introduces nothing new — it only stops
+what you've learned from decaying, which is the thing single-grade drilling
+can't do.
+
+**The invariant to preserve:** every loaded entry is tagged with
+`sourceGrade` (the grade whose file it came from), and a question's progress
+is always keyed by *its own* grade — `grade2:山` whether it was drilled from
+the grade-2 button or surfaced in a review round. `state.grade` is `null`
+during review precisely so nothing accidentally keys progress by "the round's
+grade", which doesn't exist there. Key it any other way and one kanji's
+history forks into two records, splitting its review schedule and corrupting
+the per-grade dashboard totals.
+
+Because `sourceGrade` is applied in **both** kinds of round, nothing
+downstream branches on which kind it is — `pickQuestions()` and
+`buildQuestion()` just read `entry.sourceGrade`.
+
+> [!NOTE]
+> A cumulative pool also feeds the distractor engine, which is what made
+> `DistractorConfig.selection.maxCandidates` bite a second time — see "Known
+> bug fixed: distractor diversity collapse".
 
 ### Implementing a new strategy
 
@@ -309,9 +450,8 @@ module the selector or quiz can call into:
 - `mastery/` — a `MasteryEstimator` could replace the simple `correct/seen`
   ratio with a more principled per-question mastery model feeding both the
   dashboard and the selector.
-- `review/` — a `ReviewScheduler` could own spaced-repetition due dates
-  (SM-2/FSRS-style), letting `QuestionSelector` ask "what's due today?"
-  instead of computing `reviewDelay` inline.
+- ~~`review/` — a `ReviewScheduler` could own spaced-repetition due dates~~
+  **Built** — see "Review scheduling" above.
 - `recommendation/` — a `RecommendationEngine` could suggest which grade or
   mode to study next based on overall progress, sitting above
   `QuestionSelector` rather than replacing it.
@@ -510,6 +650,15 @@ evaluate every candidate — favor readability over optimization");
 `maxCandidates` remains as a safety valve for a future, much larger pool
 rather than a routine filter.
 
+**It recurred once, exactly as predicted.** Cumulative review (below) pools
+several grades into one candidate list — up to 2,136 kanji across grades 1-9,
+well past the then-current cap of 1,000. The same collapse reappeared: a
+30-question cumulative round offered only 24 distinct distractors. Raising
+`maxCandidates` to 5,000 restored it to 30/30. The lesson generalizes: any
+change that grows the candidate pool must check this cap, because the failure
+is silent — distractors still look plausible, there are just far fewer
+distinct ones.
+
 ### Testing
 
 `js/learning/distractors/__tests__/run-tests.js` is a small, dependency-free
@@ -528,6 +677,20 @@ otherwise-stronger candidate. Run it with:
 
 ```bash
 node js/learning/distractors/__tests__/run-tests.js
+```
+
+`js/learning/review/__tests__/run-tests.js` follows the same pattern for the
+spaced-repetition modules. Both modules under test are pure, so it needs no
+`localStorage` stub and no fake clock — `ReviewScheduler` returns an interval
+rather than a due date, and `SpacedRepetitionStrategy` receives
+`daysUntilDue` precomputed. It verifies the interval ladder (graduate, grow,
+lapse, cap), that a slow correct answer grows less than a fluent one, that
+missing latency data is never punished, that dueness is measured relative to
+each question's own interval, that pre-scheduling progress is treated as due
+now, and that both modules are deterministic and non-mutating. Run it with:
+
+```bash
+node js/learning/review/__tests__/run-tests.js
 ```
 
 ## Deployment

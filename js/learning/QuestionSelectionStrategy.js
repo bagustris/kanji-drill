@@ -26,8 +26,16 @@
 //     inside the strategy.
 //
 //   `stats` (built by QuestionSelector from ProgressManager data) has the
-//   shape: { seen, correct, wrong, lastSeen, lastCorrect, daysSinceLastSeen }.
-//   `daysSinceLastSeen` is `null` for a never-seen question.
+//   shape: { seen, correct, wrong, lastSeen, lastCorrect, interval, dueAt,
+//   latencies, daysSinceLastSeen, daysUntilDue, medianLatencyMs }.
+//   The last three are derived by QuestionSelector (the first two from the
+//   system clock, the third from the `latencies` samples) precisely so that
+//   strategies stay clock-free and deterministic.
+//   `daysSinceLastSeen` is `null` for a never-seen question; `daysUntilDue`
+//   is `null` when the question has never been scheduled (never answered, or
+//   progress written before scheduling existed); `medianLatencyMs` is `null`
+//   when no answer latency has been recorded yet. Strategies must handle all
+//   three nulls rather than assuming a number.
 
 const QuestionSelectionStrategy = {
   /** Returns true if `strategy` conforms to the QuestionSelectionStrategy contract. */

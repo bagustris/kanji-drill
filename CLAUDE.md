@@ -23,12 +23,14 @@ buildless. The two things you'll actually run:
 python3 -m http.server 8000
 # then open http://localhost:8000
 
-# Run the distractor-engine test suite (Node built-ins only, no deps)
+# Run the test suites (Node built-ins only, no deps)
 node js/learning/distractors/__tests__/run-tests.js
+node js/learning/review/__tests__/run-tests.js
 ```
 
-There is no other test suite in the repo — the question-selection engine
-(`js/learning/`, non-distractor parts) currently has no automated tests.
+Those are the only test suites in the repo. `ReviewScheduler` and
+`SpacedRepetitionStrategy` are covered; `QuestionSelector` itself (the
+orchestration/randomness layer) still has no automated tests.
 
 ## Architecture
 
@@ -55,6 +57,7 @@ js/settings.js         SettingsManager — user prefs (localStorage: kanji-drill
 js/progress.js         ProgressManager — learning history (localStorage: kanji-drill-progress)
 js/progress-view.js    ProgressView — read-only rendering of ProgressManager data
 js/learning/           Adaptive Learning Engine (question ordering) — see below
+js/learning/review/    ReviewScheduler — spaced-repetition intervals — see below
 js/learning/distractors/  Adaptive Distractor Generator (wrong-answer choice) — see below
 js/app.js              Screen navigation, quiz flow, keyboard/arrow nav, DOM wiring
 data/gradeN.json       Kanji + reading pool per grade (1-9), mode = "kanji"
@@ -68,15 +71,52 @@ only one for preferences. `ProgressView` only reads/renders — it computes
 nothing. Keep this separation when editing: e.g. a new stat needs a getter
 added to `ProgressManager`, not ad-hoc `localStorage` reads elsewhere.
 
+Inside `ProgressManager`, read-only getters use `readSnapshot()` (memoized
+parse) and write paths use `load()` (always fresh). That split is load-bearing
+for performance, not cosmetic — see README "Progress tracking". The snapshot
+is shared: **never return a piece of it uncopied**, and note that a spread is
+shallow (`getQuestionStats` copies `latencies`/`confusions` explicitly).
+
+### Cumulative review — the `sourceGrade` invariant
+
+Every entry loaded in `app.js` is tagged with `sourceGrade`, in both
+single-grade and review rounds, and progress is always keyed by *that*
+grade — never by a round-wide grade. `state.grade` is `null` during a review
+round for exactly this reason. If you add a code path that records progress,
+key it by `q.sourceGrade`; keying it any other way forks one kanji's history
+into two records and corrupts both its schedule and the dashboard totals.
+
+Growing the candidate pool (as review does) also re-exposes the distractor
+`maxCandidates` cap — check it, the failure is silent.
+
 ### Adaptive Learning Engine (`js/learning/`)
 
 Picks *which* question comes next (instead of plain random), via a
 strategy-pattern pipeline: `QuestionSelector` → reads stats from
 `ProgressManager` → scores candidates through a pluggable
-`QuestionSelectionStrategy` (default: `WeightedScoreStrategy`, config in
+`QuestionSelectionStrategy` (default: `SpacedRepetitionStrategy`, config in
 `QuestionSelectorConfig.js`) → ranks → picks randomly from the top slice,
 avoiding recent repeats. Strategies must be pure functions (no
-`localStorage`/`ProgressManager` access, no randomness, deterministic).
+`localStorage`/`ProgressManager` access, no randomness, deterministic) — so
+anything clock-derived (`daysSinceLastSeen`, `daysUntilDue`) or aggregated
+(`medianLatencyMs`) is precomputed in `QuestionSelector.buildStats()` and
+passed in via `stats`.
+
+### Review scheduling (`js/learning/review/`)
+
+`ReviewScheduler.nextIntervalDays(stats, isCorrect, latencyMs, config)` owns
+the SM-2-style interval ladder (wrong → 0/due-now; first correct → 1 day;
+correct → `× 2.5`, or `× 1.2` if slower than `slowAnswerMs`; capped at
+`maxIntervalDays`). It's pure and returns an *interval*, never a due date —
+`ProgressManager.recordAnswer()` stamps `dueAt = lastSeen + interval` and
+persists `interval`/`dueAt`/`latencies` on the question stat. That call is
+guarded by `typeof ReviewScheduler !== 'undefined'` because the distractor
+test harness loads `progress.js` without the learning modules; don't remove
+the guard.
+
+Answer latency is measured in `app.js` (`performance.now()` stamped at the
+end of `renderQuestion`, read in `handleAnswer`). Samples over 30s are
+**dropped, not clamped** — clamping would record a fake 30-second answer.
 
 ### Adaptive Distractor Generator (`js/learning/distractors/`)
 

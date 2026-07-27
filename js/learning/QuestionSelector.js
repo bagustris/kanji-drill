@@ -28,12 +28,34 @@ const QuestionSelector = (() => {
     return (Date.now() - lastSeen) / MS_PER_DAY;
   }
 
-  // Builds the immutable stats object passed into strategy.score(), adding
-  // the precomputed daysSinceLastSeen so the strategy itself never needs to
-  // touch Date.now() (which would make it non-deterministic).
+  // Negative once the question is overdue. null when it has never been
+  // scheduled (never answered, or progress saved before scheduling existed).
+  function daysUntilDue(dueAt) {
+    if (!dueAt) return null;
+    return (dueAt - Date.now()) / MS_PER_DAY;
+  }
+
+  // Median is deliberate rather than a mean: one answer interrupted by a
+  // phone call shouldn't make a kanji look permanently shaky.
+  function medianLatencyMs(latencies) {
+    if (!Array.isArray(latencies) || latencies.length === 0) return null;
+    const sorted = [...latencies].sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
+  }
+
+  // Builds the immutable stats object passed into strategy.score(). Anything
+  // derived from the system clock (daysSinceLastSeen, daysUntilDue) is
+  // precomputed here so strategies never need to touch Date.now(), which
+  // would make them non-deterministic and untestable.
   function buildStats(id) {
     const stats = ProgressManager.getQuestionStats(id);
-    return { ...stats, daysSinceLastSeen: daysSinceLastSeen(stats.lastSeen) };
+    return {
+      ...stats,
+      daysSinceLastSeen: daysSinceLastSeen(stats.lastSeen),
+      daysUntilDue: daysUntilDue(stats.dueAt),
+      medianLatencyMs: medianLatencyMs(stats.latencies),
+    };
   }
 
   function rememberPick(id, historySize) {

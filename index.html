@@ -87,6 +87,14 @@
       <button class="grade-btn" data-grade="9"><span class="key-badge key-badge-corner">9</span>中学3年<span class="grade-count" data-kanji-count="370字" data-word-count="148語" data-sentence-count="準備中">370字</span></button>
     </div>
 
+    <h3 class="grade-section-heading">ふくしゅう<span>Cumulative Review</span></h3>
+    <div class="grade-grid grade-grid-single">
+      <button id="btn-review" class="review-btn" disabled>
+        <span class="key-badge key-badge-corner">R</span>ぜんぶまとめて
+        <span class="grade-count" id="review-count">学年を1つ終えると使えます</span>
+      </button>
+    </div>
+
     <h3 class="progress-heading">全体の成績<span>Overall</span></h3>
     <div id="progress-summary" class="progress-summary">
       <span class="progress-stat"><strong id="progress-answered">0</strong>問<span>Answered</span></span>
@@ -120,6 +128,7 @@
     <h2>おわり！</h2>
     <p id="summary-score" class="summary-score"></p>
     <div id="summary-missed" class="summary-missed"></div>
+    <div id="summary-correct" class="summary-correct"></div>
     <div class="summary-actions">
       <button id="btn-retry" class="primary-btn"><span class="key-badge key-badge-corner">1</span>もう一回<span>Try again</span></button>
       <button id="btn-home" class="secondary-btn"><span class="key-badge key-badge-corner">2</span>学年を選びなおす<span>Choose grade again</span></button>
@@ -132,7 +141,10 @@
 <script src="js/progress.js"></script>
 <script src="js/progress-view.js"></script>
 <script src="js/learning/QuestionSelectionStrategy.js"></script>
+<script src="js/learning/review/ReviewSchedulerConfig.js"></script>
+<script src="js/learning/review/ReviewScheduler.js"></script>
 <script src="js/learning/strategies/WeightedScoreStrategy.js"></script>
+<script src="js/learning/strategies/SpacedRepetitionStrategy.js"></script>
 <script src="js/learning/QuestionSelectorConfig.js"></script>
 <script src="js/learning/QuestionSelector.js"></script>
 <script src="js/learning/distractors/DistractorStrategy.js"></script>
