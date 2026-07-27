@@ -59,11 +59,10 @@ const el = {
 // that later code can never leave the grade/mode buttons unresponsive.
 
 // data-*-count attributes hold the exact label text to display (e.g.
-// "80字"); sentence-count instead reads "準備中" (not ready yet) for grades
-// that don't have sentence data (only grade 1 does, for now — see
-// data/sentences1.json), which parseInt() naturally turns into NaN/falsy
-// everywhere a total is checked, so those grades just show "no total" —
-// see registerTotalQuestionCounts() below.
+// "80字"); sentence-count reads "準備中" (not ready yet) for any grade that
+// doesn't have a data/sentencesN.json yet, which parseInt() naturally turns
+// into NaN/falsy everywhere a total is checked, so those grades just show
+// "no total" — see registerTotalQuestionCounts() below.
 const COUNT_ATTR = { kanji: 'kanjiCount', word: 'wordCount', sentence: 'sentenceCount' };
 
 el.modeButtons.forEach((btn) => {

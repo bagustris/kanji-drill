@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'kanji-drill-v10';
+const CACHE_VERSION = 'kanji-drill-v11';
 
 const CORE_ASSETS = [
   '.',
@@ -41,6 +41,13 @@ const CORE_ASSETS = [
   'data/words9.json',
   'data/sentences1.json',
   'data/sentences2.json',
+  'data/sentences3.json',
+  'data/sentences4.json',
+  'data/sentences5.json',
+  'data/sentences6.json',
+  'data/sentences7.json',
+  'data/sentences8.json',
+  'data/sentences9.json',
 ];
 
 self.addEventListener('install', (event) => {
