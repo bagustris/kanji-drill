@@ -42,6 +42,7 @@ const el = {
   quizMeaning: document.getElementById('quiz-meaning'),
   quizInstruction: document.getElementById('quiz-instruction'),
   quizOptions: document.getElementById('quiz-options'),
+  quizExamples: document.getElementById('quiz-examples'),
   quizContinue: document.getElementById('quiz-continue'),
   quizLeechBadge: document.getElementById('quiz-leech-badge'),
   btnReview: document.getElementById('btn-review'),
@@ -434,6 +435,25 @@ function buildQuestion(target, itemList, mode) {
     frequency: target.frequency,
   };
   const distractors = DistractorGenerator.generate(question, itemList);
+
+  // Kanji mode keeps the BARE kanji as the prompt (学, not the inflected 学ぶ) —
+  // closer to how an ES drill book presents it, and it doesn't leak the
+  // okurigana by showing ぶ in the prompt. The reading is quizzed with its
+  // okurigana intact (まな.ぶ), which readingHTML renders with the okurigana in
+  // red so it reads as "learn 学 = まな, okurigana ぶ". Example words (optional
+  // in the data — see tools/fetch-example-words.js) are still revealed after
+  // answering to reinforce the kanji -> word association a drill book builds.
+  if (mode === 'kanji') {
+    return {
+      text: question.text,
+      sourceGrade: target.sourceGrade,
+      meaning: target.meaning,
+      correctReading,
+      options: shuffle([correctReading, ...distractors]),
+      examples: Array.isArray(target.examples) ? target.examples : [],
+    };
+  }
+
   const options = shuffle([correctReading, ...distractors]);
   return {
     text: question.text,
@@ -598,8 +618,9 @@ function renderQuestion() {
   el.quizKanji.classList.toggle('is-sentence', state.mode === 'sentence');
   el.quizKanji.classList.toggle('is-reverse', isReverse);
   // Reverse prompts a reading (rendered through readingHTML so an okurigana
-  // dot becomes the styled span, not a literal period); forward modes prompt
-  // the kanji/word/sentence.
+  // dot becomes the styled span); sentence highlights the target in its
+  // sentence; kanji and word show the bare kanji / word as-is (the reading,
+  // with its okurigana, is quizzed in the options).
   el.quizKanji.innerHTML = isReverse
     ? readingHTML(q.reading)
     : state.mode === 'sentence' ? highlightTarget(q.sentence, q.target) : q.text;
@@ -629,6 +650,12 @@ function renderQuestion() {
     btn.addEventListener('click', () => handleAnswer(option, btn));
     el.quizOptions.appendChild(btn);
   });
+
+  // Example words are revealed only after answering (see handleAnswer) — before
+  // that they could give the reading away — so clear/hide them for each new
+  // question.
+  el.quizExamples.innerHTML = '';
+  el.quizExamples.classList.add('hidden');
 
   // Reverse mode speaks the reading up front (it's already on screen, so this
   // leaks nothing) — mirroring a teacher reading the target aloud before the
@@ -820,6 +847,26 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+// Renders the kanji's example words on the answer reveal (kanji mode only).
+// A no-op — hiding the panel — when there are none, so kanji that don't yet
+// carry `examples` data simply show nothing (see tools/fetch-example-words.js).
+function renderExamples(q) {
+  const examples = state.mode === 'kanji' && Array.isArray(q.examples) ? q.examples : [];
+  if (examples.length === 0) {
+    el.quizExamples.innerHTML = '';
+    el.quizExamples.classList.add('hidden');
+    return;
+  }
+  const rows = examples.map((ex) =>
+    `<li><span class="ex-word">${ex.word}</span>` +
+    `<span class="ex-reading">${ex.reading || ''}</span>` +
+    `<span class="ex-gloss">${ex.gloss || ''}</span></li>`
+  ).join('');
+  el.quizExamples.innerHTML =
+    `<div class="quiz-examples-label">この漢字を使うことば<span>Words that use this kanji</span></div><ul>${rows}</ul>`;
+  el.quizExamples.classList.remove('hidden');
+}
+
 function handleAnswer(selected, btnEl) {
   const q = state.questions[state.index];
   const isCorrect = selected === q.correctReading;
@@ -842,6 +889,10 @@ function handleAnswer(selected, btnEl) {
   // answer, so it couldn't be spoken earlier — it lives in correctReading).
   // Reverse mode already spoke it when the question rendered — don't repeat it.
   if (state.mode !== 'reverse') speakReading(q.correctReading);
+
+  // Kanji mode reveals the example words that use this kanji, reinforcing the
+  // kanji -> word association the way a drill book's 熟語 list does.
+  renderExamples(q);
 
   // q.sourceGrade, not state.grade — in review mode state.grade is null and
   // each question belongs to its own grade's progress record.

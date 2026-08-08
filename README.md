@@ -752,3 +752,19 @@ scoped out but not started:
 
 See [PLAN.md](PLAN.md) for the original implementation plan and the
 reasoning behind these calls.
+
+## Credits & data attribution
+
+Example words and readings sourced or verified with the dictionary tools in
+`tools/` come from **JMdict / KANJIDIC**, © the [Electronic Dictionary Research
+and Development Group (EDRDG)](https://www.edrdg.org/), used under the
+[Creative Commons Attribution-ShareAlike 4.0 licence (CC BY-SA
+4.0)](https://creativecommons.org/licenses/by-sa/4.0/). See
+[`CREDITS.md`](CREDITS.md) for the full notice and licence terms.
+
+Kanji readings, okurigana, and grade assignments are facts (drawn from the
+MEXT 学年別漢字配当表 and the dictionaries above); they are **not** copied from
+any commercial 漢字ドリル / らくらくノート workbook, whose example sentences and
+熟語 selections are copyrighted. When adding example words or sentences, take
+them from a freely-licensed source (with attribution) or write them from
+scratch — never transcribe them from a workbook.

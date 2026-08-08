@@ -5,7 +5,11 @@
       "いち",
       "ひと.つ"
     ],
-    "meaning": "one"
+    "meaning": "one",
+    "examples": [
+      { "word": "一つ", "reading": "ひとつ", "gloss": "one (thing)" },
+      { "word": "一年", "reading": "いちねん", "gloss": "one year" }
+    ]
   },
   {
     "kanji": "右",
@@ -272,7 +276,11 @@
     "readings": [
       "ちい.さい"
     ],
-    "meaning": "small"
+    "meaning": "small",
+    "examples": [
+      { "word": "小さい", "reading": "ちいさい", "gloss": "small" },
+      { "word": "小学校", "reading": "しょうがっこう", "gloss": "elementary school" }
+    ]
   },
   {
     "kanji": "上",
@@ -312,11 +320,16 @@
   {
     "kanji": "生",
     "readings": [
-      "う.ま",
+      "う.む",
       "う.まれる",
       "せい"
     ],
-    "meaning": "life; birth"
+    "meaning": "life; birth",
+    "examples": [
+      { "word": "学生", "reading": "がくせい", "gloss": "student" },
+      { "word": "生活", "reading": "せいかつ", "gloss": "daily life" },
+      { "word": "生まれる", "reading": "うまれる", "gloss": "to be born" }
+    ]
   },
   {
     "kanji": "青",
@@ -557,7 +570,11 @@
       "た.つ",
       "た.てる"
     ],
-    "meaning": "stand"
+    "meaning": "stand",
+    "examples": [
+      { "word": "立つ", "reading": "たつ", "gloss": "to stand" },
+      { "word": "国立", "reading": "こくりつ", "gloss": "national" }
+    ]
   },
   {
     "kanji": "力",

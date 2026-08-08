@@ -832,6 +832,50 @@ html, body {
 
 .quiz-continue.hidden { display: none; }
 
+/* Example words revealed after answering (kanji mode) — the kanji -> 熟語
+   association a drill book builds. */
+.quiz-examples {
+  margin: 1rem 0 0;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  text-align: left;
+}
+
+.quiz-examples.hidden { display: none; }
+
+.quiz-examples-label {
+  font-size: 0.7rem;
+  color: #8a8378;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.3rem;
+}
+
+.quiz-examples-label span {
+  margin-left: 0.4rem;
+}
+
+.quiz-examples ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.quiz-examples li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.quiz-examples li:first-child { border-top: none; }
+
+.ex-word { font-size: 1.15rem; font-weight: bold; }
+.ex-reading { font-size: 0.85rem; color: var(--accent); }
+.ex-gloss { font-size: 0.8rem; color: #8a8378; font-style: italic; margin-left: auto; text-align: right; }
+
 /* "Weak spot" marker for a leech (a kanji the learner keeps missing). Subtle,
    amber, and self-explaining — signals the meaning is being shown as extra
    help, not that anything is broken. */
