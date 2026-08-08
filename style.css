@@ -891,7 +891,28 @@ html, body {
 .key-badge-corner {
   position: absolute;
   bottom: 0.35rem;
-  right: 0.45rem;
+  left: 0.45rem;
+}
+
+/* Shortcut hint: a key-badge kept hidden until its button is hovered or
+   keyboard-focused, for the mode/scope/review buttons whose label doesn't
+   otherwise show the shortcut key. Gated to hover-capable pointer devices —
+   a touch user has no keyboard key to hint at, and since it's absolutely
+   positioned it reserves no space, so it simply never appears there. */
+.shortcut-hint {
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+@media (hover: hover) {
+  .mode-btn:hover .shortcut-hint,
+  .mode-btn:focus-visible .shortcut-hint,
+  .toggle-btn:hover .shortcut-hint,
+  .toggle-btn:focus-visible .shortcut-hint,
+  .review-btn:hover .shortcut-hint,
+  .review-btn:focus-visible .shortcut-hint {
+    opacity: 1;
+  }
 }
 
 .option-btn.correct .key-badge,

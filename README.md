@@ -38,18 +38,16 @@ The main concept is "how kanji is read in particular words" and "how to associat
   and same-meaning kanji — since the meaning on screen is what forces you to
   discriminate between kanji that sound alike. See "Adaptive Distractor
   Generation" below.
-- **Spoken readings (読み上げ)** — an optional setting that reads the reading
-  aloud via the browser's built-in speech synthesis (no network, no bundled
-  audio), adding the auditory channel an elementary classroom leans on.
-  Forward modes speak the reading once it's revealed; the reverse quiz speaks
-  it up front (it's already on screen). It defaults **off** in an installed /
-  offline PWA — where a Japanese voice is often network-dependent and thus
-  unavailable — and **on** in a browser tab; toggling it in Settings pins your
-  choice from then on. Degrades to silence wherever no Japanese voice exists.
-- **Manual advance by default (自動で次へ off)** — after you answer, the quiz
-  reveals the reading and *waits* for you to continue (tap/click, or → / Enter
-  / Space) instead of racing ahead on a timer, so there's time to actually
-  read what you missed. A Settings toggle switches back to timed auto-advance.
+- **Spoken readings (読み上げ)** — an optional setting (**off by default**)
+  that reads the reading aloud via the browser's built-in speech synthesis (no
+  network, no bundled audio), adding the auditory channel an elementary
+  classroom leans on. Forward modes speak the reading once it's revealed; the
+  reverse quiz speaks it up front (it's already on screen). Turn it on in
+  Settings; degrades to silence wherever no Japanese voice exists.
+- **Auto-advance by default (自動で次へ)** — after you answer, the quiz reveals
+  the reading and moves on after a short timed pause. Turn the setting **off**
+  to advance manually instead (tap/click, or → / Enter / Space), giving
+  unlimited time to read what you missed.
 - **Extra help on weak spots (にがて)** — a kanji you keep missing (seen ≥ 3
   times, right less than half) is flagged a *leech* and gets scaffolding: its
   meaning is shown as a hint even when "show meaning" is off, and a small
