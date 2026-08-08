@@ -25,7 +25,7 @@ const ProgressView = (() => {
     els.accuracy.textContent = `${stats.accuracy}%`;
 
     els.modeBreakdown.innerHTML = '';
-    [['kanji', '漢字', 'Kanji'], ['word', '言葉', 'Word'], ['sentence', '文章', 'Sentence']].forEach(([mode, label, title]) => {
+    [['kanji', '漢字', 'Kanji'], ['word', '言葉', 'Word'], ['sentence', '文章', 'Sentence'], ['reverse', '逆引き', 'Reverse']].forEach(([mode, label, title]) => {
       const modeStats = ProgressManager.getOverallStatsByMode(mode);
       const row = document.createElement('div');
       row.className = 'progress-mode-row';

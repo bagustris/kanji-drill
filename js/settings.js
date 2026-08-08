@@ -4,7 +4,18 @@
 
 const SettingsManager = (() => {
   const STORAGE_KEY = 'kanji-drill-settings';
-  const DEFAULTS = { showMeaning: true, roundSize: 10 };
+  // playAudio is deliberately tri-state: `null` means "the user has never
+  // chosen", which app.js resolves at read time to a context-dependent
+  // default (off in an installed/standalone PWA, where a ja-JP speech voice
+  // is often network-dependent and unavailable offline; on in a browser
+  // tab). An explicit toggle writes a real boolean and wins from then on.
+  // Note the load() spread below means get('playAudio') returns `null`, not
+  // `undefined`, until toggled — see audioEnabled() in app.js.
+  // autoAdvance defaults to false: after answering, the quiz waits for the
+  // learner to continue (tap / → / Enter) rather than jumping ahead on a
+  // timer, so there's time to read the revealed answer. Turning it on restores
+  // the timed auto-advance.
+  const DEFAULTS = { showMeaning: true, roundSize: 10, playAudio: null, autoAdvance: false };
 
   function load() {
     try {

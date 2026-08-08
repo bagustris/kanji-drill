@@ -28,6 +28,34 @@ The main concept is "how kanji is read in particular words" and "how to associat
   instead of in isolation. Currently seeded for grades 1-2 (one sentence per
   kanji, 80 + 160), organized into the same kind of thematic units a real
   kokugo textbook uses — see "Sentence data" below.
+- **Reverse quiz (逆引き)** — the mirror direction of the reading quiz: you're
+  shown a reading **and** its meaning, and pick the matching kanji from four.
+  It drills the same kanji as the reading quiz but exercises the opposite
+  recall (sound → glyph), and is tracked as its own skill with an independent
+  spaced-repetition schedule (a separate `reverse…` progress namespace, not
+  merged with reading-quiz history). Its distractors are chosen for *reverse*
+  confusability — homophones sharing the exact reading, then same-first-mora
+  and same-meaning kanji — since the meaning on screen is what forces you to
+  discriminate between kanji that sound alike. See "Adaptive Distractor
+  Generation" below.
+- **Spoken readings (読み上げ)** — an optional setting that reads the reading
+  aloud via the browser's built-in speech synthesis (no network, no bundled
+  audio), adding the auditory channel an elementary classroom leans on.
+  Forward modes speak the reading once it's revealed; the reverse quiz speaks
+  it up front (it's already on screen). It defaults **off** in an installed /
+  offline PWA — where a Japanese voice is often network-dependent and thus
+  unavailable — and **on** in a browser tab; toggling it in Settings pins your
+  choice from then on. Degrades to silence wherever no Japanese voice exists.
+- **Manual advance by default (自動で次へ off)** — after you answer, the quiz
+  reveals the reading and *waits* for you to continue (tap/click, or → / Enter
+  / Space) instead of racing ahead on a timer, so there's time to actually
+  read what you missed. A Settings toggle switches back to timed auto-advance.
+- **Extra help on weak spots (にがて)** — a kanji you keep missing (seen ≥ 3
+  times, right less than half) is flagged a *leech* and gets scaffolding: its
+  meaning is shown as a hint even when "show meaning" is off, and a small
+  weak-spot marker appears — mirroring a teacher spending more time on a
+  stubborn kanji. (The distractor engine already resurfaces your past wrong
+  answers for the same item.)
 - **Spaced repetition** — every kanji carries its own review interval that
   grows as you answer it correctly (1 → 2.5 → 6.25 → 15.6 days …) and resets
   when you miss it, so you spend your time on what you're about to forget
@@ -511,6 +539,22 @@ return distractors → buildQuestion() shuffles them in with the correct answer
   small or repetitive item list), it simply returns fewer distractors
   rather than throwing; `buildQuestion()` shuffles whatever comes back in
   with the correct answer, same as before.
+
+  The same file also exposes **`generateKanji(question, itemList)`** for the
+  reverse quiz, which returns distractor *kanji* instead of readings. It
+  reuses `SimilarityFeatures` but scores for reverse confusability with a
+  separate `config.reverseWeights` block, because reversing the direction
+  inverts what a *graded* reading similarity means: forward, せい-vs-せき is a
+  hard distractor (you must know the exact reading); reverse, a candidate
+  whose reading is せき is trivially eliminable once you half-know the prompt
+  reading せい. So only an **exact** homophone counts as a hard reading match
+  (a binary flag, not the Levenshtein gradient), alongside meaning overlap (a
+  same-meaning kanji is hard precisely because the meaning is on screen), the
+  learner's past wrong kanji picks, and a mild same-first-mora nudge. A tiny
+  deterministic per-`(question, kanji)` tiebreak keeps the many exact-tie
+  candidates (common at grade 1, where true homophones are sparse) from
+  collapsing to file order — otherwise 一二三… would surface as the same
+  filler in every question and be learnable by elimination.
 - **`js/learning/distractors/features/SimilarityFeatures.js`** — pure
   feature extraction, nothing else: no weighting, no ranking, no selection,
   no side effects, no `ProgressManager`/`localStorage` access of its own
@@ -705,10 +749,8 @@ Only the multiple-choice reading quiz is built today. Other drill types were
 scoped out but not started:
 
 - Flashcard mode (flip card: kanji ⇄ reading)
-- Typing/input quiz (type the reading instead of picking it)
 - Matching/memory grid game
 - Meaning drills alongside reading
-- Stroke order practice
 
 See [PLAN.md](PLAN.md) for the original implementation plan and the
 reasoning behind these calls.

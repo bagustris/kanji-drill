@@ -747,6 +747,18 @@ html, body {
   line-height: 1.7;
 }
 
+/* Reverse mode prompts a reading (kana), not a single glyph — size it down
+   from the 5rem kanji so a multi-mora reading fits the card width. */
+.quiz-kanji.is-reverse {
+  font-size: 2.6rem;
+}
+
+/* Reverse options are kanji; bump them up from the reading-option size so the
+   glyph is comfortably legible as the thing being chosen. */
+.quiz-options.is-reverse .option-btn {
+  font-size: 2rem;
+}
+
 .quiz-sentence-target {
   color: var(--accent);
   font-weight: bold;
@@ -797,9 +809,63 @@ html, body {
   gap: 0.7rem;
 }
 
+/* Manual-continue hint shown after answering when auto-advance is off. The
+   whole document is clickable to continue, so this is a cue, not the only
+   target — but give it a pointer to read as tappable. */
+.quiz-continue {
+  margin: 1rem 0 0;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--accent);
+  cursor: pointer;
+  animation: quiz-continue-fade 0.2s ease-in;
+}
+
+.quiz-continue span {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: normal;
+  color: #8a8378;
+  margin-top: 0.15rem;
+}
+
+.quiz-continue.hidden { display: none; }
+
+/* "Weak spot" marker for a leech (a kanji the learner keeps missing). Subtle,
+   amber, and self-explaining — signals the meaning is being shown as extra
+   help, not that anything is broken. */
+.quiz-leech-badge {
+  display: inline-block;
+  margin: 0 auto 0.6rem;
+  padding: 0.1rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #9a6a00;
+  background: #fdf0d5;
+  border: 1px solid #e6c886;
+  border-radius: 999px;
+}
+
+.quiz-leech-badge span {
+  font-weight: normal;
+  font-size: 0.65rem;
+  margin-left: 0.3rem;
+  opacity: 0.8;
+}
+
+.quiz-leech-badge.hidden { display: none; }
+
+@keyframes quiz-continue-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 .option-btn {
   position: relative;
-  padding: 0.9rem 0.4rem;
+  /* Symmetric side gutter reserves room for the corner key-badge so long
+     readings never sit under it, while keeping the text optically centered. */
+  padding: 0.9rem 1.7rem;
   font-size: 1.15rem;
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -824,8 +890,8 @@ html, body {
 
 .key-badge-corner {
   position: absolute;
-  top: 0.35rem;
-  left: 0.45rem;
+  bottom: 0.35rem;
+  right: 0.45rem;
 }
 
 .option-btn.correct .key-badge,

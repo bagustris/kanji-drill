@@ -22,7 +22,14 @@ const ProgressManager = (() => {
   // measurement of anything. Clamping would silently record a fake 30s
   // "answer"; dropping keeps the median honest.
   const MAX_LATENCY_MS = 30000;
-  const MODE_PREFIX = { kanji: 'grade', word: 'words', sentence: 'sentences' };
+  // Reverse mode drills the same kanji as `kanji` mode but is a distinct
+  // skill (recall the kanji from its reading, vs. recall the reading from the
+  // kanji), so it gets its own namespace here — otherwise gradeKey() would
+  // fall back to 'grade' and merge the two modes' schedules and grade totals
+  // into one corrupted record. This is the progress-key namespace, separate
+  // from app.js's MODE_FILE_PREFIX (which maps reverse -> 'grade' for loading
+  // the same data file).
+  const MODE_PREFIX = { kanji: 'grade', word: 'words', sentence: 'sentences', reverse: 'reverse' };
 
   // Reuses the existing per-mode/grade key naming (kanjidrill:gradeN /
   // kanjidrill:wordsN / kanjidrill:sentencesN) as the namespace for a
@@ -283,6 +290,19 @@ const ProgressManager = (() => {
     return stats.seen === 0 ? 0 : stats.correct / stats.seen;
   }
 
+  // A "leech": a question the learner keeps missing — seen enough times to be
+  // a pattern, yet still answered right less than half the time. It's the low
+  // end of the same accuracy scale mastery() uses (mastered = seen>=3 &
+  // acc>=0.9; a leech = seen>=3 & acc<0.5). Callers use it to give the item
+  // extra scaffolding (e.g. always show its meaning) the way a teacher spends
+  // more time on a stubborn kanji.
+  const LEECH_MIN_SEEN = 3;
+  const LEECH_MAX_ACCURACY = 0.5;
+  function isLeech(id) {
+    const stats = getQuestionStats(id);
+    return stats.seen >= LEECH_MIN_SEEN && stats.correct / stats.seen < LEECH_MAX_ACCURACY;
+  }
+
   // One-decimal accuracy percentage (e.g. 89.6), 0 when nothing answered yet.
   function getAccuracy(stats) {
     if (!stats || stats.answered === 0) return 0;
@@ -380,6 +400,7 @@ const ProgressManager = (() => {
     getConfusions,
     getErrorRate,
     getMastery,
+    isLeech,
     getGradeStats,
     getGradeStatus,
     getOverallStats,
