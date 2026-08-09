@@ -755,6 +755,10 @@ reasoning behind these calls.
 
 ## Credits & data attribution
 
+The dictionary tools in [`tools/`](tools/) verify readings and gather example
+words against KANJIDIC2 / JMdict — see [`tools/README.md`](tools/README.md) for
+the one-time download and run commands (they work fully offline).
+
 Example words and readings sourced or verified with the dictionary tools in
 `tools/` come from **JMdict / KANJIDIC**, © the [Electronic Dictionary Research
 and Development Group (EDRDG)](https://www.edrdg.org/), used under the

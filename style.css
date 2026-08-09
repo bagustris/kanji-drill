@@ -282,6 +282,42 @@ html, body {
 
 .settings-install-hint.hidden { display: none; }
 
+/* About section in Settings */
+.about-app {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: bold;
+}
+
+.about-version {
+  margin-left: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: normal;
+  color: #8a8378;
+}
+
+.about-link {
+  align-self: flex-start;
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.about-link span {
+  display: block;
+  margin-top: 0.1rem;
+  font-size: 0.7rem;
+  font-weight: normal;
+  color: #8a8378;
+}
+
+.about-link:hover,
+.about-link:focus-visible {
+  text-decoration: underline;
+}
+
 #app {
   max-width: 480px;
   margin: 0 auto;
