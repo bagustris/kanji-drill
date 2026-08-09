@@ -174,9 +174,25 @@ function audioEnabled() {
 // otherwise. Centralized so every call site shares the same gate. The
 // okurigana dot (e.g. "おぼ.える") is a display marker, not something to
 // pronounce, so it's stripped before the reading is spoken.
-function speakReading(reading) {
-  if (!reading) return;
-  if (audioEnabled() && AudioPlayer.isSupported()) AudioPlayer.speak(reading.replace(/\./g, ''));
+function speakReading(reading, onEnd) {
+  const text = reading ? reading.replace(/\./g, '') : '';
+  if (text && audioEnabled() && AudioPlayer.isSupported()) {
+    AudioPlayer.speak(text, onEnd);
+  } else if (onEnd) {
+    onEnd();
+  }
+}
+
+// How long the revealed answer stays on screen before auto-advancing, scaled to
+// how much there is to read: a single kanji reading needs less time than a long
+// compound (熟語) or an example sentence. `text` is the reading/sentence being
+// shown/spoken; a wrong answer gets a larger base, and the result is clamped so
+// nothing is instant or interminable. With audio on this is only the floor — the
+// advance also waits for the utterance to finish (see handleAnswer).
+function advanceDelayMs(text, isCorrect) {
+  const len = (text || '').length;
+  const ms = (isCorrect ? 650 : 1300) + len * 120;
+  return Math.min(isCorrect ? 6000 : 8000, Math.max(isCorrect ? 700 : 1800, ms));
 }
 
 function isSettingsOpen() {
@@ -604,7 +620,14 @@ const INSTRUCTION_TEXT = {
 };
 const DEFAULT_INSTRUCTION = ['正しい読み方は？', 'Choose the correct reading'];
 
+// Bumped every time a question renders. An audio-gated auto-advance captures
+// this at answer time and only fires if it still matches — so a spoken reading
+// that finishes (or is cancelled) after the learner has moved on, quit, or
+// started a new round can't trigger a stray skip.
+let renderGen = 0;
+
 function renderQuestion() {
+  renderGen++;
   const q = state.questions[state.index];
   const isReverse = state.mode === 'reverse';
   // Cut off any reading still being spoken from the previous question's reveal
@@ -885,11 +908,6 @@ function handleAnswer(selected, btnEl) {
     el.quizKanji.innerHTML = highlightTarget(q.sentence, q.target, furiganaHTML(kanjiPart, q.correctReading));
   }
 
-  // Forward modes speak the reading now that it's revealed (the reading is the
-  // answer, so it couldn't be spoken earlier — it lives in correctReading).
-  // Reverse mode already spoke it when the question rendered — don't repeat it.
-  if (state.mode !== 'reverse') speakReading(q.correctReading);
-
   // Kanji mode reveals the example words that use this kanji, reinforcing the
   // kanji -> word association the way a drill book's 熟語 list does.
   renderExamples(q);
@@ -902,15 +920,43 @@ function handleAnswer(selected, btnEl) {
 
   renderDashboard();
 
+  // Forward modes speak the reading now that it's revealed (it lives in
+  // correctReading — couldn't be spoken earlier without giving the answer
+  // away). Reverse mode already spoke it when the question rendered.
+  const spokenText = state.mode !== 'reverse' ? q.correctReading : '';
+  // Length for the reading pause: the whole sentence in sentence mode, the
+  // reading otherwise — so longer content gets more time on screen.
+  const readText = state.mode === 'sentence' ? q.sentence
+    : state.mode === 'reverse' ? q.reading
+    : q.correctReading;
+
   if (SettingsManager.get('autoAdvance')) {
     // A wrong answer gets a longer pause than a correct one: that's the moment
-    // the revealed reading actually needs to be read, and it mirrors how the
-    // drill books give extra repetitions to the kanji you missed.
-    state.advanceTimer = setTimeout(advanceQuestion, isCorrect ? 700 : 1800);
+    // the revealed reading actually needs to be read. Length-adaptive so a long
+    // compound or sentence gets more time than a single short reading.
+    const delay = advanceDelayMs(readText, isCorrect);
+    const willSpeak = !!spokenText && audioEnabled() && AudioPlayer.isSupported();
+    if (willSpeak) {
+      // With audio on, don't cut the spoken reading off: advance only once BOTH
+      // the reading pause has elapsed AND the utterance has finished. renderGen
+      // + the screen check guard against a late speech callback (from quitting
+      // or retrying mid-reading) triggering a stray skip.
+      const gen = renderGen;
+      let waited = false;
+      let spoken = false;
+      const maybeAdvance = () => {
+        if (waited && spoken && gen === renderGen && state.screen === 'quiz') advanceQuestion();
+      };
+      state.advanceTimer = setTimeout(() => { state.advanceTimer = null; waited = true; maybeAdvance(); }, delay);
+      speakReading(spokenText, () => { spoken = true; maybeAdvance(); });
+    } else {
+      state.advanceTimer = setTimeout(advanceQuestion, delay);
+    }
   } else {
-    // Manual advance (the default): let the learner dwell on the revealed
-    // answer as long as they like, then continue with a tap/click or
-    // →/Enter/Space (see the quiz keydown handler).
+    // Manual advance (the default): speak the reading (forward modes), then let
+    // the learner dwell on the revealed answer as long as they like and continue
+    // with a tap/click or →/Enter/Space (see the quiz keydown handler).
+    if (spokenText) speakReading(spokenText);
     state.awaitingContinue = true;
     el.quizContinue.classList.remove('hidden');
     // Register the click-to-continue listener on the *next* macrotask, so the
@@ -936,6 +982,7 @@ function onContinueClick() {
 // the auto-advance timer and a manual continue, so timer/awaiting state and
 // the continue hint are always cleared exactly once.
 function advanceQuestion() {
+  if (state.screen !== 'quiz') return; // guards a late audio callback after quitting
   if (state.advanceTimer !== null) {
     clearTimeout(state.advanceTimer);
     state.advanceTimer = null;

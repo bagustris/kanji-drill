@@ -34,19 +34,28 @@ const AudioPlayer = (() => {
     window.speechSynthesis.onvoiceschanged = pickVoice;
   }
 
-  // Speak a short string (a reading/word). Cancels anything still playing so
-  // rapid question transitions never queue or overlap utterances.
-  function speak(text) {
-    if (!supported || !text) return;
+  // Speak a string (a reading/word/compound). Cancels anything still playing so
+  // rapid question transitions never queue or overlap utterances. `onEnd`, if
+  // given, is invoked exactly once when speech finishes (or errors, or can't
+  // start) — callers use it to wait for the reading before advancing rather
+  // than cutting it off with a fixed timer.
+  function speak(text, onEnd) {
+    let done = false;
+    const finish = () => { if (done) return; done = true; if (onEnd) onEnd(); };
+    if (!supported || !text) { finish(); return; }
     try {
       window.speechSynthesis.cancel();
       const utterance = new window.SpeechSynthesisUtterance(text);
       utterance.lang = 'ja-JP';
       if (jaVoice) utterance.voice = jaVoice;
       utterance.rate = 0.95; // a hair slower than default, closer to a teacher's pace
+      utterance.onend = finish;
+      utterance.onerror = finish; // cancel() also lands here — the caller guards staleness
       window.speechSynthesis.speak(utterance);
     } catch {
-      // Any speech-engine hiccup is non-fatal to the quiz — stay silent.
+      // Any speech-engine hiccup is non-fatal to the quiz — resolve so an
+      // audio-gated auto-advance still proceeds rather than hanging.
+      finish();
     }
   }
 
