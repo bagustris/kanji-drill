@@ -35,7 +35,13 @@
     "readings": [
       "きん"
     ],
-    "meaning": "tight; urgent"
+    "meaning": "tight; urgent",
+    "examples": [
+      { "word": "緊急な", "reading": "きんきゅうな", "gloss": "urgent, pressing" },
+      { "word": "緊密な", "reading": "きんみつな", "gloss": "close" },
+      { "word": "緊迫する", "reading": "きんぱくする", "gloss": "become tense, grow strained" },
+      { "word": "緊張する", "reading": "きんちょうする", "gloss": "get tense, be strained" }
+    ]
   },
   {
     "kanji": "緒",
@@ -43,7 +49,13 @@
       "お",
       "しょ"
     ],
-    "meaning": "beginning; cord"
+    "meaning": "beginning; cord",
+    "examples": [
+      { "word": "由緒", "reading": "ゆいしょ", "gloss": "lineage, history, pedigree" },
+      { "word": "一緒", "reading": "いっしょ", "gloss": "together" },
+      { "word": "内緒", "reading": "ないしょ", "gloss": "secrecy, secret" },
+      { "word": "端緒", "reading": "たんしょ", "gloss": "clue, start, beginning" }
+    ]
   },
   {
     "kanji": "締",
@@ -141,7 +153,13 @@
     "readings": [
       "かん"
     ],
-    "meaning": "can (container)"
+    "meaning": "can (container)",
+    "examples": [
+      { "word": "缶", "reading": "かん", "gloss": "can, tin" },
+      { "word": "缶切り", "reading": "かんきり", "gloss": "can opener" },
+      { "word": "缶詰め", "reading": "かんづめ", "gloss": "canned goods, tin can" },
+      { "word": "空き缶", "reading": "あきかん", "gloss": "empty can" }
+    ]
   },
   {
     "kanji": "罰",
@@ -238,7 +256,13 @@
     "readings": [
       "はだ"
     ],
-    "meaning": "skin"
+    "meaning": "skin",
+    "examples": [
+      { "word": "肌", "reading": "はだ", "gloss": "skin" },
+      { "word": "肌身", "reading": "はだみ", "gloss": "body" },
+      { "word": "肌着", "reading": "はだぎ", "gloss": "underwear" },
+      { "word": "肌色", "reading": "はだいろ", "gloss": "skin-colored" }
+    ]
   },
   {
     "kanji": "肖",
@@ -283,7 +307,13 @@
       "かた",
       "けん"
     ],
-    "meaning": "shoulder"
+    "meaning": "shoulder",
+    "examples": [
+      { "word": "肩甲骨", "reading": "けんこうこつ", "gloss": "shoulder-blade" },
+      { "word": "強肩", "reading": "きょうけん", "gloss": "strong throwing arm" },
+      { "word": "肩", "reading": "かた", "gloss": "shoulder" },
+      { "word": "肩書き", "reading": "かたがき", "gloss": "title" }
+    ]
   },
   {
     "kanji": "肪",
@@ -297,7 +327,11 @@
     "readings": [
       "こう"
     ],
-    "meaning": "agree; consent"
+    "meaning": "agree; consent",
+    "examples": [
+      { "word": "肯定文", "reading": "こうていぶん", "gloss": "affirmative sentence" },
+      { "word": "肯定する", "reading": "こうていする", "gloss": "affirm, agree" }
+    ]
   },
   {
     "kanji": "胆",
@@ -333,7 +367,13 @@
       "あぶら",
       "し"
     ],
-    "meaning": "fat; grease"
+    "meaning": "fat; grease",
+    "examples": [
+      { "word": "脂肪", "reading": "しぼう", "gloss": "fat, grease, blubber" },
+      { "word": "脂質", "reading": "ししつ", "gloss": "lipid, fats, adipose" },
+      { "word": "油脂", "reading": "ゆし", "gloss": "fat, fats and oils" },
+      { "word": "脂", "reading": "あぶら", "gloss": "fat, tallow, lard" }
+    ]
   },
   {
     "kanji": "脅",
@@ -371,7 +411,13 @@
       "ぬ.ぐ",
       "ぬ.げる"
     ],
-    "meaning": "take off; escape"
+    "meaning": "take off; escape",
+    "examples": [
+      { "word": "脱ぐ", "reading": "ぬぐ", "gloss": "take off (clothes, shoes) [v.t.]" },
+      { "word": "脱げる", "reading": "ぬげる", "gloss": "come off (clothes, shoes) [v.i.]" },
+      { "word": "脱衣所", "reading": "だついじょ", "gloss": "dressing room" },
+      { "word": "脱線する", "reading": "だっせんする", "gloss": "digress, derail [v.i.]" }
+    ]
   },
   {
     "kanji": "腎",
@@ -394,7 +440,13 @@
       "うで",
       "わん"
     ],
-    "meaning": "arm"
+    "meaning": "arm",
+    "examples": [
+      { "word": "腕章", "reading": "わんしょう", "gloss": "arm band" },
+      { "word": "腕力", "reading": "わんりょく", "gloss": "physical strength, brute strength" },
+      { "word": "上腕", "reading": "じょうわん", "gloss": "upper arm" },
+      { "word": "手腕", "reading": "しゅわん", "gloss": "ability" }
+    ]
   },
   {
     "kanji": "腫",
@@ -410,7 +462,13 @@
       "こし",
       "よう"
     ],
-    "meaning": "hip; waist"
+    "meaning": "hip; waist",
+    "examples": [
+      { "word": "腰痛", "reading": "ようつう", "gloss": "back pain" },
+      { "word": "腰", "reading": "こし", "gloss": "waist" },
+      { "word": "腰骨", "reading": "こしぼね", "gloss": "hipbone, innominate bone" },
+      { "word": "足腰", "reading": "あしこし", "gloss": "legs and loins" }
+    ]
   },
   {
     "kanji": "腺",
@@ -424,7 +482,12 @@
     "readings": [
       "ふ"
     ],
-    "meaning": "skin (surface)"
+    "meaning": "skin (surface)",
+    "examples": [
+      { "word": "皮膚", "reading": "ひふ", "gloss": "skin" },
+      { "word": "皮膚科", "reading": "ひふか", "gloss": "dermatology" },
+      { "word": "皮膚病", "reading": "ひふびょう", "gloss": "skin disease" }
+    ]
   },
   {
     "kanji": "膜",
@@ -499,7 +562,13 @@
       "ま.う",
       "ぶ"
     ],
-    "meaning": "dance"
+    "meaning": "dance",
+    "examples": [
+      { "word": "舞台", "reading": "ぶたい", "gloss": "stage, scene or setting" },
+      { "word": "舞曲", "reading": "ぶきょく", "gloss": "musical dance" },
+      { "word": "舞踏会", "reading": "ぶとうかい", "gloss": "ball, dance" },
+      { "word": "歌舞伎", "reading": "かぶき", "gloss": "kabuki" }
+    ]
   },
   {
     "kanji": "舟",
@@ -507,14 +576,25 @@
       "ふね",
       "ふな"
     ],
-    "meaning": "boat"
+    "meaning": "boat",
+    "examples": [
+      { "word": "舟", "reading": "ふね", "gloss": "ship, boat, watercraft" },
+      { "word": "舟大工", "reading": "ふなだいく", "gloss": "shipwright" },
+      { "word": "舟着き場", "reading": "ふなつきば", "gloss": "wharf" },
+      { "word": "舟航", "reading": "しゅうこう", "gloss": "boating, sailing" }
+    ]
   },
   {
     "kanji": "般",
     "readings": [
       "はん"
     ],
-    "meaning": "sort; general"
+    "meaning": "sort; general",
+    "examples": [
+      { "word": "諸般", "reading": "しょはん", "gloss": "circumstances" },
+      { "word": "一般的な", "reading": "いっぱんてきな", "gloss": "common, usual, average" },
+      { "word": "全般的な", "reading": "ぜんぱんてきな", "gloss": "general [adj.]" }
+    ]
   },
   {
     "kanji": "舶",
@@ -564,7 +644,13 @@
     "readings": [
       "しば"
     ],
-    "meaning": "lawn; turf"
+    "meaning": "lawn; turf",
+    "examples": [
+      { "word": "芝", "reading": "しば", "gloss": "lawn, sod, turf" },
+      { "word": "芝生", "reading": "しばふ", "gloss": "lawn" },
+      { "word": "芝居", "reading": "しばい", "gloss": "play, drama" },
+      { "word": "人工芝", "reading": "じんこうしば", "gloss": "artificial grass" }
+    ]
   },
   {
     "kanji": "芯",
@@ -618,7 +704,13 @@
       "あ.らす",
       "あら.い"
     ],
-    "meaning": "rough; wild"
+    "meaning": "rough; wild",
+    "examples": [
+      { "word": "荒らす", "reading": "あらす", "gloss": "lay waste, devastate, damage" },
+      { "word": "荒い", "reading": "あらい", "gloss": "rough, rude, wild, harsh" },
+      { "word": "荒々しい", "reading": "あらあらしい", "gloss": "rough, wild, harsh, violent" },
+      { "word": "荒っぽい", "reading": "あらっぽい", "gloss": "rough, rude" }
+    ]
   },
   {
     "kanji": "荘",
@@ -646,7 +738,13 @@
     "readings": [
       "か"
     ],
-    "meaning": "confection (as in 菓子)"
+    "meaning": "confection (as in 菓子)",
+    "examples": [
+      { "word": "菓子", "reading": "かし", "gloss": "pastry" },
+      { "word": "菓子屋", "reading": "かしや", "gloss": "confectionery shop" },
+      { "word": "銘菓", "reading": "めいか", "gloss": "cake of a well-known brand" },
+      { "word": "和菓子", "reading": "わがし", "gloss": "Japanese confectionery" }
+    ]
   },
   {
     "kanji": "華",
@@ -654,7 +752,13 @@
       "はな",
       "か"
     ],
-    "meaning": "flower; splendor"
+    "meaning": "flower; splendor",
+    "examples": [
+      { "word": "華道", "reading": "かどう", "gloss": "flower arrangement" },
+      { "word": "華氏", "reading": "かし", "gloss": "Fahrenheit" },
+      { "word": "中華料理", "reading": "ちゅうかりょうり", "gloss": "Chinese food" },
+      { "word": "華麗な", "reading": "かれいな", "gloss": "splendid, magnificent" }
+    ]
   },
   {
     "kanji": "萎",
@@ -717,7 +821,13 @@
       "うす.い",
       "うす.める"
     ],
-    "meaning": "thin"
+    "meaning": "thin",
+    "examples": [
+      { "word": "薄める", "reading": "うすめる", "gloss": "dilute, water down [v.t.]" },
+      { "word": "薄まる", "reading": "うすまる", "gloss": "become weak (color, taste) [v.i.]" },
+      { "word": "薄らぐ", "reading": "うすらぐ", "gloss": "become thin, fade [v.i.]" },
+      { "word": "薄れる", "reading": "うすれる", "gloss": "fade, become dim [v.i.]" }
+    ]
   },
   {
     "kanji": "薦",
@@ -905,7 +1015,13 @@
       "ふくろ",
       "たい"
     ],
-    "meaning": "bag"
+    "meaning": "bag",
+    "examples": [
+      { "word": "郵袋", "reading": "ゆうたい", "gloss": "mailbag" },
+      { "word": "袋", "reading": "ふくろ", "gloss": "bag, sack" },
+      { "word": "袋小路", "reading": "ふくろこうじ", "gloss": "blind alley, cul-de-sac" },
+      { "word": "お袋", "reading": "おふくろ", "gloss": "one's mother" }
+    ]
   },
   {
     "kanji": "袖",
@@ -1005,7 +1121,13 @@
       "ふ.れる",
       "さわ.る"
     ],
-    "meaning": "touch"
+    "meaning": "touch",
+    "examples": [
+      { "word": "触れる", "reading": "ふれる", "gloss": "touch, reach, brush" },
+      { "word": "触れ合う", "reading": "ふれあう", "gloss": "come in contact with, touch" },
+      { "word": "触る", "reading": "さわる", "gloss": "touch" },
+      { "word": "触覚", "reading": "しょっかく", "gloss": "sense of touch" }
+    ]
   },
   {
     "kanji": "訂",
@@ -1095,7 +1217,13 @@
       "つ.める",
       "つ.まる"
     ],
-    "meaning": "stuff; pack"
+    "meaning": "stuff; pack",
+    "examples": [
+      { "word": "詰問する", "reading": "きつもんする", "gloss": "cross-examine" },
+      { "word": "詰める", "reading": "つめる", "gloss": "pack, fill, plug, shorten [v.t.]" },
+      { "word": "詰まる", "reading": "つまる", "gloss": "be blocked, be packed [v.i.]" },
+      { "word": "詰む", "reading": "つむ", "gloss": "close, become fine" }
+    ]
   },
   {
     "kanji": "該",
@@ -1110,7 +1238,11 @@
       "くわ.しい",
       "しょう"
     ],
-    "meaning": "detailed"
+    "meaning": "detailed",
+    "examples": [
+      { "word": "詳細", "reading": "しょうさい", "gloss": "detail" },
+      { "word": "詳しい", "reading": "くわしい", "gloss": "detailed, knowledgable" }
+    ]
   },
   {
     "kanji": "誇",
@@ -1118,7 +1250,13 @@
       "ほこ.る",
       "こ"
     ],
-    "meaning": "be proud; boast"
+    "meaning": "be proud; boast",
+    "examples": [
+      { "word": "誇大妄想", "reading": "こだいもうそう", "gloss": "megalomania" },
+      { "word": "誇張する", "reading": "こちょうする", "gloss": "exaggerate" },
+      { "word": "誇示する", "reading": "こじする", "gloss": "display, show off" },
+      { "word": "誇る", "reading": "ほこる", "gloss": "boast of, be proud of" }
+    ]
   },
   {
     "kanji": "誉",
@@ -1149,7 +1287,11 @@
     "readings": [
       "だれ"
     ],
-    "meaning": "who"
+    "meaning": "who",
+    "examples": [
+      { "word": "誰", "reading": "だれ", "gloss": "who" },
+      { "word": "誰何", "reading": "すいか", "gloss": "asking a person's identity" }
+    ]
   },
   {
     "kanji": "請",
@@ -1270,7 +1412,13 @@
       "ぶた",
       "とん"
     ],
-    "meaning": "pig"
+    "meaning": "pig",
+    "examples": [
+      { "word": "豚カツ", "reading": "とんカツ", "gloss": "pork cutlet" },
+      { "word": "豚舎", "reading": "とんしゃ", "gloss": "pigpen, pigsty" },
+      { "word": "養豚", "reading": "ようとん", "gloss": "pig-keeping, pig farming" },
+      { "word": "豚", "reading": "ぶた", "gloss": "pig" }
+    ]
   },
   {
     "kanji": "豪",
@@ -1306,7 +1454,13 @@
     "readings": [
       "はん"
     ],
-    "meaning": "sell"
+    "meaning": "sell",
+    "examples": [
+      { "word": "販路", "reading": "はんろ", "gloss": "market, outlet" },
+      { "word": "自動販売機", "reading": "じどうはんばいき", "gloss": "vending machine" },
+      { "word": "販売する", "reading": "はんばいする", "gloss": "sell, market" },
+      { "word": "市販する", "reading": "しはんする", "gloss": "put on the market, market" }
+    ]
   },
   {
     "kanji": "貪",
@@ -1382,7 +1536,13 @@
       "かしこ.い",
       "けん"
     ],
-    "meaning": "wise"
+    "meaning": "wise",
+    "examples": [
+      { "word": "賢者", "reading": "けんじゃ", "gloss": "wise man, sage" },
+      { "word": "賢母", "reading": "けんぼ", "gloss": "wise mother" },
+      { "word": "賢明な", "reading": "けんめいな", "gloss": "wise, intelligent, prudent" },
+      { "word": "賢い", "reading": "かしこい", "gloss": "wise, clever, smart" }
+    ]
   },
   {
     "kanji": "賦",
@@ -1412,7 +1572,13 @@
       "おく.る",
       "ぞう"
     ],
-    "meaning": "give (a gift)"
+    "meaning": "give (a gift)",
+    "examples": [
+      { "word": "贈与", "reading": "ぞうよ", "gloss": "presentation, donation" },
+      { "word": "贈賄", "reading": "ぞうわい", "gloss": "bribery" },
+      { "word": "贈答品", "reading": "ぞうとうひん", "gloss": "gift, present" },
+      { "word": "贈呈する", "reading": "ぞうていする", "gloss": "give, present" }
+    ]
   },
   {
     "kanji": "赦",
@@ -1435,7 +1601,13 @@
       "こ.す",
       "こ.える"
     ],
-    "meaning": "exceed"
+    "meaning": "exceed",
+    "examples": [
+      { "word": "超す", "reading": "こす", "gloss": "cross, pass [v.i.]" },
+      { "word": "超える", "reading": "こえる", "gloss": "exceed, cross over [v.i.]" },
+      { "word": "超人", "reading": "ちょうじん", "gloss": "superman" },
+      { "word": "超特急", "reading": "ちょうとっきゅう", "gloss": "super express" }
+    ]
   },
   {
     "kanji": "越",
@@ -1443,7 +1615,13 @@
       "こ.す",
       "こ.える"
     ],
-    "meaning": "cross over; surpass"
+    "meaning": "cross over; surpass",
+    "examples": [
+      { "word": "越す", "reading": "こす", "gloss": "go over, exceed, move [v.i]" },
+      { "word": "引っ越す", "reading": "ひっこす", "gloss": "move [v.i.]" },
+      { "word": "越える", "reading": "こえる", "gloss": "go over, exceed [v.i.]" },
+      { "word": "超越する", "reading": "ちょうえつする", "gloss": "transcend" }
+    ]
   },
   {
     "kanji": "趣",
@@ -1451,7 +1629,13 @@
       "おもむき",
       "しゅ"
     ],
-    "meaning": "taste; gist"
+    "meaning": "taste; gist",
+    "examples": [
+      { "word": "趣味", "reading": "しゅみ", "gloss": "hobby, interest, tastes" },
+      { "word": "趣旨", "reading": "しゅし", "gloss": "object, goal" },
+      { "word": "趣向", "reading": "しゅこう", "gloss": "plan, scheme" },
+      { "word": "趣", "reading": "おもむき", "gloss": "grace, refinement" }
+    ]
   },
   {
     "kanji": "距",
@@ -1466,7 +1650,13 @@
       "あと",
       "せき"
     ],
-    "meaning": "mark; trace"
+    "meaning": "mark; trace",
+    "examples": [
+      { "word": "足跡", "reading": "そくせき", "gloss": "footprints" },
+      { "word": "奇跡", "reading": "きせき", "gloss": "miracle, wonder, marvel" },
+      { "word": "筆跡", "reading": "ひっせき", "gloss": "handwriting" },
+      { "word": "遺跡", "reading": "いせき", "gloss": "historic ruins" }
+    ]
   },
   {
     "kanji": "跳",
@@ -1489,7 +1679,13 @@
       "おど.る",
       "おど.り"
     ],
-    "meaning": "dance"
+    "meaning": "dance",
+    "examples": [
+      { "word": "踊る", "reading": "おどる", "gloss": "dance [v.i.]" },
+      { "word": "踊り子", "reading": "おどりこ", "gloss": "dancer" },
+      { "word": "盆踊り", "reading": "ぼんおどり", "gloss": "Bon festival dance" },
+      { "word": "舞踊", "reading": "ぶよう", "gloss": "dance [n.]" }
+    ]
   },
   {
     "kanji": "踏",
@@ -1535,7 +1731,13 @@
       "のき",
       "けん"
     ],
-    "meaning": "eaves; counter for houses"
+    "meaning": "eaves; counter for houses",
+    "examples": [
+      { "word": "軒数", "reading": "けんすう", "gloss": "number of houses" },
+      { "word": "一軒", "reading": "いっけん", "gloss": "one house" },
+      { "word": "一軒家", "reading": "いっけんや", "gloss": "an isolated house" },
+      { "word": "軒", "reading": "のき", "gloss": "eaves" }
+    ]
   },
   {
     "kanji": "軟",
@@ -1543,7 +1745,13 @@
       "やわ.らか",
       "やわ.らかい"
     ],
-    "meaning": "soft; flexible"
+    "meaning": "soft; flexible",
+    "examples": [
+      { "word": "軟らかい", "reading": "やわらかい", "gloss": "soft, tender, limp" },
+      { "word": "軟骨", "reading": "なんこつ", "gloss": "cartilage" },
+      { "word": "軟水", "reading": "なんすい", "gloss": "soft water" },
+      { "word": "軟着陸", "reading": "なんちゃくりく", "gloss": "soft-landing" }
+    ]
   },
   {
     "kanji": "軸",
@@ -1557,7 +1765,12 @@
     "readings": [
       "かく"
     ],
-    "meaning": "compare"
+    "meaning": "compare",
+    "examples": [
+      { "word": "較差", "reading": "かくさ", "gloss": "range [n.]" },
+      { "word": "比較的", "reading": "ひかくてき", "gloss": "comparatively, relatively" },
+      { "word": "比較する", "reading": "ひかくする", "gloss": "compare" }
+    ]
   },
   {
     "kanji": "載",
@@ -1580,7 +1793,13 @@
     "readings": [
       "はい"
     ],
-    "meaning": "companion; fellow"
+    "meaning": "companion; fellow",
+    "examples": [
+      { "word": "後輩", "reading": "こうはい", "gloss": "junior (at work or school)" },
+      { "word": "若輩", "reading": "じゃくはい", "gloss": "young or inexperienced person" },
+      { "word": "吾輩", "reading": "わがはい", "gloss": "I (nuance of arrogance)" },
+      { "word": "我が輩", "reading": "わがはい", "gloss": "I (nuance of arrogance)" }
+    ]
   },
   {
     "kanji": "轄",
@@ -1595,7 +1814,13 @@
       "から.い",
       "しん"
     ],
-    "meaning": "spicy; hard"
+    "meaning": "spicy; hard",
+    "examples": [
+      { "word": "辛苦", "reading": "しんく", "gloss": "hardship, toil, trouble" },
+      { "word": "辛酸", "reading": "しんさん", "gloss": "hardships, privation" },
+      { "word": "辛辣な", "reading": "しんらつな", "gloss": "bitter, sharp, acrimonious" },
+      { "word": "辛抱する", "reading": "しんぼうする", "gloss": "endure, persevere" }
+    ]
   },
   {
     "kanji": "辣",
@@ -1610,7 +1835,13 @@
       "はずかし.める",
       "じょく"
     ],
-    "meaning": "disgrace"
+    "meaning": "disgrace",
+    "examples": [
+      { "word": "屈辱", "reading": "くつじょく", "gloss": "disgrace, humiliation" },
+      { "word": "恥辱", "reading": "ちじょく", "gloss": "disgrace, shame, insult" },
+      { "word": "雪辱", "reading": "せつじょく", "gloss": "vindication of one's honor" },
+      { "word": "侮辱する", "reading": "ぶじょくする", "gloss": "treat with contempt, insult" }
+    ]
   },
   {
     "kanji": "込",
@@ -1618,7 +1849,13 @@
       "こ.む",
       "こ.める"
     ],
-    "meaning": "be crowded; include"
+    "meaning": "be crowded; include",
+    "examples": [
+      { "word": "込める", "reading": "こめる", "gloss": "include, put into [v.t.]" },
+      { "word": "閉じ込める", "reading": "とじこめる", "gloss": "lock up, shut up, imprison" },
+      { "word": "引っ込める", "reading": "ひっこめる", "gloss": "draw in, take in, retract" },
+      { "word": "込む", "reading": "こむ", "gloss": "be crowded, be thronged [v.i.]" }
+    ]
   },
   {
     "kanji": "迅",
@@ -1633,7 +1870,13 @@
       "むか.える",
       "げい"
     ],
-    "meaning": "welcome"
+    "meaning": "welcome",
+    "examples": [
+      { "word": "迎賓館", "reading": "げいひんかん", "gloss": "reception hall" },
+      { "word": "送迎バス", "reading": "そうげいバス", "gloss": "a pick up and drop off bus" },
+      { "word": "迎合する", "reading": "げいごうする", "gloss": "flatter, ingratiate" },
+      { "word": "歓迎する", "reading": "かんげいする", "gloss": "welcome, give warm reception" }
+    ]
   },
   {
     "kanji": "迫",
@@ -1656,7 +1899,13 @@
       "のが.す",
       "のが.れる"
     ],
-    "meaning": "escape"
+    "meaning": "escape",
+    "examples": [
+      { "word": "逃す", "reading": "のがす", "gloss": "miss, waste, let slip [v.t.]" },
+      { "word": "見逃す", "reading": "みのがす", "gloss": "miss, overlook" },
+      { "word": "逃れる", "reading": "のがれる", "gloss": "escape, evade [v.i.]" },
+      { "word": "言い逃れ", "reading": "いいのがれ", "gloss": "evasion, excuse" }
+    ]
   },
   {
     "kanji": "透",
@@ -1685,7 +1934,13 @@
     "readings": [
       "と"
     ],
-    "meaning": "way; route"
+    "meaning": "way; route",
+    "examples": [
+      { "word": "途中", "reading": "とちゅう", "gloss": "on the way, en route, midway" },
+      { "word": "前途", "reading": "ぜんと", "gloss": "future prospects, outlook" },
+      { "word": "用途", "reading": "ようと", "gloss": "use, usefulness" },
+      { "word": "帰途", "reading": "きと", "gloss": "on the way back, returning" }
+    ]
   },
   {
     "kanji": "逝",
@@ -1723,7 +1978,13 @@
       "おく.れる",
       "おく.らす"
     ],
-    "meaning": "be late"
+    "meaning": "be late",
+    "examples": [
+      { "word": "遅れる", "reading": "おくれる", "gloss": "be late [v.i.]" },
+      { "word": "遅らす", "reading": "おくらす", "gloss": "delay [v.t.]" },
+      { "word": "遅刻する", "reading": "ちこくする", "gloss": "come late" },
+      { "word": "遅い", "reading": "おそい", "gloss": "late, slow" }
+    ]
   },
   {
     "kanji": "遇",
@@ -1745,7 +2006,13 @@
       "ちが.う",
       "ちが.える"
     ],
-    "meaning": "differ"
+    "meaning": "differ",
+    "examples": [
+      { "word": "違う", "reading": "ちがう", "gloss": "differ" },
+      { "word": "食い違う", "reading": "くいちがう", "gloss": "clash, run counter to" },
+      { "word": "間違い", "reading": "まちがい", "gloss": "mistake [n.]" },
+      { "word": "勘違い", "reading": "かんちがい", "gloss": "misunderstanding, wrong guess" }
+    ]
   },
   {
     "kanji": "遜",
@@ -1806,7 +2073,13 @@
       "さ.ける",
       "ひ"
     ],
-    "meaning": "avoid"
+    "meaning": "avoid",
+    "examples": [
+      { "word": "避暑地", "reading": "ひしょち", "gloss": "summer resort" },
+      { "word": "避雷針", "reading": "ひらいしん", "gloss": "lightning rod" },
+      { "word": "不可避な", "reading": "ふかひな", "gloss": "inevitable, inescapable" },
+      { "word": "避難する", "reading": "ひなんする", "gloss": "seek refuge, find shelter" }
+    ]
   },
   {
     "kanji": "還",
@@ -1834,7 +2107,13 @@
     "readings": [
       "じゃ"
     ],
-    "meaning": "evil; wrong"
+    "meaning": "evil; wrong",
+    "examples": [
+      { "word": "邪心", "reading": "じゃしん", "gloss": "malice, evil intentions" },
+      { "word": "邪道な", "reading": "じゃどうな", "gloss": "heresy, the course of evil" },
+      { "word": "邪魔な", "reading": "じゃまな", "gloss": "obstructive, burdensome" },
+      { "word": "邪悪な", "reading": "じゃあくな", "gloss": "wicked, evil" }
+    ]
   },
   {
     "kanji": "邸",
@@ -1848,7 +2127,11 @@
     "readings": [
       "こう"
     ],
-    "meaning": "suburb"
+    "meaning": "suburb",
+    "examples": [
+      { "word": "郊外", "reading": "こうがい", "gloss": "suburb, outskirts" },
+      { "word": "近郊", "reading": "きんこう", "gloss": "suburbs, outskirts, neighboring" }
+    ]
   },
   {
     "kanji": "郎",
@@ -1981,7 +2264,13 @@
       "にぶ.い",
       "にぶ.る"
     ],
-    "meaning": "dull; slow"
+    "meaning": "dull; slow",
+    "examples": [
+      { "word": "鈍る", "reading": "にぶる", "gloss": "grow dull, become blunt [v.i.]" },
+      { "word": "鈍い", "reading": "にぶい", "gloss": "dull, thickheaded, slow [adj.]" },
+      { "word": "鈍器", "reading": "どんき", "gloss": "blunt weapon" },
+      { "word": "鈍角", "reading": "どんかく", "gloss": "obtuse angle" }
+    ]
   },
   {
     "kanji": "鈴",
@@ -2026,7 +2315,13 @@
       "するど.い",
       "えい"
     ],
-    "meaning": "sharp"
+    "meaning": "sharp",
+    "examples": [
+      { "word": "鋭角", "reading": "えいかく", "gloss": "acute angle" },
+      { "word": "新鋭", "reading": "しんえい", "gloss": "new & powerful, fresh" },
+      { "word": "精鋭", "reading": "せいえい", "gloss": "elite, picked, best" },
+      { "word": "鋭利な", "reading": "えいりな", "gloss": "sharp" }
+    ]
   },
   {
     "kanji": "鋳",
@@ -2243,7 +2538,13 @@
       "すみ",
       "ぐう"
     ],
-    "meaning": "corner"
+    "meaning": "corner",
+    "examples": [
+      { "word": "一隅", "reading": "いちぐう", "gloss": "corner, nook" },
+      { "word": "隅", "reading": "すみ", "gloss": "corner, nook" },
+      { "word": "隅々", "reading": "すみずみ", "gloss": "every nook and corner" },
+      { "word": "片隅", "reading": "かたすみ", "gloss": "corner, nook" }
+    ]
   },
   {
     "kanji": "隆",
@@ -2289,7 +2590,13 @@
       "とな.る",
       "りん"
     ],
-    "meaning": "neighbor"
+    "meaning": "neighbor",
+    "examples": [
+      { "word": "隣人", "reading": "りんじん", "gloss": "neighbor" },
+      { "word": "隣国", "reading": "りんごく", "gloss": "neighboring country" },
+      { "word": "近隣", "reading": "きんりん", "gloss": "neighborhood, vicinity" },
+      { "word": "隣接する", "reading": "りんせつする", "gloss": "adjoin, be adjacent, be related" }
+    ]
   },
   {
     "kanji": "隷",
@@ -2303,7 +2610,12 @@
     "readings": [
       "せき"
     ],
-    "meaning": "counter for ships"
+    "meaning": "counter for ships",
+    "examples": [
+      { "word": "隻眼", "reading": "せきがん", "gloss": "one eye, knowledgeable person" },
+      { "word": "隻手", "reading": "せきしゅ", "gloss": "one arm, one hand" },
+      { "word": "一隻", "reading": "いっせき", "gloss": "one boat, one ship" }
+    ]
   },
   {
     "kanji": "雄",
@@ -2326,7 +2638,13 @@
       "やと.う",
       "こ"
     ],
-    "meaning": "employ; hire"
+    "meaning": "employ; hire",
+    "examples": [
+      { "word": "終身雇用制", "reading": "しゅうしんこようせい", "gloss": "system of lifetime employment" },
+      { "word": "雇用する", "reading": "こようする", "gloss": "employ, hire" },
+      { "word": "解雇する", "reading": "かいこする", "gloss": "discharge, fire, dismiss" },
+      { "word": "雇う", "reading": "やとう", "gloss": "employ, hire" }
+    ]
   },
   {
     "kanji": "雌",
@@ -2342,7 +2660,13 @@
       "はな.れる",
       "はな.す"
     ],
-    "meaning": "separate; leave"
+    "meaning": "separate; leave",
+    "examples": [
+      { "word": "離す", "reading": "はなす", "gloss": "part, divide, separate [v.t.]" },
+      { "word": "離れる", "reading": "はなれる", "gloss": "leave, separate [v.i.]" },
+      { "word": "離れ離れ", "reading": "はなればなれ", "gloss": "scattered, separated [n.]" },
+      { "word": "離島", "reading": "りとう", "gloss": "outlying island" }
+    ]
   },
   {
     "kanji": "雰",
@@ -2356,7 +2680,13 @@
     "readings": [
       "れい"
     ],
-    "meaning": "zero"
+    "meaning": "zero",
+    "examples": [
+      { "word": "零", "reading": "れい", "gloss": "zero, nought" },
+      { "word": "零度", "reading": "れいど", "gloss": "zero degree" },
+      { "word": "零下", "reading": "れいか", "gloss": "below zero" },
+      { "word": "零時", "reading": "れいじ", "gloss": "twelve o'clock" }
+    ]
   },
   {
     "kanji": "雷",
@@ -2379,7 +2709,13 @@
       "ふる.う",
       "ふる.える"
     ],
-    "meaning": "shake; tremble"
+    "meaning": "shake; tremble",
+    "examples": [
+      { "word": "震える", "reading": "ふるえる", "gloss": "shiver, shake, quake [v.i.]" },
+      { "word": "震動", "reading": "しんどう", "gloss": "shock, tremor, impact" },
+      { "word": "震度", "reading": "しんど", "gloss": "Japanese earthquake scale" },
+      { "word": "震源", "reading": "しんげん", "gloss": "epicenter" }
+    ]
   },
   {
     "kanji": "霊",
@@ -2419,7 +2755,13 @@
       "くつ",
       "か"
     ],
-    "meaning": "shoe"
+    "meaning": "shoe",
+    "examples": [
+      { "word": "軍靴", "reading": "ぐんか", "gloss": "military shoes" },
+      { "word": "製靴業", "reading": "せいかぎょう", "gloss": "the shoemaking industry" },
+      { "word": "靴", "reading": "くつ", "gloss": "shoes, footwear" },
+      { "word": "靴屋", "reading": "くつや", "gloss": "shoemaker, shoe store" }
+    ]
   },
   {
     "kanji": "韓",
@@ -2441,14 +2783,26 @@
       "ひび.く",
       "きょう"
     ],
-    "meaning": "echo; resound"
+    "meaning": "echo; resound",
+    "examples": [
+      { "word": "影響する", "reading": "えいきょうする", "gloss": "influence [v.t.]" },
+      { "word": "反響する", "reading": "はんきょうする", "gloss": "echo [v.i.]" },
+      { "word": "音響", "reading": "おんきょう", "gloss": "acoustic(s)" },
+      { "word": "交響曲", "reading": "こうきょうきょく", "gloss": "symphony" }
+    ]
   },
   {
     "kanji": "頃",
     "readings": [
       "ころ"
     ],
-    "meaning": "about (time)"
+    "meaning": "about (time)",
+    "examples": [
+      { "word": "頃", "reading": "ころ", "gloss": "approximately (time)" },
+      { "word": "頃日", "reading": "けいじつ", "gloss": "recently" },
+      { "word": "三時頃", "reading": "さんじごろ", "gloss": "about 3 o'clock" },
+      { "word": "この頃", "reading": "このごろ", "gloss": "recently" }
+    ]
   },
   {
     "kanji": "項",
@@ -2505,7 +2859,13 @@
       "たの.む",
       "たの.もしい"
     ],
-    "meaning": "request; rely on"
+    "meaning": "request; rely on",
+    "examples": [
+      { "word": "頼む", "reading": "たのむ", "gloss": "request, ask" },
+      { "word": "頼もしい", "reading": "たのもしい", "gloss": "trustworthy" },
+      { "word": "信頼する", "reading": "しんらいする", "gloss": "trust [v.t.]" },
+      { "word": "依頼する", "reading": "いらいする", "gloss": "request [v.t.]" }
+    ]
   },
   {
     "kanji": "顎",
@@ -2544,7 +2904,13 @@
       "あ.きる",
       "あ.かす"
     ],
-    "meaning": "get tired of; be full"
+    "meaning": "get tired of; be full",
+    "examples": [
+      { "word": "飽きる", "reading": "あきる", "gloss": "get tired of [v.i.]" },
+      { "word": "飽きっぽい", "reading": "あきっぽい", "gloss": "fickle, capricious" },
+      { "word": "飽き飽きする", "reading": "あきあきする", "gloss": "be bored, be sick of" },
+      { "word": "飽かす", "reading": "あかす", "gloss": "satiate, glut, indulge [v.t.]" }
+    ]
   },
   {
     "kanji": "飾",
@@ -2597,7 +2963,13 @@
     "readings": [
       "ちゅう"
     ],
-    "meaning": "stay; be stationed"
+    "meaning": "stay; be stationed",
+    "examples": [
+      { "word": "駐車場", "reading": "ちゅうしゃじょう", "gloss": "parking lot, parking place" },
+      { "word": "駐輪場", "reading": "ちゅうりんじょう", "gloss": "parking area for bicycles" },
+      { "word": "駐屯地", "reading": "ちゅうとんち", "gloss": "garrison" },
+      { "word": "駐日大使", "reading": "ちゅうにちたいし", "gloss": "ambassador to Japan" }
+    ]
   },
   {
     "kanji": "駒",
@@ -2619,7 +2991,13 @@
       "さわ.ぐ",
       "そう"
     ],
-    "meaning": "make noise; clamor"
+    "meaning": "make noise; clamor",
+    "examples": [
+      { "word": "騒音", "reading": "そうおん", "gloss": "noise" },
+      { "word": "騒動", "reading": "そうどう", "gloss": "strife, riot, rebellion" },
+      { "word": "騒々しい", "reading": "そうぞうしい", "gloss": "noisy, boisterous" },
+      { "word": "物騒な", "reading": "ぶっそうな", "gloss": "dangerous, disturbed, insecure" }
+    ]
   },
   {
     "kanji": "騰",
@@ -2634,7 +3012,13 @@
       "おどろ.く",
       "おどろ.かす"
     ],
-    "meaning": "be surprised"
+    "meaning": "be surprised",
+    "examples": [
+      { "word": "驚く", "reading": "おどろく", "gloss": "be surprised [v.i.]" },
+      { "word": "驚かす", "reading": "おどろかす", "gloss": "surprise [v.t.]" },
+      { "word": "驚嘆する", "reading": "きょうたんする", "gloss": "marvel [v.t.]" },
+      { "word": "驚喜する", "reading": "きょうきする", "gloss": "exult" }
+    ]
   },
   {
     "kanji": "骸",
@@ -2656,7 +3040,13 @@
       "かみ",
       "はつ"
     ],
-    "meaning": "hair (of head)"
+    "meaning": "hair (of head)",
+    "examples": [
+      { "word": "頭髪", "reading": "とうはつ", "gloss": "hair (on the head)" },
+      { "word": "毛髪", "reading": "もうはつ", "gloss": "hair" },
+      { "word": "白髪", "reading": "はくはつ", "gloss": "white hair, grey hair" },
+      { "word": "髪", "reading": "かみ", "gloss": "hair (on the head)" }
+    ]
   },
   {
     "kanji": "鬱",
@@ -2778,6 +3168,12 @@
     "readings": [
       "れい"
     ],
-    "meaning": "age (years)"
+    "meaning": "age (years)",
+    "examples": [
+      { "word": "年齢", "reading": "ねんれい", "gloss": "age, years" },
+      { "word": "樹齢", "reading": "じゅれい", "gloss": "age of a tree" },
+      { "word": "老齢", "reading": "ろうれい", "gloss": "advanced age, senility" },
+      { "word": "月齢", "reading": "げつれい", "gloss": "age of the moon" }
+    ]
   }
 ]

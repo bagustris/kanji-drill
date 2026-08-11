@@ -44,6 +44,14 @@ The main concept is "how kanji is read in particular words" and "how to associat
   classroom leans on. Forward modes speak the reading once it's revealed; the
   reverse quiz speaks it up front (it's already on screen). Turn it on in
   Settings; degrades to silence wherever no Japanese voice exists.
+- **Example words on the answer reveal (この漢字を使うことば)** — after you
+  answer a kanji-mode question, a few common words that use that kanji are
+  shown alongside the reading, reinforcing the kanji → word association the
+  way a drill book's 熟語 list does. Backed by an `examples` field per kanji
+  (curated from JMdict, backfilled from [Kanji alive](https://kanjialive.com)
+  where JMdict curation hasn't reached yet — see `CREDITS.md`); kanji without
+  any example data simply show nothing. On by default — turn it off in
+  Settings if you'd rather answer without it.
 - **Auto-advance by default (自動で次へ)** — after you answer, the quiz reveals
   the reading and moves on after a short timed pause. Turn the setting **off**
   to advance manually instead (tap/click, or → / Enter / Space), giving
@@ -95,6 +103,7 @@ If port 8000 is already in use (`OSError: [Errno 98] Address already in
 use`), find and stop whatever's holding it:
 
 ```bash
+fuser -k 8000/top                  # kills the process on port 8000 or  
 lsof -i :8000 -sTCP:LISTEN -P -n   # shows the PID
 kill <PID>                         # or `kill -9 <PID>` if it won't stop
 ```

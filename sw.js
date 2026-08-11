@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'kanji-drill-v21';
+const CACHE_VERSION = 'kanji-drill-v22';
 
 const CORE_ASSETS = [
   '.',

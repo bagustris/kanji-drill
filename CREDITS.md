@@ -27,6 +27,20 @@ licence. The full CC BY-SA 4.0 legal text is available at the link above; add it
 here as `LICENSE-CC-BY-SA-4.0.txt` from the official source if you ship the data
 in the repo.
 
+## Kanji alive (example words)
+
+Where JMdict-based curation hadn't reached a kanji yet, its `examples`
+(the "Words that use this kanji" list on the answer reveal) were backfilled
+from the [Kanji alive](https://kanjialive.com) project's language-data CSV via
+[`tools/fetch-examples-kanjialive.js`](tools/fetch-examples-kanjialive.js).
+
+- Source: <https://github.com/kanjialive/kanji-data-media>
+  (`language-data/ka_data.csv`)
+- Copyright © Kanji alive.
+- Licence: **Creative Commons Attribution 4.0 International (CC BY 4.0)**
+  — <https://creativecommons.org/licenses/by/4.0/> (attribution-only, unlike
+  JMdict/KANJIDIC's share-alike above).
+
 ## What is NOT from any workbook
 
 Kanji readings, okurigana (送り仮名), and per-grade assignments are language

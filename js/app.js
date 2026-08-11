@@ -57,6 +57,7 @@ const el = {
   btnSettingsClose: document.getElementById('btn-settings-close'),
   settingsOverlay: document.getElementById('settings-overlay'),
   settingShowMeaning: document.getElementById('setting-show-meaning'),
+  settingShowExamples: document.getElementById('setting-show-examples'),
   settingPlayAudio: document.getElementById('setting-play-audio'),
   settingAutoAdvance: document.getElementById('setting-auto-advance'),
   settingRoundSizeButtons: document.querySelectorAll('#setting-round-size .segmented-btn'),
@@ -263,6 +264,16 @@ function initSettingsPanel() {
   el.settingShowMeaning.addEventListener('change', () => {
     SettingsManager.set('showMeaning', el.settingShowMeaning.checked);
     applyMeaningVisibility();
+  });
+
+  el.settingShowExamples.checked = SettingsManager.get('showExamples');
+  el.settingShowExamples.addEventListener('change', () => {
+    SettingsManager.set('showExamples', el.settingShowExamples.checked);
+    // Only re-render if this question's examples were already revealed
+    // (options disabled) — toggling the setting on before answering must not
+    // reveal them early and give away the reading.
+    const answered = state.screen === 'quiz' && el.quizOptions.children[0] && el.quizOptions.children[0].disabled;
+    if (answered) renderExamples(state.questions[state.index]);
   });
 
   // Init from the *resolved* default (audioEnabled()), not the raw tri-state
@@ -870,20 +881,25 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
 // Renders the kanji's example words on the answer reveal (kanji mode only).
-// A no-op — hiding the panel — when there are none, so kanji that don't yet
-// carry `examples` data simply show nothing (see tools/fetch-example-words.js).
+// A no-op — hiding the panel — when there are none or the setting is off, so
+// kanji that don't yet carry `examples` data simply show nothing (see
+// tools/fetch-example-words.js and tools/fetch-examples-kanjialive.js).
 function renderExamples(q) {
   const examples = state.mode === 'kanji' && Array.isArray(q.examples) ? q.examples : [];
-  if (examples.length === 0) {
+  if (examples.length === 0 || !SettingsManager.get('showExamples')) {
     el.quizExamples.innerHTML = '';
     el.quizExamples.classList.add('hidden');
     return;
   }
   const rows = examples.map((ex) =>
-    `<li><span class="ex-word">${ex.word}</span>` +
-    `<span class="ex-reading">${ex.reading || ''}</span>` +
-    `<span class="ex-gloss">${ex.gloss || ''}</span></li>`
+    `<li><span class="ex-word">${escapeHtml(ex.word)}</span>` +
+    `<span class="ex-reading">${escapeHtml(ex.reading || '')}</span>` +
+    `<span class="ex-gloss">${escapeHtml(ex.gloss || '')}</span></li>`
   ).join('');
   el.quizExamples.innerHTML =
     `<div class="quiz-examples-label">この漢字を使うことば<span>Words that use this kanji</span></div><ul>${rows}</ul>`;

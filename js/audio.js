@@ -52,6 +52,13 @@ const AudioPlayer = (() => {
       utterance.onend = finish;
       utterance.onerror = finish; // cancel() also lands here — the caller guards staleness
       window.speechSynthesis.speak(utterance);
+      // Backstop: some browsers (older Android/Chrome notably) accept an
+      // utterance but the speech engine silently does nothing — no sound, and
+      // neither onend nor onerror ever fires. Callers that wait on `onEnd`
+      // (auto-advance) would hang forever without this. The cap is well past
+      // any real reading's speaking time, so working speech always finishes
+      // on its own first; this only fires when the engine is actually stuck.
+      setTimeout(finish, Math.min(10000, Math.max(2000, text.length * 400)));
     } catch {
       // Any speech-engine hiccup is non-fatal to the quiz — resolve so an
       // audio-gated auto-advance still proceeds rather than hanging.

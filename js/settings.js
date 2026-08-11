@@ -11,7 +11,9 @@ const SettingsManager = (() => {
   // autoAdvance defaults to true: after answering, the quiz moves on after a
   // short timed pause. Turning it off makes it wait for a manual continue
   // (tap / → / Enter) so there's unlimited time to read the revealed answer.
-  const DEFAULTS = { showMeaning: true, roundSize: 10, playAudio: false, autoAdvance: true };
+  // showExamples defaults to true: kanji mode reveals a few example words
+  // that use the kanji alongside the answer (see renderExamples in app.js).
+  const DEFAULTS = { showMeaning: true, roundSize: 10, playAudio: false, autoAdvance: true, showExamples: true };
 
   function load() {
     try {

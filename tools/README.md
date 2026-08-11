@@ -14,6 +14,7 @@ commercial くりかえし漢字ドリル / らくらくノート workbook — t
 | `audit-readings.js` | kanji readings not attested by KANJIDIC (e.g. `生 "う.ま"` → should be `う.む`) | kanji files: `data/gradeN.json`, jlpt `data/kanji-nN.json` |
 | `audit-words.js` | word readings not attested by JMdict | word files: `data/wordsN.json`, jlpt `data/compounds-nN.json` |
 | `fetch-example-words.js` | `example-words-report.json` — candidate 例語 per kanji to curate | kanji files (as above) |
+| `fetch-examples-kanjialive.js` | backfills `examples` directly (no review file — see below) for kanji that don't have any yet | kanji files (as above) |
 | `jmdict.js` | shared JMdict parser (not run directly) | — |
 
 ## Online usage
@@ -72,3 +73,12 @@ Approx sizes: KANJIDIC2 ~15 MB, JMdict_e ~35 MB gz / ~100 MB uncompressed.
   direct edit. Pick the words that reinforce the reading each grade teaches, add
   them to the data as an `examples` array (`{word, reading, gloss}` — kanji-drill
   already renders them on the answer reveal), and keep the JMdict attribution.
+- **`fetch-examples-kanjialive.js`** backfills the same `examples` field
+  directly, for any kanji that doesn't have one yet — it never touches an
+  entry that already has examples. Unlike the JMdict tool above it skips the
+  review step, because [Kanji alive](https://kanjialive.com)'s example lists
+  are already hand-curated per kanji, not raw frequency-ranked dictionary
+  output. Fetches its CSV over the network by default; pass `--csv <path>` to
+  use a local copy instead. Covers 1,235 kanji (grades 1-6 plus the general
+  jōyō set), so junior-high-only kanji (grades 7-9 here) are only partly
+  covered — see the CC BY 4.0 attribution in [`../CREDITS.md`](../CREDITS.md).
