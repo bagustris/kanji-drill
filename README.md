@@ -7,12 +7,13 @@ It is a static, browser-only kanji quiz covering all six years of Japanese eleme
 No backend, no build step, no framework — just HTML, CSS, and JavaScript,
 designed to run as-is on GitHub Pages.
 
-The app currently has three drill types with focus on reading:  
+The app currently has four drill types with focus on reading:  
 1. Recognition recall (Kanji)
 2. Reading in context (words) 
 3. Sentences reading (sentences)  
+4. Reverse reading (hiragana-kanji)
 
-The main concept is "how kanji is read in particular words" and "how to associate kanji with useful words". 
+The main concept is "how kanji is read in particular words" and "how to associate kanji with useful context" (comprehensible input).
 
 ## Features
 
@@ -25,9 +26,9 @@ The main concept is "how kanji is read in particular words" and "how to associat
 - **Sentence reading quiz** — the same multiple-choice format, but the
   question is a short original example sentence with one word or inflected
   kanji highlighted (bold, colored), so you practice the reading in context
-  instead of in isolation. Currently seeded for grades 1-2 (one sentence per
-  kanji, 80 + 160), organized into the same kind of thematic units a real
-  kokugo textbook uses — see "Sentence data" below.
+  instead of in isolation. Seeded for all grades 1-9 with **two** sentences
+  per kanji — each uses a different common word for that kanji so you meet it
+  in two contexts (e.g. 出 via 出発 and 出かける) — see "Sentence data" below.
 - **Reverse quiz (逆引き)** — the mirror direction of the reading quiz: you're
   shown a reading **and** its meaning, and pick the matching kanji from four.
   It drills the same kanji as the reading quiz but exercises the opposite
@@ -198,9 +199,10 @@ you spend more time on.
 > family & body, spring/weather, then a broader sweep of nature/town/number
 > kanji) rather than dictionary order — inspired by how a real kokugo
 > textbook sequences vocabulary by theme and season, without copying its
-> actual text. Grades 1-2 are populated so far (80 + 160 sentences); grades
-> 3-9 show "準備中" (not ready) and their grade buttons are disabled while
-> Sentence mode is selected, until more sentence data is added.
+> actual text. All grades 1-9 are populated, with **two** sentences per kanji
+> (a first block in the original order, then a second block that covers each
+> kanji again with a different common word). `tools/validate-sentences.js`
+> checks the structural invariants of both blocks.
 
 ## Progress tracking
 
@@ -757,17 +759,6 @@ The app only uses relative paths, so it can be served from a project subpath
 without any changes. To publish on GitHub Pages: push to a repo, then enable
 Pages for the branch/root in the repo settings — no build step required.
 
-## Roadmap
-
-Only the multiple-choice reading quiz is built today. Other drill types were
-scoped out but not started:
-
-- Flashcard mode (flip card: kanji ⇄ reading)
-- Matching/memory grid game
-- Meaning drills alongside reading
-
-See [PLAN.md](PLAN.md) for the original implementation plan and the
-reasoning behind these calls.
 
 ## Credits & data attribution
 

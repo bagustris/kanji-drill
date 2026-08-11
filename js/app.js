@@ -973,7 +973,9 @@ function handleAnswer(selected, btnEl) {
   // Forward modes speak the reading now that it's revealed (it lives in
   // correctReading — couldn't be spoken earlier without giving the answer
   // away). Reverse mode already spoke it when the question rendered.
-  const spokenText = state.mode !== 'reverse' ? q.correctReading : '';
+  const spokenText = state.mode === 'sentence' ? q.sentence
+    : state.mode !== 'reverse' ? q.correctReading
+    : '';
   // Length for the reading pause: the whole sentence in sentence mode, the
   // reading otherwise — so longer content gets more time on screen.
   const readText = state.mode === 'sentence' ? q.sentence

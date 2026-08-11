@@ -11,6 +11,20 @@ source of truth for the app version.
 
 ## [Unreleased]
 
+### Added
+- A second example sentence for every kanji in sentence mode (grades 1-9), each
+  using a different common word for the same kanji so it appears in two
+  contexts (e.g. 出 via 出発 and 出かける). Sentence counts roughly double per
+  grade. New `tools/validate-sentences.js` checks the structural invariants
+  (target is a substring of its sentence, readings are valid kana, sentences
+  are unique per grade, the second word differs from the first).
+
+## [1.1.1] - 2026-08-12
+
+### Fixed
+- Sentence mode now reads the whole example sentence aloud instead of only the
+  target kanji's reading, so the audio matches the sentence shown on screen.
+
 ## [1.1.0] - 2026-08-11
 
 ### Added
