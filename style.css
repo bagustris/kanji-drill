@@ -210,6 +210,15 @@ html, body {
   outline-offset: 2px;
 }
 
+.switch input:disabled + .switch-slider {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.settings-row:has(.switch input:disabled) .settings-row-label {
+  opacity: 0.6;
+}
+
 .settings-segmented {
   display: flex;
   gap: 0.4rem;

@@ -63,6 +63,7 @@ const el = {
   settingRoundSizeButtons: document.querySelectorAll('#setting-round-size .segmented-btn'),
   installButton: document.getElementById('btn-install'),
   installHint: document.getElementById('settings-install-hint'),
+  aboutVersion: document.getElementById('about-version'),
 };
 
 // Core screen navigation is wired up first, before dashboard rendering or
@@ -266,9 +267,25 @@ function initSettingsPanel() {
     applyMeaningVisibility();
   });
 
+  // Example words need real reading time that auto-advance's timer doesn't
+  // account for (see SettingsManager.get's autoAdvance/showExamples note), so
+  // showing them always suppresses auto-advance. Reflect that as a disabled,
+  // synced checkbox rather than leaving it interactive-but-ineffective: the
+  // underlying autoAdvance preference is untouched in storage and reappears
+  // (checkbox included) the moment examples are turned back off.
+  function syncAutoAdvanceAvailability() {
+    const suppressed = SettingsManager.get('showExamples');
+    el.settingAutoAdvance.disabled = suppressed;
+    el.settingAutoAdvance.checked = SettingsManager.get('autoAdvance');
+    el.settingAutoAdvance.title = suppressed
+      ? 'この漢字を使うことばの表示中は自動で次へを使えません — Not available while example words are shown'
+      : '';
+  }
+
   el.settingShowExamples.checked = SettingsManager.get('showExamples');
   el.settingShowExamples.addEventListener('change', () => {
     SettingsManager.set('showExamples', el.settingShowExamples.checked);
+    syncAutoAdvanceAvailability();
     // Only re-render if this question's examples were already revealed
     // (options disabled) — toggling the setting on before answering must not
     // reveal them early and give away the reading.
@@ -284,7 +301,7 @@ function initSettingsPanel() {
     SettingsManager.set('playAudio', el.settingPlayAudio.checked);
   });
 
-  el.settingAutoAdvance.checked = SettingsManager.get('autoAdvance');
+  syncAutoAdvanceAvailability();
   el.settingAutoAdvance.addEventListener('change', () => {
     SettingsManager.set('autoAdvance', el.settingAutoAdvance.checked);
   });
@@ -313,7 +330,24 @@ function initSettingsPanel() {
   renderInstallRow();
 }
 
+// The About panel's version is read from CHANGELOG.md (the single source of
+// truth — see its header) rather than duplicated here: parse the newest
+// `## [x.y.z]` heading and show it. The static v-number in index.html is the
+// offline/pre-fetch fallback, so a failed fetch just leaves that in place.
+async function loadAppVersion() {
+  try {
+    const res = await fetch('CHANGELOG.md');
+    if (!res.ok) return;
+    const text = await res.text();
+    const match = text.match(/^##\s*\[(\d+\.\d+\.\d+)\]/m);
+    if (match) el.aboutVersion.textContent = `v${match[1]}`;
+  } catch {
+    // offline / fetch blocked — keep the static fallback from index.html
+  }
+}
+
 initSettingsPanel();
+loadAppVersion();
 registerTotalQuestionCounts();
 ProgressView.init();
 renderDashboard();
