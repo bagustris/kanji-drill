@@ -33,16 +33,8 @@ const SettingsManager = (() => {
     }
   }
 
-  // Example words (shown after answering, in kanji mode — see renderExamples
-  // in app.js) take real reading time, but auto-advance's timed pause is
-  // sized only for the reading itself, not the example list, so a fast
-  // auto-advance would cut them off before they can be read. showExamples
-  // therefore always suppresses autoAdvance. Applied here at read time only
-  // (never persisted) so a user's underlying autoAdvance preference survives
-  // turning examples back off later, instead of being silently overwritten.
   function get(key) {
     const settings = load();
-    if (key === 'autoAdvance' && settings.showExamples) return false;
     return settings[key];
   }
 

@@ -191,6 +191,11 @@ function speakReading(reading, onEnd) {
 // shown/spoken; a wrong answer gets a larger base, and the result is clamped so
 // nothing is instant or interminable. With audio on this is only the floor — the
 // advance also waits for the utterance to finish (see handleAnswer).
+// Auto-advance's floor while example words are on screen (see handleAnswer)
+// — long enough for a quick read of the 熟語 list, short enough to still feel
+// automatic.
+const EXAMPLES_READ_MS = 5000;
+
 function advanceDelayMs(text, isCorrect) {
   const len = (text || '').length;
   const ms = (isCorrect ? 650 : 1300) + len * 120;
@@ -267,25 +272,9 @@ function initSettingsPanel() {
     applyMeaningVisibility();
   });
 
-  // Example words need real reading time that auto-advance's timer doesn't
-  // account for (see SettingsManager.get's autoAdvance/showExamples note), so
-  // showing them always suppresses auto-advance. Reflect that as a disabled,
-  // synced checkbox rather than leaving it interactive-but-ineffective: the
-  // underlying autoAdvance preference is untouched in storage and reappears
-  // (checkbox included) the moment examples are turned back off.
-  function syncAutoAdvanceAvailability() {
-    const suppressed = SettingsManager.get('showExamples');
-    el.settingAutoAdvance.disabled = suppressed;
-    el.settingAutoAdvance.checked = SettingsManager.get('autoAdvance');
-    el.settingAutoAdvance.title = suppressed
-      ? 'この漢字を使うことばの表示中は自動で次へを使えません — Not available while example words are shown'
-      : '';
-  }
-
   el.settingShowExamples.checked = SettingsManager.get('showExamples');
   el.settingShowExamples.addEventListener('change', () => {
     SettingsManager.set('showExamples', el.settingShowExamples.checked);
-    syncAutoAdvanceAvailability();
     // Only re-render if this question's examples were already revealed
     // (options disabled) — toggling the setting on before answering must not
     // reveal them early and give away the reading.
@@ -301,7 +290,7 @@ function initSettingsPanel() {
     SettingsManager.set('playAudio', el.settingPlayAudio.checked);
   });
 
-  syncAutoAdvanceAvailability();
+  el.settingAutoAdvance.checked = SettingsManager.get('autoAdvance');
   el.settingAutoAdvance.addEventListener('change', () => {
     SettingsManager.set('autoAdvance', el.settingAutoAdvance.checked);
   });
@@ -928,13 +917,21 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
+// Whether q's example words will actually be shown on the answer reveal —
+// kanji mode, the kanji has examples data, and the setting is on. Shared by
+// renderExamples and handleAnswer's auto-advance delay.
+function hasVisibleExamples(q) {
+  const examples = state.mode === 'kanji' && Array.isArray(q.examples) ? q.examples : [];
+  return examples.length > 0 && SettingsManager.get('showExamples');
+}
+
 // Renders the kanji's example words on the answer reveal (kanji mode only).
 // A no-op — hiding the panel — when there are none or the setting is off, so
 // kanji that don't yet carry `examples` data simply show nothing (see
 // vendor/kanji-data/scripts/kyoiku/fetch-example-words.js and fetch-examples-kanjialive.js).
 function renderExamples(q) {
   const examples = state.mode === 'kanji' && Array.isArray(q.examples) ? q.examples : [];
-  if (examples.length === 0 || !SettingsManager.get('showExamples')) {
+  if (!hasVisibleExamples(q)) {
     el.quizExamples.innerHTML = '';
     el.quizExamples.classList.add('hidden');
     return;
@@ -994,8 +991,11 @@ function handleAnswer(selected, btnEl) {
   if (SettingsManager.get('autoAdvance')) {
     // A wrong answer gets a longer pause than a correct one: that's the moment
     // the revealed reading actually needs to be read. Length-adaptive so a long
-    // compound or sentence gets more time than a single short reading.
-    const delay = advanceDelayMs(readText, isCorrect);
+    // compound or sentence gets more time than a single short reading. Floored
+    // to EXAMPLES_READ_MS when the example-word list is also on screen, since
+    // that needs its own reading time the reading-length formula doesn't know
+    // about.
+    const delay = Math.max(advanceDelayMs(readText, isCorrect), hasVisibleExamples(q) ? EXAMPLES_READ_MS : 0);
     const willSpeak = !!spokenText && audioEnabled() && AudioPlayer.isSupported();
     if (willSpeak) {
       // With audio on, don't cut the spoken reading off: advance only once BOTH

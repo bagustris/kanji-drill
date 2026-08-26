@@ -909,17 +909,20 @@ html, body {
 
 .quiz-examples li {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.5rem;
+  gap: 0.2rem 0.5rem;
   padding: 0.25rem 0;
   border-top: 1px solid var(--border);
 }
 
 .quiz-examples li:first-child { border-top: none; }
 
-.ex-word { font-size: 1.15rem; font-weight: bold; }
-.ex-reading { font-size: 0.85rem; color: var(--accent); }
-.ex-gloss { font-size: 0.8rem; color: #8a8378; font-style: italic; margin-left: auto; text-align: right; }
+/* nowrap keeps a 熟語 and its reading from breaking mid-word on a narrow
+   screen — the row wraps as a whole (gloss drops to its own line) instead. */
+.ex-word { font-size: 1.3rem; font-weight: bold; white-space: nowrap; }
+.ex-reading { font-size: 1rem; color: var(--accent); white-space: nowrap; }
+.ex-gloss { font-size: 0.9rem; color: #8a8378; font-style: italic; margin-left: auto; text-align: right; }
 
 /* "Weak spot" marker for a leech (a kanji the learner keeps missing). Subtle,
    amber, and self-explaining — signals the meaning is being shown as extra

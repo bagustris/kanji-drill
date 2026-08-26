@@ -58,12 +58,10 @@ The main concept is "how kanji is read in particular words" and "how to associat
   to advance manually instead (tap/click, or → / Enter / Space), giving
   unlimited time to read what you missed.
   > [!NOTE]
-  > Auto-advance is unavailable while "Show words that use this kanji" is on —
-  > its timed pause is sized for the reading alone and would cut the example
-  > list off before it can be read, so the Settings toggle is disabled and the
-  > quiz always waits for a manual continue in that case. Your underlying
-  > auto-advance preference isn't lost — turn examples back off and it
-  > resumes automatically.
+  > When "Show words that use this kanji" is also on, the pause is held to at
+  > least 5 seconds (`EXAMPLES_READ_MS` in `js/app.js`) instead of the usual
+  > reading-length-scaled delay, so there's time to skim the example list
+  > before the quiz moves on.
 - **Extra help on weak spots (にがて)** — a kanji you keep missing (seen ≥ 3
   times, right less than half) is flagged a *leech* and gets scaffolding: its
   meaning is shown as a hint even when "show meaning" is off, and a small

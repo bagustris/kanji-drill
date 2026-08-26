@@ -22,6 +22,13 @@ source of truth for the app version.
   workflow (`.github/workflows/deploy-pages.yml`), since the live site now
   fetches data straight out of the submodule and the branch-deploy
   pipeline doesn't check out submodules.
+- Auto-advance can now be combined with "Show words that use this kanji"
+  instead of being force-disabled while it's on. The timed pause is held to
+  at least 5 seconds whenever the example-word list is showing, giving
+  enough time to read it before the quiz moves on.
+- Example words on the answer reveal are shown slightly larger, since they
+  were hard to read on mobile. Each row now wraps as a whole instead of
+  breaking a 熟語 mid-character when it doesn't fit a narrow screen.
 
 ### Added
 - A second example sentence for every kanji in sentence mode (grades 1-9), each
