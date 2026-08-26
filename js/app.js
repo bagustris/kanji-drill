@@ -570,7 +570,7 @@ const MODE_FILE_PREFIX = { kanji: 'grade', word: 'words', sentence: 'sentences',
 // which kind of round it is — see pickQuestions().
 async function loadData(mode, grade) {
   const file = `${MODE_FILE_PREFIX[mode]}${grade}`;
-  const res = await fetch(`data/${file}.json`);
+  const res = await fetch(`vendor/kanji-data/kanji-drill/data/${file}.json`);
   if (!res.ok) throw new Error(`Failed to load ${file} data (HTTP ${res.status})`);
   const entries = await res.json();
   return entries.map((entry) => ({

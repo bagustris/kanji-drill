@@ -127,10 +127,17 @@ js/app.js          Screen navigation, question generation, quiz flow
 js/progress.js      Progress tracking (localStorage), via ProgressManager
 js/progress-view.js Renders the Progress Dashboard from ProgressManager data
 js/learning/         Adaptive Learning Engine (question selection, review scheduling, distractor generation)
-data/grade1.json … grade9.json      Kanji + reading data, one file per grade
-data/words1.json … words9.json     Word + reading data, one file per grade
-data/sentences1.json, sentences2.json  Sentence + reading data (grades 1-2 so far)
+vendor/kanji-data/       git submodule: https://github.com/bagustris/kanji-data
+  kanji-drill/data/grade1.json … grade9.json      Kanji + reading data, one file per grade
+  kanji-drill/data/words1.json … words9.json      Word + reading data, one file per grade
+  kanji-drill/data/sentences1.json … sentences9.json  Sentence + reading data, one file per grade
+  kanji-drill/tools/       data-maintenance scripts (readings/words audits, example-word/sentence fetchers)
 ```
+
+Data lives in the [kanji-data](https://github.com/bagustris/kanji-data)
+repo, checked out here as a submodule (`git submodule update --init`) so
+this app's own data-maintenance tools and its data stay together with the
+other apps that share the same schema/tooling conventions.
 
 Each entry in a `data/gradeN.json` file looks like:
 
@@ -756,18 +763,24 @@ node js/learning/review/__tests__/run-tests.js
 ## Deployment
 
 The app only uses relative paths, so it can be served from a project subpath
-without any changes. To publish on GitHub Pages: push to a repo, then enable
-Pages for the branch/root in the repo settings — no build step required.
+without any changes. Deployed via GitHub Actions
+(`.github/workflows/deploy-pages.yml`) rather than the classic "deploy from
+branch" Pages source, because the app now fetches its data straight out of
+the `vendor/kanji-data` git submodule at runtime — the branch-deploy
+pipeline doesn't check out submodules, so the workflow does an explicit
+`actions/checkout` with `submodules: true` before publishing.
 
 
 ## Credits & data attribution
 
-The dictionary tools in [`tools/`](tools/) verify readings and gather example
-words against KANJIDIC2 / JMdict — see [`tools/README.md`](tools/README.md) for
-the one-time download and run commands (they work fully offline).
+The dictionary tools in
+[`vendor/kanji-data/kanji-drill/tools/`](https://github.com/bagustris/kanji-data/tree/main/kanji-drill/tools)
+verify readings and gather example words against KANJIDIC2 / JMdict — see
+that directory's `README.md` for the one-time download and run commands
+(they work fully offline).
 
-Example words and readings sourced or verified with the dictionary tools in
-`tools/` come from **JMdict / KANJIDIC**, © the [Electronic Dictionary Research
+Example words and readings sourced or verified with those dictionary tools
+come from **JMdict / KANJIDIC**, © the [Electronic Dictionary Research
 and Development Group (EDRDG)](https://www.edrdg.org/), used under the
 [Creative Commons Attribution-ShareAlike 4.0 licence (CC BY-SA
 4.0)](https://creativecommons.org/licenses/by-sa/4.0/). See

@@ -1,0 +1,3 @@
+[submodule "vendor/kanji-data"]
+	path = vendor/kanji-data
+	url = https://github.com/bagustris/kanji-data

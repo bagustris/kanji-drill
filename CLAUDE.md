@@ -60,8 +60,8 @@ js/learning/           Adaptive Learning Engine (question ordering) — see belo
 js/learning/review/    ReviewScheduler — spaced-repetition intervals — see below
 js/learning/distractors/  Adaptive Distractor Generator (wrong-answer choice) — see below
 js/app.js              Screen navigation, quiz flow, keyboard/arrow nav, DOM wiring
-data/gradeN.json       Kanji + reading pool per grade (1-9), mode = "kanji"
-data/wordsN.json       Word + reading pool per grade (1-9), mode = "word"
+vendor/kanji-data/kanji-drill/data/gradeN.json  Kanji + reading pool per grade (1-9), mode = "kanji"
+vendor/kanji-data/kanji-drill/data/wordsN.json  Word + reading pool per grade (1-9), mode = "word"
 sw.js                  Service worker; CORE_ASSETS must mirror index.html's script list
 ```
 
@@ -135,6 +135,18 @@ Both engines follow the same extension recipe: add a new strategy module,
 add its `<script>` tag before `js/app.js`, point the relevant `Config.js` at
 it — no changes needed to `QuestionSelector.js` / `DistractorGenerator.js`
 themselves.
+
+### Data lives in a submodule
+
+`vendor/kanji-data` (submodule, https://github.com/bagustris/kanji-data)
+holds this app's `data/` and `tools/` under `kanji-drill/` — run
+`git submodule update --init` after cloning, or `loadData()`'s `fetch()`
+calls 404. Because the live site fetches this at runtime (not a
+pre-generated committed copy), GitHub Pages deploys via
+`.github/workflows/deploy-pages.yml` (explicit `submodules: true` checkout)
+instead of the classic branch-deploy source, which does not check out
+submodules — don't switch Pages back to "deploy from a branch" without
+first moving `data/` back to a plain committed directory.
 
 ### Data shape
 
