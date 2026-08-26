@@ -691,11 +691,15 @@ function fetchKanjivgSvg(char) {
   return strokeOrderCache.get(path);
 }
 
-// Ported verbatim from jed's js/app.js: sets each stroke's
-// stroke-dasharray/stroke-dashoffset to its own length and transitions the
-// offset to 0 with a per-stroke delay, giving a draw-in-order effect with no
-// animation library. kvg: paths are always in stroke order regardless of
-// nesting depth, so a plain query in document order is correct.
+// Adapted from jed's js/app.js: sets each stroke's stroke-dasharray/
+// stroke-dashoffset to its own length and transitions the offset to 0 with a
+// per-stroke delay, giving a draw-in-order effect with no animation library.
+// kvg: paths are always in stroke order regardless of nesting depth, so a
+// plain query in document order is correct. Twice jed's pace (0.3s/0.35s vs
+// 0.6s/0.7s) — a quiz prompt should read fast, unlike a lookup-view diagram.
+const STROKE_DELAY_S = 0.3;
+const STROKE_DURATION_S = 0.35;
+
 function animateStrokeOrder(svg) {
   const paths = svg.querySelectorAll('[id^="kvg:StrokePaths"] path');
   paths.forEach((path, i) => {
@@ -705,8 +709,8 @@ function animateStrokeOrder(svg) {
     path.style.strokeDashoffset = String(len);
     // force reflow so the transition below animates from this state
     void path.getBoundingClientRect();
-    path.style.transition = 'stroke-dashoffset 0.7s ease-in-out';
-    path.style.transitionDelay = `${i * 0.6}s`;
+    path.style.transition = `stroke-dashoffset ${STROKE_DURATION_S}s ease-in-out`;
+    path.style.transitionDelay = `${i * STROKE_DELAY_S}s`;
     requestAnimationFrame(() => { path.style.strokeDashoffset = '0'; });
   });
 }
@@ -722,7 +726,14 @@ async function renderKanjiStrokeOrder(char, myGen) {
   // understands HTML syntax, so keep just the <svg>...</svg> element.
   const svgMatch = svgText.match(/<svg[\s\S]*<\/svg>/);
   if (!svgMatch) return;
-  el.quizKanji.innerHTML = svgMatch[0].replace(/stroke:#000000/g, 'stroke:currentColor');
+  // KanjiVG ships stroke:#000000;stroke-width:3 on the outer <g> — swap in
+  // the app's accent red and a heavier weight so the animated glyph matches
+  // the bold-red styling .quiz-kanji already applies to the plain-character
+  // fallback (see style.css), instead of a thin black default.
+  const svgHTML = svgMatch[0]
+    .replace(/stroke:#000000/g, 'stroke:var(--accent)')
+    .replace(/stroke-width:3/g, 'stroke-width:4.5');
+  el.quizKanji.innerHTML = svgHTML;
   const svg = el.quizKanji.querySelector('svg');
   animateStrokeOrder(svg);
   svg.addEventListener('click', () => animateStrokeOrder(svg));

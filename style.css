@@ -781,19 +781,35 @@ html, body {
   font-size: 5rem;
   line-height: 1;
   margin-bottom: 0.3rem;
+  /* Kanji-mode default: bold + accent red, for both the animated SVG
+     (stroke color/weight set via the same-colored string replace in
+     renderKanjiStrokeOrder) and the plain-character fallback for kanji
+     without stroke data, so there's no visual jump between the two.
+     Reset for word/sentence/reverse below — those aren't a single kanji
+     glyph and keep the original neutral styling. */
+  font-weight: bold;
+  color: var(--accent);
 }
 
-/* Animated stroke-order SVG, kanji mode only — sized to match the plain
-   character's footprint so the prompt doesn't jump when it swaps in.
-   Stroke-order numbers are hidden (matching jed's default) — they're
-   pedagogical clutter here, not part of what's being quizzed. */
+/* Animated stroke-order SVG, kanji mode only — bigger than the plain
+   character's old footprint (was 5rem/6rem) since a bolder, larger glyph
+   reads better mid-animation. Stroke-order numbers are hidden (matching
+   jed's default) — they're pedagogical clutter here, not part of what's
+   being quizzed. */
 .quiz-kanji svg {
-  width: 5rem;
-  height: 5rem;
+  width: 7rem;
+  height: 7rem;
   cursor: pointer;
 }
 .quiz-kanji svg [id^="kvg:StrokeNumbers"] {
   display: none;
+}
+
+.quiz-kanji.is-word,
+.quiz-kanji.is-sentence,
+.quiz-kanji.is-reverse {
+  font-weight: normal;
+  color: var(--fg);
 }
 
 .quiz-kanji.is-word {
@@ -1188,5 +1204,5 @@ html, body {
 
 @media (min-width: 480px) {
   .quiz-kanji { font-size: 6rem; }
-  .quiz-kanji svg { width: 6rem; height: 6rem; }
+  .quiz-kanji svg { width: 8.5rem; height: 8.5rem; }
 }
