@@ -127,11 +127,12 @@ js/app.js          Screen navigation, question generation, quiz flow
 js/progress.js      Progress tracking (localStorage), via ProgressManager
 js/progress-view.js Renders the Progress Dashboard from ProgressManager data
 js/learning/         Adaptive Learning Engine (question selection, review scheduling, distractor generation)
-vendor/kanji-data/       git submodule: https://github.com/bagustris/kanji-data
-  kanji-drill/data/grade1.json … grade9.json      Kanji + reading data, one file per grade
-  kanji-drill/data/words1.json … words9.json      Word + reading data, one file per grade
-  kanji-drill/data/sentences1.json … sentences9.json  Sentence + reading data, one file per grade
-  kanji-drill/tools/       data-maintenance scripts (readings/words audits, example-word/sentence fetchers)
+vendor/kanji-data/       git submodule: https://github.com/bagustris/kanji-data (organized by
+                         data domain, not by app)
+  kanji/kyoiku-grade1.json … kyoiku-grade9.json      Kanji + reading data, one file per grade
+  words/kyoiku-words1.json … kyoiku-words9.json      Word + reading data, one file per grade
+  sentences/kyoiku-sentences1.json … kyoiku-sentences9.json  Sentence + reading data, one file per grade
+  scripts/kyoiku/          data-maintenance scripts (readings/words audits, example-word/sentence fetchers)
 ```
 
 Data lives in the [kanji-data](https://github.com/bagustris/kanji-data)
@@ -774,7 +775,7 @@ pipeline doesn't check out submodules, so the workflow does an explicit
 ## Credits & data attribution
 
 The dictionary tools in
-[`vendor/kanji-data/kanji-drill/tools/`](https://github.com/bagustris/kanji-data/tree/main/kanji-drill/tools)
+[`vendor/kanji-data/scripts/kyoiku/`](https://github.com/bagustris/kanji-data/tree/main/scripts/kyoiku)
 verify readings and gather example words against KANJIDIC2 / JMdict — see
 that directory's `README.md` for the one-time download and run commands
 (they work fully offline).

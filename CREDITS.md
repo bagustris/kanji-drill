@@ -4,7 +4,7 @@
 
 Example words, readings, and glosses that are sourced or verified using the
 tools in
-[`kanji-data/kanji-drill/tools/`](https://github.com/bagustris/kanji-data/tree/main/kanji-drill/tools)
+[`kanji-data/scripts/kyoiku/`](https://github.com/bagustris/kanji-data/tree/main/scripts/kyoiku)
 (this app's `vendor/kanji-data` submodule) come from the **JMdict** and
 **KANJIDIC** dictionary files.
 
@@ -34,7 +34,7 @@ in the repo.
 Where JMdict-based curation hadn't reached a kanji yet, its `examples`
 (the "Words that use this kanji" list on the answer reveal) were backfilled
 from the [Kanji alive](https://kanjialive.com) project's language-data CSV via
-[`fetch-examples-kanjialive.js`](https://github.com/bagustris/kanji-data/blob/main/kanji-drill/tools/fetch-examples-kanjialive.js).
+[`fetch-examples-kanjialive.js`](https://github.com/bagustris/kanji-data/blob/main/scripts/kyoiku/fetch-examples-kanjialive.js).
 
 - Source: <https://github.com/kanjialive/kanji-data-media>
   (`language-data/ka_data.csv`)

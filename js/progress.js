@@ -27,8 +27,8 @@ const ProgressManager = (() => {
   // kanji), so it gets its own namespace here — otherwise gradeKey() would
   // fall back to 'grade' and merge the two modes' schedules and grade totals
   // into one corrupted record. This is the progress-key namespace, separate
-  // from app.js's MODE_FILE_PREFIX (which maps reverse -> 'grade' for loading
-  // the same data file).
+  // from app.js's MODE_FILE (which maps reverse -> the 'kanji' data, same
+  // file as kanji mode).
   const MODE_PREFIX = { kanji: 'grade', word: 'words', sentence: 'sentences', reverse: 'reverse' };
 
   // Reuses the existing per-mode/grade key naming (kanjidrill:gradeN /

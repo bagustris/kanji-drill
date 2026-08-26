@@ -60,8 +60,8 @@ js/learning/           Adaptive Learning Engine (question ordering) — see belo
 js/learning/review/    ReviewScheduler — spaced-repetition intervals — see below
 js/learning/distractors/  Adaptive Distractor Generator (wrong-answer choice) — see below
 js/app.js              Screen navigation, quiz flow, keyboard/arrow nav, DOM wiring
-vendor/kanji-data/kanji-drill/data/gradeN.json  Kanji + reading pool per grade (1-9), mode = "kanji"
-vendor/kanji-data/kanji-drill/data/wordsN.json  Word + reading pool per grade (1-9), mode = "word"
+vendor/kanji-data/kanji/kyoiku-gradeN.json      Kanji + reading pool per grade (1-9), mode = "kanji"
+vendor/kanji-data/words/kyoiku-wordsN.json      Word + reading pool per grade (1-9), mode = "word"
 sw.js                  Service worker; CORE_ASSETS must mirror index.html's script list
 ```
 
@@ -139,14 +139,17 @@ themselves.
 ### Data lives in a submodule
 
 `vendor/kanji-data` (submodule, https://github.com/bagustris/kanji-data)
-holds this app's `data/` and `tools/` under `kanji-drill/` — run
-`git submodule update --init` after cloning, or `loadData()`'s `fetch()`
-calls 404. Because the live site fetches this at runtime (not a
-pre-generated committed copy), GitHub Pages deploys via
+holds this app's data, organized there by data domain rather than by app:
+`kanji/kyoiku-gradeN.json`, `words/kyoiku-wordsN.json`,
+`sentences/kyoiku-sentencesN.json`, and the maintenance tools under
+`scripts/kyoiku/`. `MODE_FILE` in `app.js` maps each quiz mode to its
+`{dir, prefix}` pair — run `git submodule update --init` after cloning, or
+`loadData()`'s `fetch()` calls 404. Because the live site fetches this at
+runtime (not a pre-generated committed copy), GitHub Pages deploys via
 `.github/workflows/deploy-pages.yml` (explicit `submodules: true` checkout)
 instead of the classic branch-deploy source, which does not check out
 submodules — don't switch Pages back to "deploy from a branch" without
-first moving `data/` back to a plain committed directory.
+first moving the data back to a plain committed directory.
 
 ### Data shape
 

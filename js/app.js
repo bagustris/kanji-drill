@@ -563,14 +563,23 @@ function buildReverseQuestion(target, itemList) {
   };
 }
 
-const MODE_FILE_PREFIX = { kanji: 'grade', word: 'words', sentence: 'sentences', reverse: 'grade' };
+// kanji-data organizes by data domain, not by app — grade/words/sentences
+// files each live under a different top-level directory there (kanji/,
+// words/, sentences/) with a kyoiku- prefix.
+const MODE_FILE = {
+  kanji: { dir: 'kanji', prefix: 'kyoiku-grade' },
+  reverse: { dir: 'kanji', prefix: 'kyoiku-grade' },
+  word: { dir: 'words', prefix: 'kyoiku-words' },
+  sentence: { dir: 'sentences', prefix: 'kyoiku-sentences' },
+};
 
 // Every entry is tagged with the grade whose file it came from, in both
 // single-grade and review rounds, so nothing downstream needs to branch on
 // which kind of round it is — see pickQuestions().
 async function loadData(mode, grade) {
-  const file = `${MODE_FILE_PREFIX[mode]}${grade}`;
-  const res = await fetch(`vendor/kanji-data/kanji-drill/data/${file}.json`);
+  const { dir, prefix } = MODE_FILE[mode];
+  const file = `${prefix}${grade}`;
+  const res = await fetch(`vendor/kanji-data/${dir}/${file}.json`);
   if (!res.ok) throw new Error(`Failed to load ${file} data (HTTP ${res.status})`);
   const entries = await res.json();
   return entries.map((entry) => ({
