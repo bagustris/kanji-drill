@@ -33,12 +33,13 @@ source of truth for the app version.
 ### Added
 - Kanji-mode quiz prompts now show an animated stroke-order diagram (from
   KanjiVG data mirrored into kanji-data) instead of a static character —
-  bold, in the app's accent red, larger than the old plain-character size,
-  and drawn in twice as fast as a typical stroke-order reference diagram
-  since this is a quiz prompt, not a lookup view. Tap/click it to replay.
-  Falls back to a bold accent-red plain character (same styling, so there's
-  no visual jump) for kanji without stroke data. Word, sentence, and
-  reverse-mode prompts are unchanged.
+  in the app's accent red, larger than the old plain-character size, and
+  drawn in twice as fast as a typical stroke-order reference diagram since
+  this is a quiz prompt, not a lookup view. Tap/click it to replay. Falls
+  back to a plain accent-red character (not bold — a bold system-font
+  glyph next to the KanjiVG brush-stroke look read as two mismatched
+  fonts) for kanji without stroke data. Word, sentence, and reverse-mode
+  prompts are unchanged.
 - A second example sentence for every kanji in sentence mode (grades 1-9), each
   using a different common word for the same kanji so it appears in two
   contexts (e.g. 出 via 出発 and 出かける). Sentence counts roughly double per

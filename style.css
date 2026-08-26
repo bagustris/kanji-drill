@@ -781,13 +781,15 @@ html, body {
   font-size: 5rem;
   line-height: 1;
   margin-bottom: 0.3rem;
-  /* Kanji-mode default: bold + accent red, for both the animated SVG
-     (stroke color/weight set via the same-colored string replace in
+  /* Kanji-mode default: accent red, for both the animated SVG (stroke
+     color set via the same-colored string replace in
      renderKanjiStrokeOrder) and the plain-character fallback for kanji
-     without stroke data, so there's no visual jump between the two.
-     Reset for word/sentence/reverse below — those aren't a single kanji
-     glyph and keep the original neutral styling. */
-  font-weight: bold;
+     without stroke data, so there's no color jump between the two.
+     Deliberately NOT bold here — a bold system-font glyph and the
+     KanjiVG brush-stroke rendering read as two different "fonts" side by
+     side during the brief pre-fetch flash, which looked worse than a
+     plain-weight fallback. Reset for word/sentence/reverse below — those
+     aren't a single kanji glyph and keep the original neutral styling. */
   color: var(--accent);
 }
 
@@ -808,7 +810,6 @@ html, body {
 .quiz-kanji.is-word,
 .quiz-kanji.is-sentence,
 .quiz-kanji.is-reverse {
-  font-weight: normal;
   color: var(--fg);
 }
 
