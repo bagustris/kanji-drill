@@ -11,6 +11,8 @@ source of truth for the app version.
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-08-26
+
 ### Changed
 - Kanji, word, and sentence data now lives in the shared
   [kanji-data](https://github.com/bagustris/kanji-data) repo (added as the
