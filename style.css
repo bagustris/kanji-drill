@@ -3,6 +3,17 @@
   --fg: #2b2b2b;
   --accent: #c0392b;
   --accent-dark: #962d22;
+  /* Accent used as foreground text/glyph color (kanji prompt, readings,
+     links, active-state labels) rather than as a background or border — kept
+     as its own token because --accent itself needs a lighter dark-mode
+     override for text contrast (~3:1 on the dark background otherwise) that
+     would look wrong applied to --accent's background/border uses, where
+     white text already sits on top of it at a safe contrast. */
+  --accent-ink: var(--accent);
+  /* Secondary/muted text — English sub-labels, meanings, glosses, counters.
+     One token so every such use stays in lockstep instead of each carrying
+     its own copy of the same gray. */
+  --muted: #6b6357;
   --card-bg: #ffffff;
   --border: #e0d8cc;
   --correct: #2e7d32;
@@ -20,6 +31,11 @@
     --fg: #f0ece4;
     --card-bg: #2a2622;
     --border: #443d34;
+    /* Both lightened for the dark background — the light-mode values fall
+       under WCAG AA (2.5–3.2:1) as foreground text there; these clear 5.5:1+
+       against both --bg and --card-bg. */
+    --accent-ink: #e86a5c;
+    --muted: #a89e90;
   }
 }
 
@@ -48,6 +64,31 @@ html, body {
   letter-spacing: 0.05em;
 }
 
+/* The h1's text is a real <button> (see index.html) so tapping the title
+   goes home — buttons don't inherit heading typography by default, so this
+   explicitly matches it, then layers on the same hover/focus affordance
+   .icon-btn uses elsewhere in the header. */
+.app-title-btn {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.app-title-btn:hover,
+.app-title-btn:focus-visible {
+  color: var(--accent-ink);
+}
+
+.app-title-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .icon-btn {
   background: none;
   border: none;
@@ -60,7 +101,7 @@ html, body {
 }
 
 .icon-btn:hover, .icon-btn:focus-visible {
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 .icon-btn:focus-visible {
@@ -129,7 +170,7 @@ html, body {
   display: block;
   font-size: 0.65rem;
   font-weight: normal;
-  color: #8a8378;
+  color: var(--muted);
   margin-top: 0.1rem;
 }
 
@@ -163,7 +204,7 @@ html, body {
   display: block;
   font-size: 0.7rem;
   font-weight: normal;
-  color: #8a8378;
+  color: var(--muted);
   margin-top: 0.1rem;
 }
 
@@ -243,7 +284,7 @@ html, body {
 .segmented-btn span {
   font-size: 0.6rem;
   font-weight: normal;
-  color: #8a8378;
+  color: var(--muted);
 }
 
 .segmented-btn:hover, .segmented-btn:focus-visible {
@@ -252,7 +293,7 @@ html, body {
 
 .segmented-btn.active {
   border-color: var(--accent);
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 .settings-install-btn {
@@ -266,14 +307,14 @@ html, body {
   border: 1px solid var(--border);
   border-radius: 8px;
   background: transparent;
-  color: var(--accent);
+  color: var(--accent-ink);
   cursor: pointer;
 }
 
 .settings-install-btn span {
   font-size: 0.7rem;
   font-weight: normal;
-  color: #8a8378;
+  color: var(--muted);
 }
 
 .settings-install-btn:hover, .settings-install-btn:focus-visible {
@@ -286,7 +327,7 @@ html, body {
   margin: 0;
   font-size: 0.75rem;
   line-height: 1.5;
-  color: #8a8378;
+  color: var(--muted);
 }
 
 .settings-install-hint.hidden { display: none; }
@@ -302,7 +343,7 @@ html, body {
   margin-left: 0.35rem;
   font-size: 0.75rem;
   font-weight: normal;
-  color: #8a8378;
+  color: var(--muted);
 }
 
 .about-link {
@@ -310,7 +351,7 @@ html, body {
   margin-top: 0.3rem;
   font-size: 0.85rem;
   font-weight: bold;
-  color: var(--accent);
+  color: var(--accent-ink);
   text-decoration: none;
 }
 
@@ -319,7 +360,7 @@ html, body {
   margin-top: 0.1rem;
   font-size: 0.7rem;
   font-weight: normal;
-  color: #8a8378;
+  color: var(--muted);
 }
 
 .about-link:hover,
@@ -373,7 +414,7 @@ html, body {
 
 .subtitle {
   text-align: center;
-  color: #8a8378;
+  color: var(--muted);
   margin-top: 0;
   font-size: 0.85rem;
 }
@@ -381,7 +422,7 @@ html, body {
 .progress-heading {
   margin: 1rem 0 0.4rem;
   font-size: 0.85rem;
-  color: #8a8378;
+  color: var(--muted);
   text-align: center;
   letter-spacing: 0.05em;
 }
@@ -410,7 +451,7 @@ html, body {
   align-items: center;
   gap: 0.1rem;
   font-size: 0.75rem;
-  color: #8a8378;
+  color: var(--muted);
 }
 
 .progress-stat strong {
@@ -452,7 +493,7 @@ html, body {
   min-width: 2.6em;
   font-variant-numeric: tabular-nums;
   font-size: 0.75rem;
-  color: #8a8378;
+  color: var(--muted);
   text-align: right;
 }
 
@@ -474,12 +515,12 @@ html, body {
   border: none;
   border-radius: 50%;
   background: transparent;
-  color: #8a8378;
+  color: var(--muted);
   cursor: pointer;
 }
 
 .grade-row-reset:hover, .grade-row-reset:focus-visible {
-  color: var(--accent);
+  color: var(--accent-ink);
   outline: none;
 }
 
@@ -497,7 +538,7 @@ html, body {
   gap: 0.6rem;
   padding: 0.15rem 0;
   font-size: 0.8rem;
-  color: #8a8378;
+  color: var(--muted);
 }
 
 .progress-mode-row:not(:last-child) {
@@ -523,7 +564,7 @@ html, body {
 .progress-history-label {
   flex-shrink: 0;
   font-size: 0.75rem;
-  color: #8a8378;
+  color: var(--muted);
 }
 
 .progress-history-label span {
@@ -540,7 +581,7 @@ html, body {
 
 .progress-history-bar.is-empty::after {
   content: '—';
-  color: #8a8378;
+  color: var(--muted);
   font-size: 0.8rem;
 }
 
@@ -591,7 +632,7 @@ html, body {
 .progress-bar-percent {
   font-variant-numeric: tabular-nums;
   font-size: 0.8rem;
-  color: #8a8378;
+  color: var(--muted);
   min-width: 2.5em;
   text-align: right;
 }
@@ -626,12 +667,12 @@ html, body {
 .mode-btn span {
   font-size: 0.7rem;
   font-weight: normal;
-  color: #8a8378;
+  color: var(--muted);
 }
 
 .mode-btn.active {
   border-color: var(--accent);
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 .mode-btn:focus-visible,
@@ -644,7 +685,7 @@ html, body {
 .grade-section-heading {
   margin: 1.6rem 0 0.6rem;
   font-size: 0.85rem;
-  color: #8a8378;
+  color: var(--muted);
   text-align: center;
   letter-spacing: 0.05em;
 }
@@ -684,7 +725,7 @@ html, body {
 .grade-btn span {
   font-size: 0.75rem;
   font-weight: normal;
-  color: #8a8378;
+  color: var(--muted);
 }
 
 .grade-btn:hover, .grade-btn:focus-visible {
@@ -728,14 +769,14 @@ html, body {
   border: 1px solid var(--accent);
   border-radius: var(--radius);
   background: var(--card-bg);
-  color: var(--accent);
+  color: var(--accent-ink);
   cursor: pointer;
 }
 
 .review-btn span {
   font-size: 0.75rem;
   font-weight: normal;
-  color: #8a8378;
+  color: var(--muted);
 }
 
 .review-btn:hover:not(:disabled), .review-btn:focus-visible {
@@ -765,7 +806,7 @@ html, body {
 
 .quiz-progress {
   font-variant-numeric: tabular-nums;
-  color: #8a8378;
+  color: var(--muted);
   font-size: 0.9rem;
 }
 
@@ -778,29 +819,32 @@ html, body {
 }
 
 .quiz-kanji {
-  font-size: 5rem;
+  font-size: 6rem;
   line-height: 1;
   margin-bottom: 0.3rem;
-  /* Kanji-mode default: accent red, for both the animated SVG (stroke
-     color set via the same-colored string replace in
-     renderKanjiStrokeOrder) and the plain-character fallback for kanji
-     without stroke data, so there's no color jump between the two.
-     Deliberately NOT bold here — a bold system-font glyph and the
-     KanjiVG brush-stroke rendering read as two different "fonts" side by
-     side during the brief pre-fetch flash, which looked worse than a
-     plain-weight fallback. Reset for word/sentence/reverse below — those
-     aren't a single kanji glyph and keep the original neutral styling. */
-  color: var(--accent);
+  /* Kanji-mode default: accent ink, for both the animated SVG (stroke color
+     set via the same-colored string replace in renderKanjiStrokeOrder) and
+     the plain-character fallback (stroke animation off, or this kanji has no
+     stroke data), so there's no color jump between the two. Deliberately NOT
+     bold here — a bold system-font glyph and the KanjiVG brush-stroke
+     rendering read as two different "fonts" next to each other, which looked
+     worse than a plain-weight fallback. Reset for word/sentence/reverse
+     below — those aren't a single kanji glyph and keep the original neutral
+     styling. */
+  color: var(--accent-ink);
 }
 
-/* Animated stroke-order SVG, kanji mode only — bigger than the plain
-   character's old footprint (was 5rem/6rem) since a bolder, larger glyph
-   reads better mid-animation. Stroke-order numbers are hidden (matching
-   jed's default) — they're pedagogical clutter here, not part of what's
-   being quizzed. */
+/* Animated stroke-order SVG, kanji mode only (see the strokeAnimation
+   setting) — bigger than the plain character's footprint since a bolder,
+   larger glyph reads better mid-animation. Stroke-order numbers are hidden
+   (matching jed's default) — they're pedagogical clutter here, not part of
+   what's being quizzed. Click-to-replay (see renderKanjiStrokeOrder in
+   app.js) has no visible hint text — cursor:pointer is the only affordance —
+   so onContinueClick's #quiz-kanji exclusion is what keeps a replay tap from
+   also skipping past a revealed answer. */
 .quiz-kanji svg {
-  width: 7rem;
-  height: 7rem;
+  width: 8.5rem;
+  height: 8.5rem;
   cursor: pointer;
 }
 .quiz-kanji svg [id^="kvg:StrokeNumbers"] {
@@ -835,7 +879,7 @@ html, body {
 }
 
 .quiz-sentence-target {
-  color: var(--accent);
+  color: var(--accent-ink);
   font-weight: bold;
 }
 
@@ -845,11 +889,11 @@ html, body {
 .quiz-kanji rt {
   font-size: 0.4em;
   font-weight: normal;
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 .quiz-meaning {
-  color: #8a8378;
+  color: var(--muted);
   font-size: 1rem;
   font-style: italic;
   margin: 0 0 1rem;
@@ -858,7 +902,7 @@ html, body {
 .quiz-meaning.hidden { display: none; }
 
 .quiz-instruction {
-  color: #8a8378;
+  color: var(--muted);
   font-size: 0.9rem;
   margin: 0 0 1.2rem;
 }
@@ -870,7 +914,7 @@ html, body {
 }
 
 .okurigana {
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 .option-btn.correct .okurigana,
@@ -892,7 +936,7 @@ html, body {
   text-align: center;
   font-size: 1rem;
   font-weight: bold;
-  color: var(--accent);
+  color: var(--accent-ink);
   cursor: pointer;
   animation: quiz-continue-fade 0.2s ease-in;
 }
@@ -901,7 +945,7 @@ html, body {
   display: block;
   font-size: 0.7rem;
   font-weight: normal;
-  color: #8a8378;
+  color: var(--muted);
   margin-top: 0.15rem;
 }
 
@@ -922,13 +966,14 @@ html, body {
 
 .quiz-examples-label {
   font-size: 0.7rem;
-  color: #8a8378;
+  color: var(--muted);
   letter-spacing: 0.05em;
   margin-bottom: 0.3rem;
 }
 
 .quiz-examples-label span {
-  margin-left: 0.4rem;
+  display: block;
+  margin-top: 0.15rem;
 }
 
 .quiz-examples ul {
@@ -951,8 +996,8 @@ html, body {
 /* nowrap keeps a 熟語 and its reading from breaking mid-word on a narrow
    screen — the row wraps as a whole (gloss drops to its own line) instead. */
 .ex-word { font-size: 1.3rem; font-weight: bold; white-space: nowrap; }
-.ex-reading { font-size: 1rem; color: var(--accent); white-space: nowrap; }
-.ex-gloss { font-size: 0.9rem; color: #8a8378; font-style: italic; margin-left: auto; text-align: right; }
+.ex-reading { font-size: 1rem; color: var(--accent-ink); white-space: nowrap; }
+.ex-gloss { font-size: 0.9rem; color: var(--muted); font-style: italic; margin-left: auto; text-align: right; }
 
 /* "Weak spot" marker for a leech (a kanji the learner keeps missing). Subtle,
    amber, and self-explaining — signals the meaning is being shown as extra
@@ -1005,7 +1050,7 @@ html, body {
   height: 1.1rem;
   font-size: 0.65rem;
   font-variant-numeric: tabular-nums;
-  color: #8a8378;
+  color: var(--muted);
   border: 1px solid var(--border);
   border-radius: 4px;
 }
@@ -1082,14 +1127,14 @@ html, body {
 
 .summary-missed h3 {
   font-size: 0.95rem;
-  color: #8a8378;
+  color: var(--muted);
 }
 
 .summary-score span {
   display: block;
   font-size: 0.7rem;
   font-weight: normal;
-  color: #8a8378;
+  color: var(--muted);
 }
 
 .missed-item {
@@ -1104,7 +1149,7 @@ html, body {
 
 .missed-item-meaning {
   flex: 1;
-  color: #8a8378;
+  color: var(--muted);
   font-size: 0.85rem;
   font-style: italic;
   text-align: center;
@@ -1118,7 +1163,7 @@ html, body {
 .summary-correct-details summary {
   cursor: pointer;
   font-size: 0.95rem;
-  color: #8a8378;
+  color: var(--muted);
   padding: 0.3rem 0;
 }
 
@@ -1174,7 +1219,7 @@ html, body {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: transparent;
-  color: var(--accent);
+  color: var(--accent-ink);
   cursor: pointer;
 }
 
@@ -1183,7 +1228,7 @@ html, body {
 .secondary-btn span {
   font-size: 0.7rem;
   font-weight: normal;
-  color: #8a8378;
+  color: var(--muted);
 }
 
 .link-btn {
@@ -1192,7 +1237,7 @@ html, body {
   gap: 0.4rem;
   background: none;
   border: none;
-  color: var(--accent);
+  color: var(--accent-ink);
   font-size: 0.95rem;
   cursor: pointer;
   padding: 0.4rem;
@@ -1204,6 +1249,6 @@ html, body {
 }
 
 @media (min-width: 480px) {
-  .quiz-kanji { font-size: 6rem; }
-  .quiz-kanji svg { width: 8.5rem; height: 8.5rem; }
+  .quiz-kanji { font-size: 7.5rem; }
+  .quiz-kanji svg { width: 10rem; height: 10rem; }
 }

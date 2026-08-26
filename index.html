@@ -15,7 +15,7 @@
   <button id="btn-settings" type="button" class="icon-btn settings-btn" aria-haspopup="dialog" aria-label="設定 Settings">
     <span class="hamburger-icon"><span></span><span></span><span></span></span>
   </button>
-  <h1>漢字ドリル</h1>
+  <h1><button id="btn-home-title" type="button" class="app-title-btn">漢字ドリル</button></h1>
 </header>
 
 <div id="settings-overlay" class="settings-overlay hidden">
@@ -37,6 +37,14 @@
       <span class="settings-row-label" id="setting-show-examples-label">この漢字を使うことばを表示<span>Show words that use this kanji</span></span>
       <label class="switch">
         <input type="checkbox" id="setting-show-examples" aria-labelledby="setting-show-examples-label">
+        <span class="switch-slider"></span>
+      </label>
+    </div>
+
+    <div class="settings-row">
+      <span class="settings-row-label" id="setting-stroke-animation-label">筆順アニメーション<span>Stroke-order animation</span></span>
+      <label class="switch">
+        <input type="checkbox" id="setting-stroke-animation" aria-labelledby="setting-stroke-animation-label">
         <span class="switch-slider"></span>
       </label>
     </div>

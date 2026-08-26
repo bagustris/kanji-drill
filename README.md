@@ -23,6 +23,13 @@ The main concept is "how kanji is read in particular words" and "how to associat
   hiragana options. Wrong answers aren't random: a small adaptive engine
   ranks candidates by reading/meaning similarity so the distractors are
   ones you're actually likely to confuse the answer with.
+- **Animated stroke order (筆順アニメーション)** — kanji mode draws the kanji
+  stroke-by-stroke instead of showing it as static text, the same
+  demonstration a teacher gives at the blackboard, without asking you to
+  write anything yourself. On by default (**筆順アニメーション** in Settings);
+  turn it off to see the plain character instead. Falls back to the plain
+  character automatically for the rare kanji in this app's grade lists that
+  fall outside the jōyō set KanjiVG covers.
 - **Sentence reading quiz** — the same multiple-choice format, but the
   question is a short original example sentence with one word or inflected
   kanji highlighted (bold, colored), so you practice the reading in context

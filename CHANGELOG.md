@@ -11,6 +11,47 @@ source of truth for the app version.
 
 ## [Unreleased]
 
+### Added
+- Settings toggle **筆順アニメーション / Stroke-order animation** (on by
+  default) for the animated kanji-mode prompt, falling back to the plain
+  character when it's off.
+- Tapping the app title (漢字ドリル) now goes home from any screen.
+
+### Changed
+- The kanji-mode prompt (both the animated stroke-order SVG and the plain
+  character) is noticeably bigger: 5rem/7rem → 6rem/8.5rem on mobile,
+  6rem/8.5rem → 7.5rem/10rem at the ≥480px breakpoint.
+- Reworked the color system for consistency and contrast: introduced
+  `--accent-ink` (accent used as foreground text/glyph color — kanji prompt,
+  readings, links, active-state labels — with its own lighter dark-mode
+  value, since the plain `--accent` red read at only ~3:1 contrast as text on
+  the dark background) and `--muted` (one token for the secondary/English
+  sub-label gray used throughout, replacing 33 separate hardcoded copies of
+  the same color, also retuned per-theme for WCAG AA contrast).
+- "Words that use this kanji"'s English sub-label now sits below the
+  Japanese label, matching how every other bilingual label in the app is
+  laid out (it previously sat inline to the right, the one inconsistent
+  case).
+
+### Fixed
+- Every kanji-mode question briefly flashed the plain character before the
+  animated stroke-order SVG popped in over it. `renderKanjiPrompt()` now
+  leaves the prompt blank while the SVG loads instead of showing the plain
+  character first — the plain character only ever appears as a genuine
+  fallback (animation off, or this kanji has no stroke data), never as a
+  transitional state before the animation.
+- Tapping the animated kanji to replay its stroke order — or opening/using
+  Settings — while a revealed answer was waiting for a manual "tap to
+  continue" (auto-advance off) silently skipped straight to the next
+  question instead. `onContinueClick` now ignores clicks on `#quiz-kanji`
+  and `#settings-overlay`.
+
+### Removed
+- The "タップしてもう一度 — Tap to replay" hint text under the animated
+  kanji. Tapping it still replays the stroke-order animation (`cursor:
+  pointer` is now the only affordance for that) — only the visible hint
+  text was removed.
+
 ## [1.2.0] - 2026-08-26
 
 ### Changed

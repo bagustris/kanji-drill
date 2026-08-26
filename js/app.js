@@ -37,6 +37,7 @@ const el = {
   btnQuit: document.getElementById('btn-quit'),
   btnRetry: document.getElementById('btn-retry'),
   btnHome: document.getElementById('btn-home'),
+  btnHomeTitle: document.getElementById('btn-home-title'),
   quizProgress: document.getElementById('quiz-progress'),
   quizKanji: document.getElementById('quiz-kanji'),
   quizMeaning: document.getElementById('quiz-meaning'),
@@ -60,6 +61,7 @@ const el = {
   settingShowExamples: document.getElementById('setting-show-examples'),
   settingPlayAudio: document.getElementById('setting-play-audio'),
   settingAutoAdvance: document.getElementById('setting-auto-advance'),
+  settingStrokeAnimation: document.getElementById('setting-stroke-animation'),
   settingRoundSizeButtons: document.querySelectorAll('#setting-round-size .segmented-btn'),
   installButton: document.getElementById('btn-install'),
   installHint: document.getElementById('settings-install-hint'),
@@ -105,6 +107,7 @@ el.btnReview.addEventListener('click', () => startReview(getSelectedMode()));
 
 el.btnQuit.addEventListener('click', () => showScreen('home'));
 el.btnHome.addEventListener('click', () => showScreen('home'));
+el.btnHomeTitle.addEventListener('click', () => showScreen('home'));
 el.btnRetry.addEventListener('click', () => startRound());
 
 // The grade name shown in the dashboard (e.g. "3年生") is read straight off
@@ -293,6 +296,17 @@ function initSettingsPanel() {
   el.settingAutoAdvance.checked = SettingsManager.get('autoAdvance');
   el.settingAutoAdvance.addEventListener('change', () => {
     SettingsManager.set('autoAdvance', el.settingAutoAdvance.checked);
+  });
+
+  el.settingStrokeAnimation.checked = SettingsManager.get('strokeAnimation');
+  el.settingStrokeAnimation.addEventListener('change', () => {
+    SettingsManager.set('strokeAnimation', el.settingStrokeAnimation.checked);
+    // Redraw the kanji already on screen — safe before or after answering,
+    // since neither the animation nor the plain character gives away the
+    // reading being quizzed.
+    if (state.screen === 'quiz' && state.mode === 'kanji') {
+      renderKanjiPrompt(state.questions[state.index].text, renderGen);
+    }
   });
 
   el.settingRoundSizeButtons.forEach((btn) => {
@@ -673,9 +687,9 @@ let renderGen = 0;
 // KanjiVG data (jōyō kanji only, ~2,136 characters) mirrored into the
 // kanji-data submodule specifically for this — see stroke-order/kanjivg/
 // there. Not every kanji in this app's grade lists is jōyō, so a fetch miss
-// silently leaves the plain character in place (set synchronously by
-// renderQuestion before this resolves) rather than showing an error; this
-// is a quiz prompt, not a dictionary lookup.
+// falls back to the plain character (set by renderKanjiStrokeOrder itself,
+// not shown first and then replaced — see the "no flash" note there) rather
+// than showing an error; this is a quiz prompt, not a dictionary lookup.
 const strokeOrderCache = new Map();
 
 function kanjivgFilename(char) {
@@ -715,28 +729,53 @@ function animateStrokeOrder(svg) {
   });
 }
 
-// Swaps #quiz-kanji's plain character for an animated stroke-order SVG once
-// fetched. myGen guards against a slow fetch resolving after the learner has
-// already advanced to (or the round has rendered) a different question.
+// Fills #quiz-kanji with an animated stroke-order SVG once fetched, or the
+// plain character if this kanji has no stroke data. myGen guards against a
+// slow fetch resolving after the learner has already advanced to (or the
+// round has rendered) a different question. Called only when the
+// strokeAnimation setting is on (see renderKanjiPrompt) — the caller leaves
+// #quiz-kanji empty in that case, and deliberately does NOT set the plain
+// character first: this function is the only thing that ever writes to it,
+// so there's no flash of the plain character before the animation appears,
+// only a (typically sub-frame, same-origin-cached) blank gap while it loads.
 async function renderKanjiStrokeOrder(char, myGen) {
   const svgText = await fetchKanjivgSvg(char);
-  if (renderGen !== myGen || !svgText) return;
+  if (renderGen !== myGen) return;
   // The fetched file is a full XML document (declaration, licence comment,
   // internal DOCTYPE subset) ahead of the <svg> element — innerHTML only
   // understands HTML syntax, so keep just the <svg>...</svg> element.
-  const svgMatch = svgText.match(/<svg[\s\S]*<\/svg>/);
-  if (!svgMatch) return;
+  const svgMatch = svgText && svgText.match(/<svg[\s\S]*<\/svg>/);
+  if (!svgMatch) { el.quizKanji.textContent = char; return; }
   // KanjiVG ships stroke:#000000;stroke-width:3 on the outer <g> — swap in
   // the app's accent red and a heavier weight so the animated glyph matches
   // the bold-red styling .quiz-kanji already applies to the plain-character
   // fallback (see style.css), instead of a thin black default.
   const svgHTML = svgMatch[0]
-    .replace(/stroke:#000000/g, 'stroke:var(--accent)')
+    .replace(/stroke:#000000/g, 'stroke:var(--accent-ink)')
     .replace(/stroke-width:3/g, 'stroke-width:4.5');
   el.quizKanji.innerHTML = svgHTML;
   const svg = el.quizKanji.querySelector('svg');
   animateStrokeOrder(svg);
+  // Click-to-replay — no visible hint text (see onContinueClick's
+  // #quiz-kanji exclusion for why a tap here must not also count as
+  // "continue" past a revealed answer).
   svg.addEventListener('click', () => animateStrokeOrder(svg));
+}
+
+// Kanji mode's prompt: an animated stroke-order SVG when the setting is on
+// (falling back to the plain character if this kanji has no stroke data —
+// see renderKanjiStrokeOrder), otherwise the plain character outright with
+// no fetch at all. Shared by renderQuestion and the Settings toggle, so
+// flipping the setting mid-question redraws the kanji already on screen —
+// safe to do even before answering, since neither state gives away the
+// reading being quizzed.
+function renderKanjiPrompt(char, myGen) {
+  if (!SettingsManager.get('strokeAnimation')) {
+    el.quizKanji.textContent = char;
+    return;
+  }
+  el.quizKanji.textContent = '';
+  renderKanjiStrokeOrder(char, myGen);
 }
 
 function renderQuestion() {
@@ -755,12 +794,18 @@ function renderQuestion() {
   el.quizKanji.classList.toggle('is-reverse', isReverse);
   // Reverse prompts a reading (rendered through readingHTML so an okurigana
   // dot becomes the styled span); sentence highlights the target in its
-  // sentence; kanji and word show the bare kanji / word as-is (the reading,
-  // with its okurigana, is quizzed in the options).
-  el.quizKanji.innerHTML = isReverse
-    ? readingHTML(q.reading)
-    : state.mode === 'sentence' ? highlightTarget(q.sentence, q.target) : q.text;
-  if (state.mode === 'kanji') renderKanjiStrokeOrder(q.text, renderGen);
+  // sentence; word shows the bare word as-is (the reading, with its
+  // okurigana, is quizzed in the options); kanji goes through
+  // renderKanjiPrompt so the stroke-animation setting is respected.
+  if (isReverse) {
+    el.quizKanji.innerHTML = readingHTML(q.reading);
+  } else if (state.mode === 'sentence') {
+    el.quizKanji.innerHTML = highlightTarget(q.sentence, q.target);
+  } else if (state.mode === 'kanji') {
+    renderKanjiPrompt(q.text, renderGen);
+  } else {
+    el.quizKanji.textContent = q.text;
+  }
   el.quizMeaning.textContent = q.meaning;
   // A leech (a kanji this learner keeps missing) gets extra scaffolding: its
   // meaning is shown as a hint even when the setting is off, and the card is
@@ -1105,9 +1150,20 @@ function handleAnswer(selected, btnEl) {
 }
 
 // Advances on a click anywhere while a revealed answer waits for manual
-// continue. Guarded, though advanceQuestion() also removes it.
-function onContinueClick() {
-  if (state.awaitingContinue) advanceQuestion();
+// continue. Guarded, though advanceQuestion() also removes it. Two kinds of
+// click must NOT count as "continue": opening/using Settings (else it
+// silently advances past the very answer the learner opened Settings to look
+// at — isSettingsOpen() catches the click that opens it, since the button's
+// own listener runs first in the bubble phase; the target check separately
+// catches closing it, since by the time this fires the overlay may already
+// be hidden again) and tapping the animated kanji to replay its stroke order
+// (see renderKanjiStrokeOrder) — replaying it to restudy the correct stroke
+// order is exactly what a learner should be able to do while reviewing a
+// revealed answer, not something that skips past it.
+function onContinueClick(e) {
+  if (!state.awaitingContinue) return;
+  if (e && e.target && (isSettingsOpen() || e.target.closest('#settings-overlay') || e.target.closest('#quiz-kanji'))) return;
+  advanceQuestion();
 }
 
 // Moves to the next question (or the summary). The single exit point for both

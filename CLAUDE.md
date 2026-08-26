@@ -136,6 +136,35 @@ add its `<script>` tag before `js/app.js`, point the relevant `Config.js` at
 it — no changes needed to `QuestionSelector.js` / `DistractorGenerator.js`
 themselves.
 
+### Stroke-order animation (kanji mode)
+
+`renderKanjiPrompt()` in `app.js` picks between an animated KanjiVG
+stroke-order SVG and the plain character, gated on the `strokeAnimation`
+setting (default on) — shared by `renderQuestion()` and the Settings
+toggle's `change` handler, so flipping the setting mid-question redraws the
+kanji already on screen (safe either before or after answering: neither
+state gives away the reading being quizzed).
+
+When the setting is on, `renderKanjiPrompt()` deliberately leaves
+`#quiz-kanji` empty rather than setting the plain character first —
+`renderKanjiStrokeOrder()` (data at `vendor/kanji-data/stroke-order/kanjivg/`,
+jōyō kanji only, guarded by `renderGen` the same way the speech-synthesis
+callbacks are) is the only thing that ever writes to it in that path, writing
+either the fetched SVG or, on a fetch miss, the plain character as a genuine
+fallback — never both in sequence. Don't reintroduce a synchronous
+`el.quizKanji.textContent = q.text` ahead of that call; it would bring back
+a flash of the plain character right before the SVG replaces it.
+
+The SVG is click-to-replay (`animateStrokeOrder(svg)` re-runs on click, no
+visible hint text — `cursor: pointer` is the only affordance), which is
+exactly what bit auto-advance-off mode once already: `onContinueClick`
+(armed whenever `state.awaitingContinue` is true) advances on *any* document
+click, so a tap meant only to replay the animation — or to open/use
+Settings — also satisfied it and silently skipped to the next question.
+Both are excluded by target (`#quiz-kanji`, `#settings-overlay`) in
+`onContinueClick`. Any future interactive element added inside the quiz card
+during the reveal needs the same exclusion, or it inherits this bug.
+
 ### Data lives in a submodule
 
 `vendor/kanji-data` (submodule, https://github.com/bagustris/kanji-data)
@@ -164,7 +193,8 @@ tracking" / data section before assuming a reading is wrong.
 
 - `kanji-drill-progress` — per-question stats, per-grade totals, answer
   history, per-question confusion counts (used by both engines above).
-- `kanji-drill-settings` — `showMeaning`, `roundSize`.
+- `kanji-drill-settings` — `showMeaning`, `roundSize`, `playAudio`,
+  `autoAdvance`, `showExamples`, `strokeAnimation`.
 
 Both are versioned, defensively-parsed JSON blobs (see `load()` in each
 file) — preserve that pattern (never assume a key exists) when extending

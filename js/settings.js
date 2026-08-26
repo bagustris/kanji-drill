@@ -13,7 +13,11 @@ const SettingsManager = (() => {
   // (tap / → / Enter) so there's unlimited time to read the revealed answer.
   // showExamples defaults to true: kanji mode reveals a few example words
   // that use the kanji alongside the answer (see renderExamples in app.js).
-  const DEFAULTS = { showMeaning: true, roundSize: 10, playAudio: false, autoAdvance: true, showExamples: true };
+  // strokeAnimation defaults to true: kanji mode shows an animated
+  // stroke-order diagram instead of the plain character (see
+  // renderKanjiStrokeOrder in app.js). Turning it off skips the fetch
+  // entirely and always shows the plain character.
+  const DEFAULTS = { showMeaning: true, roundSize: 10, playAudio: false, autoAdvance: true, showExamples: true, strokeAnimation: true };
 
   function load() {
     try {
