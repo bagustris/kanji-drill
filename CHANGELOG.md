@@ -31,6 +31,11 @@ source of truth for the app version.
   breaking a 熟語 mid-character when it doesn't fit a narrow screen.
 
 ### Added
+- Kanji-mode quiz prompts now show an animated stroke-order diagram (from
+  KanjiVG data mirrored into kanji-data) instead of a static character —
+  tap/click it to replay. Falls back silently to the plain character for
+  kanji without stroke data. Word, sentence, and reverse-mode prompts are
+  unchanged.
 - A second example sentence for every kanji in sentence mode (grades 1-9), each
   using a different common word for the same kanji so it appears in two
   contexts (e.g. 出 via 出発 and 出かける). Sentence counts roughly double per

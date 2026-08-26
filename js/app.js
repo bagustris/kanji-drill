@@ -669,6 +669,65 @@ const DEFAULT_INSTRUCTION = ['正しい読み方は？', 'Choose the correct rea
 // started a new round can't trigger a stray skip.
 let renderGen = 0;
 
+// --- Stroke-order animation (kanji mode only) ---------------------------
+// KanjiVG data (jōyō kanji only, ~2,136 characters) mirrored into the
+// kanji-data submodule specifically for this — see stroke-order/kanjivg/
+// there. Not every kanji in this app's grade lists is jōyō, so a fetch miss
+// silently leaves the plain character in place (set synchronously by
+// renderQuestion before this resolves) rather than showing an error; this
+// is a quiz prompt, not a dictionary lookup.
+const strokeOrderCache = new Map();
+
+function kanjivgFilename(char) {
+  return char.codePointAt(0).toString(16).padStart(5, '0') + '.svg';
+}
+
+function fetchKanjivgSvg(char) {
+  const path = `vendor/kanji-data/stroke-order/kanjivg/${kanjivgFilename(char)}`;
+  if (!strokeOrderCache.has(path)) {
+    const p = fetch(path).then((r) => (r.ok ? r.text() : null)).catch(() => null);
+    strokeOrderCache.set(path, p);
+  }
+  return strokeOrderCache.get(path);
+}
+
+// Ported verbatim from jed's js/app.js: sets each stroke's
+// stroke-dasharray/stroke-dashoffset to its own length and transitions the
+// offset to 0 with a per-stroke delay, giving a draw-in-order effect with no
+// animation library. kvg: paths are always in stroke order regardless of
+// nesting depth, so a plain query in document order is correct.
+function animateStrokeOrder(svg) {
+  const paths = svg.querySelectorAll('[id^="kvg:StrokePaths"] path');
+  paths.forEach((path, i) => {
+    const len = path.getTotalLength();
+    path.style.transition = 'none';
+    path.style.strokeDasharray = String(len);
+    path.style.strokeDashoffset = String(len);
+    // force reflow so the transition below animates from this state
+    void path.getBoundingClientRect();
+    path.style.transition = 'stroke-dashoffset 0.7s ease-in-out';
+    path.style.transitionDelay = `${i * 0.6}s`;
+    requestAnimationFrame(() => { path.style.strokeDashoffset = '0'; });
+  });
+}
+
+// Swaps #quiz-kanji's plain character for an animated stroke-order SVG once
+// fetched. myGen guards against a slow fetch resolving after the learner has
+// already advanced to (or the round has rendered) a different question.
+async function renderKanjiStrokeOrder(char, myGen) {
+  const svgText = await fetchKanjivgSvg(char);
+  if (renderGen !== myGen || !svgText) return;
+  // The fetched file is a full XML document (declaration, licence comment,
+  // internal DOCTYPE subset) ahead of the <svg> element — innerHTML only
+  // understands HTML syntax, so keep just the <svg>...</svg> element.
+  const svgMatch = svgText.match(/<svg[\s\S]*<\/svg>/);
+  if (!svgMatch) return;
+  el.quizKanji.innerHTML = svgMatch[0].replace(/stroke:#000000/g, 'stroke:currentColor');
+  const svg = el.quizKanji.querySelector('svg');
+  animateStrokeOrder(svg);
+  svg.addEventListener('click', () => animateStrokeOrder(svg));
+}
+
 function renderQuestion() {
   renderGen++;
   const q = state.questions[state.index];
@@ -690,6 +749,7 @@ function renderQuestion() {
   el.quizKanji.innerHTML = isReverse
     ? readingHTML(q.reading)
     : state.mode === 'sentence' ? highlightTarget(q.sentence, q.target) : q.text;
+  if (state.mode === 'kanji') renderKanjiStrokeOrder(q.text, renderGen);
   el.quizMeaning.textContent = q.meaning;
   // A leech (a kanji this learner keeps missing) gets extra scaffolding: its
   // meaning is shown as a hint even when the setting is off, and the card is
