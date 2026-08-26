@@ -502,7 +502,7 @@ function buildQuestion(target, itemList, mode) {
   // okurigana by showing ぶ in the prompt. The reading is quizzed with its
   // okurigana intact (まな.ぶ), which readingHTML renders with the okurigana in
   // red so it reads as "learn 学 = まな, okurigana ぶ". Example words (optional
-  // in the data — see tools/fetch-example-words.js) are still revealed after
+  // in the data — see vendor/kanji-data/scripts/kyoiku/fetch-example-words.js) are still revealed after
   // answering to reinforce the kanji -> word association a drill book builds.
   if (mode === 'kanji') {
     return {
@@ -931,7 +931,7 @@ function escapeHtml(s) {
 // Renders the kanji's example words on the answer reveal (kanji mode only).
 // A no-op — hiding the panel — when there are none or the setting is off, so
 // kanji that don't yet carry `examples` data simply show nothing (see
-// tools/fetch-example-words.js and tools/fetch-examples-kanjialive.js).
+// vendor/kanji-data/scripts/kyoiku/fetch-example-words.js and fetch-examples-kanjialive.js).
 function renderExamples(q) {
   const examples = state.mode === 'kanji' && Array.isArray(q.examples) ? q.examples : [];
   if (examples.length === 0 || !SettingsManager.get('showExamples')) {

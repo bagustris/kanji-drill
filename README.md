@@ -209,7 +209,7 @@ you spend more time on.
 > textbook sequences vocabulary by theme and season, without copying its
 > actual text. All grades 1-9 are populated, with **two** sentences per kanji
 > (a first block in the original order, then a second block that covers each
-> kanji again with a different common word). `tools/validate-sentences.js`
+> kanji again with a different common word). `vendor/kanji-data/scripts/kyoiku/validate-sentences.js`
 > checks the structural invariants of both blocks.
 
 ## Progress tracking

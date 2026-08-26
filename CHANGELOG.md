@@ -11,13 +11,26 @@ source of truth for the app version.
 
 ## [Unreleased]
 
+### Changed
+- Kanji, word, and sentence data now lives in the shared
+  [kanji-data](https://github.com/bagustris/kanji-data) repo (added as the
+  `vendor/kanji-data` submodule, organized there by data domain —
+  `kanji/`, `words/`, `sentences/` — rather than by app) instead of this
+  app's own `data/` directory, so the same JMdict/Kanji Alive-backed
+  dataset can be reused by other apps in the family. Deployment switched
+  from GitHub Pages' classic "deploy from branch" to a GitHub Actions
+  workflow (`.github/workflows/deploy-pages.yml`), since the live site now
+  fetches data straight out of the submodule and the branch-deploy
+  pipeline doesn't check out submodules.
+
 ### Added
 - A second example sentence for every kanji in sentence mode (grades 1-9), each
   using a different common word for the same kanji so it appears in two
   contexts (e.g. 出 via 出発 and 出かける). Sentence counts roughly double per
-  grade. New `tools/validate-sentences.js` checks the structural invariants
-  (target is a substring of its sentence, readings are valid kana, sentences
-  are unique per grade, the second word differs from the first).
+  grade. New `validate-sentences.js` (now in the kanji-data submodule's
+  `scripts/kyoiku/`) checks the structural invariants (target is a
+  substring of its sentence, readings are valid kana, sentences are unique
+  per grade, the second word differs from the first).
 
 ## [1.1.1] - 2026-08-12
 
