@@ -532,6 +532,11 @@ function buildQuestion(target, itemList, mode) {
     meaning: mode === 'sentence' ? (target.translation || target.meaning) : target.meaning,
     correctReading,
     options,
+    // Word mode's own example sentences (see
+    // vendor/kanji-data/scripts/kyoiku/augment-words.js — pulled from the
+    // sentence dataset by exact target match), shown on answer reveal the
+    // same way kanji mode shows example words.
+    examples: mode === 'word' && Array.isArray(target.examples) ? target.examples : [],
   };
 }
 
@@ -563,6 +568,10 @@ function buildReverseQuestion(target, itemList) {
     correctReading: kanji,
     options,
     isReverse: true,
+    // Reverse mode reuses the same kanji-file data as kanji mode, so the
+    // same example words are available and reinforce the same kanji -> word
+    // association, now shown after the correct kanji has been revealed.
+    examples: Array.isArray(target.examples) ? target.examples : [],
   };
 }
 
@@ -1033,23 +1042,40 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
-// Whether q's example words will actually be shown on the answer reveal —
-// kanji mode, the kanji has examples data, and the setting is on. Shared by
-// renderExamples and handleAnswer's auto-advance delay.
+// Whether q's examples will actually be shown on the answer reveal — kanji
+// or reverse mode (example words) or word mode (example sentences), q
+// carries examples data, and the setting is on. Shared by renderExamples
+// and handleAnswer's auto-advance delay.
 function hasVisibleExamples(q) {
-  const examples = state.mode === 'kanji' && Array.isArray(q.examples) ? q.examples : [];
+  const examples = (state.mode === 'kanji' || state.mode === 'word' || state.mode === 'reverse') && Array.isArray(q.examples) ? q.examples : [];
   return examples.length > 0 && SettingsManager.get('showExamples');
 }
 
-// Renders the kanji's example words on the answer reveal (kanji mode only).
-// A no-op — hiding the panel — when there are none or the setting is off, so
-// kanji that don't yet carry `examples` data simply show nothing (see
-// vendor/kanji-data/scripts/kyoiku/fetch-example-words.js and fetch-examples-kanjialive.js).
+// Renders the answer-reveal examples panel: example words for kanji and
+// reverse mode (both read the same kanji-file data — see
+// vendor/kanji-data/scripts/kyoiku/fetch-example-words.js and
+// fetch-examples-kanjialive.js), example sentences for word mode (pulled
+// from the sentence dataset by exact target match — see
+// vendor/kanji-data/scripts/kyoiku/augment-words.js). A no-op — hiding the
+// panel — when there are none or the setting is off, so entries that don't
+// carry `examples` data simply show nothing.
 function renderExamples(q) {
-  const examples = state.mode === 'kanji' && Array.isArray(q.examples) ? q.examples : [];
+  const examples = (state.mode === 'kanji' || state.mode === 'word' || state.mode === 'reverse') && Array.isArray(q.examples) ? q.examples : [];
   if (!hasVisibleExamples(q)) {
     el.quizExamples.innerHTML = '';
     el.quizExamples.classList.add('hidden');
+    return;
+  }
+  if (state.mode === 'word') {
+    const rows = examples.map((ex) =>
+      `<li><span class="ex-sentence">${escapeHtml(ex.sentence)}</span>` +
+      `<span class="ex-gloss">${escapeHtml(ex.translation || '')}</span></li>`
+    ).join('');
+    // A word can carry more than one attached sentence (see augment-words.js) —
+    // label pluralizes rather than hardcoding "Example sentence".
+    const label = examples.length > 1 ? 'れい文<span>Example sentences</span>' : 'れい文<span>Example sentence</span>';
+    el.quizExamples.innerHTML = `<div class="quiz-examples-label">${label}</div><ul>${rows}</ul>`;
+    el.quizExamples.classList.remove('hidden');
     return;
   }
   const rows = examples.map((ex) =>
@@ -1080,8 +1106,9 @@ function handleAnswer(selected, btnEl) {
     el.quizKanji.innerHTML = highlightTarget(q.sentence, q.target, furiganaHTML(kanjiPart, q.correctReading));
   }
 
-  // Kanji mode reveals the example words that use this kanji, reinforcing the
-  // kanji -> word association the way a drill book's 熟語 list does.
+  // Kanji and reverse mode reveal example words that use this kanji, and
+  // word mode reveals an example sentence that uses this word, reinforcing
+  // the reading the way a drill book's 熟語/例文 list does.
   renderExamples(q);
 
   // q.sourceGrade, not state.grade — in review mode state.grade is null and

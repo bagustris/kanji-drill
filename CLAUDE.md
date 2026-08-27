@@ -183,7 +183,15 @@ first moving the data back to a plain committed directory.
 ### Data shape
 
 `data/gradeN.json` (kanji mode): `{ "kanji": "口", "readings": ["くち"], "meaning": "..." }`
-`data/wordsN.json` (word mode): same shape but `"word"` instead of `"kanji"`.
+`data/wordsN.json` (word mode): same shape but `"word"` instead of `"kanji"`,
+plus an optional `examples: [{sentence, translation}]` (up to 2, attached
+whenever a sentence's `target` exactly matches the word — see
+`vendor/kanji-data/scripts/kyoiku/augment-words.js`), rendered in word mode's
+answer-reveal panel the way kanji mode renders its own `examples`. The word
+pool also includes inflected (okurigana) forms like 買う/食べる, generated
+by that same script from each kanji's own `examples` where the word is that
+kanji plus a kana-only suffix — coverage follows whatever the kanji dataset
+already has, so not every kanji has one.
 `readings` is almost always length 1; a few (notably 一〜十) carry two. Grade
 files 1–6 are the official Kyōiku set; 7–9 are junior-high kanji, editorially
 curated (not copied from an official answer key) — see README's "Progress

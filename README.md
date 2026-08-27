@@ -52,23 +52,34 @@ The main concept is "how kanji is read in particular words" and "how to associat
   classroom leans on. Forward modes speak the reading once it's revealed; the
   reverse quiz speaks it up front (it's already on screen). Turn it on in
   Settings; degrades to silence wherever no Japanese voice exists.
-- **Example words on the answer reveal (この漢字を使うことば)** — after you
-  answer a kanji-mode question, a few common words that use that kanji are
-  shown alongside the reading, reinforcing the kanji → word association the
-  way a drill book's 熟語 list does. Backed by an `examples` field per kanji
-  (curated from JMdict, backfilled from [Kanji alive](https://kanjialive.com)
-  where JMdict curation hasn't reached yet — see `CREDITS.md`); kanji without
-  any example data simply show nothing. On by default — turn it off in
-  Settings if you'd rather answer without it.
+- **Examples on the answer reveal (答えた後に例を表示)** — after you answer, a
+  short example is shown alongside the reading, reinforcing the answer the
+  way a drill book would. What's shown depends on the mode: kanji and reverse
+  mode show a few common words that use that kanji (この漢字を使うことば),
+  backed by an `examples` field per kanji (curated from JMdict, backfilled
+  from [Kanji alive](https://kanjialive.com) where JMdict curation hasn't
+  reached yet — see `CREDITS.md`); word mode shows an example sentence that
+  uses the word (れい文), backed by an `examples: [{sentence, translation}]`
+  field per word attached whenever a sentence's `target` exactly matches the
+  word (see `vendor/kanji-data/scripts/kyoiku/augment-words.js`). Entries
+  without any example data simply show nothing. On by default (one setting
+  covers all three modes) — turn it off in Settings if you'd rather answer
+  without it.
+- **Words with okurigana in word mode** — alongside compound words (熟語) like
+  学校, word mode's pool also includes inflected forms such as 買う, 急ぐ,
+  食べる, generated from each kanji's own example words wherever the word is
+  that kanji plus a kana-only suffix. Coverage follows whatever the kanji
+  dataset already has for that kanji, so it's not exhaustive — see
+  `augment-words.js` above.
 - **Auto-advance by default (自動で次へ)** — after you answer, the quiz reveals
   the reading and moves on after a short timed pause. Turn the setting **off**
   to advance manually instead (tap/click, or → / Enter / Space), giving
   unlimited time to read what you missed.
   > [!NOTE]
-  > When "Show words that use this kanji" is also on, the pause is held to at
+  > When "Show example after answering" is also on, the pause is held to at
   > least 5 seconds (`EXAMPLES_READ_MS` in `js/app.js`) instead of the usual
-  > reading-length-scaled delay, so there's time to skim the example list
-  > before the quiz moves on.
+  > reading-length-scaled delay, so there's time to skim the example before
+  > the quiz moves on.
 - **Extra help on weak spots (にがて)** — a kanji you keep missing (seen ≥ 3
   times, right less than half) is flagged a *leech* and gets scaffolding: its
   meaning is shown as a hint even when "show meaning" is off, and a small

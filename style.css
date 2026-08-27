@@ -999,6 +999,10 @@ html, body {
 .ex-reading { font-size: 1rem; color: var(--accent-ink); white-space: nowrap; }
 .ex-gloss { font-size: 0.9rem; color: var(--muted); font-style: italic; margin-left: auto; text-align: right; }
 
+/* Word mode's example-sentence row — the sentence gets its own line since it
+   won't fit alongside the gloss the way a short 熟語 does. */
+.ex-sentence { font-size: 1.15rem; font-weight: bold; flex-basis: 100%; }
+
 /* "Weak spot" marker for a leech (a kanji the learner keeps missing). Subtle,
    amber, and self-explaining — signals the meaning is being shown as extra
    help, not that anything is broken. */

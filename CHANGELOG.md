@@ -9,15 +9,28 @@ The version shown in the app's Settings → About panel is read from the latest
 entry below (see `loadAppVersion()` in `js/app.js`), so this file is the single
 source of truth for the app version.
 
-## [Unreleased]
+## [1.3.0] - 2026-08-27  
 
 ### Added
 - Settings toggle **筆順アニメーション / Stroke-order animation** (on by
   default) for the animated kanji-mode prompt, falling back to the plain
   character when it's off.
 - Tapping the app title (漢字ドリル) now goes home from any screen.
+- Word mode's pool now includes inflected (okurigana) words like 買う, 急ぐ,
+  飲む, 食べる, alongside its existing compound words (熟語) — generated from
+  each kanji's own example words wherever the word is that kanji plus a
+  kana-only suffix (`vendor/kanji-data/scripts/kyoiku/augment-words.js`).
+- Word mode now reveals an example sentence (れい文) on the answer reveal,
+  the same way kanji mode reveals example words — attached whenever a
+  sentence's target exactly matches the word.
+- Reverse mode now also reveals example words on the answer reveal, reusing
+  the same kanji-file `examples` data kanji mode already shows.
 
 ### Changed
+- Settings toggle **この漢字を使うことばを表示 / Show words that use this
+  kanji** renamed to **答えた後に例を表示 / Show example after answering**,
+  since it now also controls word mode's example sentence and reverse mode's
+  example words.
 - The kanji-mode prompt (both the animated stroke-order SVG and the plain
   character) is noticeably bigger: 5rem/7rem → 6rem/8.5rem on mobile,
   6rem/8.5rem → 7.5rem/10rem at the ≥480px breakpoint.

@@ -11,8 +11,9 @@ const SettingsManager = (() => {
   // autoAdvance defaults to true: after answering, the quiz moves on after a
   // short timed pause. Turning it off makes it wait for a manual continue
   // (tap / → / Enter) so there's unlimited time to read the revealed answer.
-  // showExamples defaults to true: kanji mode reveals a few example words
-  // that use the kanji alongside the answer (see renderExamples in app.js).
+  // showExamples defaults to true: reveals a few examples alongside the
+  // answer — example words for kanji and reverse mode, an example sentence
+  // for word mode (see renderExamples in app.js).
   // strokeAnimation defaults to true: kanji mode shows an animated
   // stroke-order diagram instead of the plain character (see
   // renderKanjiStrokeOrder in app.js). Turning it off skips the fetch
