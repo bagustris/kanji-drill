@@ -995,13 +995,18 @@ html, body {
 
 /* nowrap keeps a 熟語 and its reading from breaking mid-word on a narrow
    screen — the row wraps as a whole (gloss drops to its own line) instead. */
-.ex-word { font-size: 1.3rem; font-weight: bold; white-space: nowrap; }
+.ex-word { font-size: 1.3rem; font-weight: normal; white-space: nowrap; }
 .ex-reading { font-size: 1rem; color: var(--accent-ink); white-space: nowrap; }
 .ex-gloss { font-size: 0.9rem; color: var(--muted); font-style: italic; margin-left: auto; text-align: right; }
 
 /* Word mode's example-sentence row — the sentence gets its own line since it
    won't fit alongside the gloss the way a short 熟語 does. */
-.ex-sentence { font-size: 1.15rem; font-weight: bold; flex-basis: 100%; }
+.ex-sentence { font-size: 1.15rem; font-weight: normal; flex-basis: 100%; }
+
+/* The exact kanji (ex-word) or word (ex-sentence) being quizzed, picked out
+   from the rest of the example the same way the sentence-mode prompt
+   highlights its own target (.quiz-sentence-target). */
+.ex-target { color: var(--accent-ink); font-weight: bold; }
 
 /* "Weak spot" marker for a leech (a kanji the learner keeps missing). Subtle,
    amber, and self-explaining — signals the meaning is being shown as extra

@@ -25,12 +25,26 @@ source of truth for the app version.
   sentence's target exactly matches the word.
 - Reverse mode now also reveals example words on the answer reveal, reusing
   the same kanji-file `examples` data kanji mode already shows.
+- Every word now has an example sentence on the answer reveal (100%
+  coverage, up from ~62%): `augment-words.js`'s exact-target match now
+  checks every grade (not just a word's own) and falls back to the Tanaka
+  Corpus, and a new `generate-filler-sentences.js` mechanically templates a
+  plain sentence for any word still left over, from the word and its own
+  meaning gloss.
 
 ### Changed
 - Settings toggle **この漢字を使うことばを表示 / Show words that use this
   kanji** renamed to **答えた後に例を表示 / Show example after answering**,
   since it now also controls word mode's example sentence and reverse mode's
   example words.
+- Okurigana words (買う, 食べる, ...) are now ordered ahead of compound words
+  in word mode's pool, so a new learner actually meets them first — the
+  question selector's tie-break made array order equivalent to learning
+  order, and they were previously appended to the end where they rarely
+  surfaced.
+- The exact kanji/word being quizzed is now highlighted in red within its
+  example (word list or sentence), matching how sentence mode already
+  highlights its own target; the example text itself is no longer bold.
 - The kanji-mode prompt (both the animated stroke-order SVG and the plain
   character) is noticeably bigger: 5rem/7rem → 6rem/8.5rem on mobile,
   6rem/8.5rem → 7.5rem/10rem at the ≥480px breakpoint.

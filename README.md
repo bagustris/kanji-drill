@@ -54,17 +54,22 @@ The main concept is "how kanji is read in particular words" and "how to associat
   Settings; degrades to silence wherever no Japanese voice exists.
 - **Examples on the answer reveal (答えた後に例を表示)** — after you answer, a
   short example is shown alongside the reading, reinforcing the answer the
-  way a drill book would. What's shown depends on the mode: kanji and reverse
-  mode show a few common words that use that kanji (この漢字を使うことば),
-  backed by an `examples` field per kanji (curated from JMdict, backfilled
-  from [Kanji alive](https://kanjialive.com) where JMdict curation hasn't
-  reached yet — see `CREDITS.md`); word mode shows an example sentence that
-  uses the word (れい文), backed by an `examples: [{sentence, translation}]`
-  field per word attached whenever a sentence's `target` exactly matches the
-  word (see `vendor/kanji-data/scripts/kyoiku/augment-words.js`). Entries
-  without any example data simply show nothing. On by default (one setting
-  covers all three modes) — turn it off in Settings if you'd rather answer
-  without it.
+  way a drill book would; the exact kanji/word being quizzed is picked out in
+  red within it. What's shown depends on the mode: kanji and reverse mode
+  show a few common words that use that kanji (この漢字を使うことば), backed
+  by an `examples` field per kanji (curated from JMdict, backfilled from
+  [Kanji alive](https://kanjialive.com) where JMdict curation hasn't reached
+  yet — see `CREDITS.md`); word mode shows an example sentence that uses the
+  word (れい文), backed by an `examples: [{sentence, translation}]` field per
+  word. Coverage is 100%: `augment-words.js` attaches a real example wherever
+  a sentence's `target` matches (checked across every grade, then against
+  the Tanaka Corpus as a fallback), and `generate-filler-sentences.js` fills
+  every remaining word with a plain, mechanically templated sentence built
+  from the word and its own gloss (original text, not sourced from any
+  dictionary/corpus) — noticeably simpler than the matched examples, by
+  design, since it's guessing far less. On by default (one setting covers
+  all three modes) — turn it off in Settings if you'd rather answer without
+  it.
 - **Words with okurigana in word mode** — alongside compound words (熟語) like
   学校, word mode's pool also includes inflected forms such as 買う, 急ぐ,
   食べる, generated from each kanji's own example words wherever the word is

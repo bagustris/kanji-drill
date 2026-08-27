@@ -1059,6 +1059,17 @@ function hasVisibleExamples(q) {
 // vendor/kanji-data/scripts/kyoiku/augment-words.js). A no-op — hiding the
 // panel — when there are none or the setting is off, so entries that don't
 // carry `examples` data simply show nothing.
+// Wraps the first occurrence of `target` inside `text` in the same red
+// highlight the sentence-mode prompt uses for its own target, so the exact
+// word/kanji being quizzed stands out from the rest of the example — the
+// text on either side is still escaped, just not inside the wrapped span.
+function highlightTargetIn(text, target) {
+  const start = text.indexOf(target);
+  if (start === -1) return escapeHtml(text);
+  const end = start + target.length;
+  return `${escapeHtml(text.slice(0, start))}<span class="ex-target">${escapeHtml(text.slice(start, end))}</span>${escapeHtml(text.slice(end))}`;
+}
+
 function renderExamples(q) {
   const examples = (state.mode === 'kanji' || state.mode === 'word' || state.mode === 'reverse') && Array.isArray(q.examples) ? q.examples : [];
   if (!hasVisibleExamples(q)) {
@@ -1068,7 +1079,7 @@ function renderExamples(q) {
   }
   if (state.mode === 'word') {
     const rows = examples.map((ex) =>
-      `<li><span class="ex-sentence">${escapeHtml(ex.sentence)}</span>` +
+      `<li><span class="ex-sentence">${highlightTargetIn(ex.sentence, q.text)}</span>` +
       `<span class="ex-gloss">${escapeHtml(ex.translation || '')}</span></li>`
     ).join('');
     // A word can carry more than one attached sentence (see augment-words.js) —
@@ -1079,7 +1090,7 @@ function renderExamples(q) {
     return;
   }
   const rows = examples.map((ex) =>
-    `<li><span class="ex-word">${escapeHtml(ex.word)}</span>` +
+    `<li><span class="ex-word">${highlightTargetIn(ex.word, q.text)}</span>` +
     `<span class="ex-reading">${escapeHtml(ex.reading || '')}</span>` +
     `<span class="ex-gloss">${escapeHtml(ex.gloss || '')}</span></li>`
   ).join('');
