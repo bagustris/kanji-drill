@@ -109,6 +109,9 @@ el.btnQuit.addEventListener('click', () => showScreen('home'));
 el.btnHome.addEventListener('click', () => showScreen('home'));
 el.btnHomeTitle.addEventListener('click', () => showScreen('home'));
 el.btnRetry.addEventListener('click', () => startRound());
+el.quizContinue.addEventListener('click', () => {
+  if (state.awaitingContinue) advanceQuestion();
+});
 
 // The grade name shown in the dashboard (e.g. "3年生") is read straight off
 // the matching grade button rather than duplicated in a lookup table — strip
@@ -383,7 +386,6 @@ function showScreen(name) {
     state.advanceTimer = null;
   }
   state.awaitingContinue = false;
-  document.removeEventListener('click', onContinueClick);
   el.quizContinue.classList.add('hidden');
   state.screen = name;
   Object.entries(el.screens).forEach(([key, section]) => {
@@ -765,9 +767,8 @@ async function renderKanjiStrokeOrder(char, myGen) {
   el.quizKanji.innerHTML = svgHTML;
   const svg = el.quizKanji.querySelector('svg');
   animateStrokeOrder(svg);
-  // Click-to-replay — no visible hint text (see onContinueClick's
-  // #quiz-kanji exclusion for why a tap here must not also count as
-  // "continue" past a revealed answer).
+  // Click-to-replay — it remains independent from the explicit Continue
+  // button, so restudying stroke order never skips the revealed answer.
   svg.addEventListener('click', () => animateStrokeOrder(svg));
 }
 
@@ -1079,7 +1080,7 @@ function renderExamples(q) {
   }
   if (state.mode === 'word') {
     const rows = examples.map((ex) =>
-      `<li><span class="ex-sentence">${highlightTargetIn(ex.sentence, q.text)}</span>` +
+      `<li><button type="button" class="ex-sentence" aria-label="例文を読み上げる Play example sentence">${highlightTargetIn(ex.sentence, q.text)}</button>` +
       `<span class="ex-gloss">${escapeHtml(ex.translation || '')}</span></li>`
     ).join('');
     // A word can carry more than one attached sentence (see augment-words.js) —
@@ -1087,6 +1088,13 @@ function renderExamples(q) {
     const label = examples.length > 1 ? 'れい文<span>Example sentences</span>' : 'れい文<span>Example sentence</span>';
     el.quizExamples.innerHTML = `<div class="quiz-examples-label">${label}</div><ul>${rows}</ul>`;
     el.quizExamples.classList.remove('hidden');
+    el.quizExamples.classList.toggle('has-audio', AudioPlayer.isSupported());
+    el.quizExamples.querySelectorAll('.ex-sentence').forEach((sentence, index) => {
+      const example = examples[index];
+      sentence.addEventListener('click', () => {
+        if (example?.sentence) AudioPlayer.speak(example.sentence.replace(/\./g, ''));
+      });
+    });
     return;
   }
   const rows = examples.map((ex) =>
@@ -1174,34 +1182,7 @@ function handleAnswer(selected, btnEl) {
     if (spokenText) speakReading(spokenText);
     state.awaitingContinue = true;
     el.quizContinue.classList.remove('hidden');
-    // Register the click-to-continue listener on the *next* macrotask, so the
-    // very click that answered this question doesn't bubble up and instantly
-    // advance it — and only if we're still awaiting (a fast keyboard advance
-    // may have already moved on). advanceQuestion() removes it, so exactly one
-    // listener is ever live; a plain (non-once) listener avoids a keyboard
-    // advance leaving a stale once-listener that would swallow the next
-    // question's answering click.
-    setTimeout(() => {
-      if (state.awaitingContinue) document.addEventListener('click', onContinueClick);
-    }, 0);
   }
-}
-
-// Advances on a click anywhere while a revealed answer waits for manual
-// continue. Guarded, though advanceQuestion() also removes it. Two kinds of
-// click must NOT count as "continue": opening/using Settings (else it
-// silently advances past the very answer the learner opened Settings to look
-// at — isSettingsOpen() catches the click that opens it, since the button's
-// own listener runs first in the bubble phase; the target check separately
-// catches closing it, since by the time this fires the overlay may already
-// be hidden again) and tapping the animated kanji to replay its stroke order
-// (see renderKanjiStrokeOrder) — replaying it to restudy the correct stroke
-// order is exactly what a learner should be able to do while reviewing a
-// revealed answer, not something that skips past it.
-function onContinueClick(e) {
-  if (!state.awaitingContinue) return;
-  if (e && e.target && (isSettingsOpen() || e.target.closest('#settings-overlay') || e.target.closest('#quiz-kanji'))) return;
-  advanceQuestion();
 }
 
 // Moves to the next question (or the summary). The single exit point for both
@@ -1214,7 +1195,6 @@ function advanceQuestion() {
     state.advanceTimer = null;
   }
   state.awaitingContinue = false;
-  document.removeEventListener('click', onContinueClick);
   el.quizContinue.classList.add('hidden');
   state.index++;
   if (state.index < state.questions.length) renderQuestion();
