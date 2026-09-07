@@ -13,6 +13,13 @@ source of truth for the app version.
 ## [2026-09-07]
 
 ### Fixed
+- Word mode's example sentences (れい文) now actually appear on the answer
+  reveal with **答えた後に例を表示 / Show example after answering** on. The
+  rendering code was correct all along; `vendor/kanji-data` was pinned to a
+  commit predating `augment-words.js`, so every word entry the app loaded
+  had no `examples` field (and grade 1 served 80 words instead of the 106
+  advertised on the home screen). Bumping the submodule brings 100% example
+  coverage across all nine grades.
 - Settings dialog: scrolling it on a phone no longer reloads the page. The
   overlay is now its own scroll container (`overflow-y: auto` +
   `overscroll-behavior: contain`), so a swipe over the settings panel stops
