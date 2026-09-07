@@ -18,7 +18,11 @@ const SettingsManager = (() => {
   // stroke-order diagram instead of the plain character (see
   // renderKanjiStrokeOrder in app.js). Turning it off skips the fetch
   // entirely and always shows the plain character.
-  const DEFAULTS = { showMeaning: true, roundSize: 10, playAudio: false, autoAdvance: true, showExamples: true, strokeAnimation: true };
+  // studyMode defaults to 'quiz': grade buttons and cumulative review launch
+  // the MCQ quiz. Switching to 'learn' in Settings makes those same buttons
+  // launch flashcard sessions instead — a single global switch rather than a
+  // second button cluttering every grade tile.
+  const DEFAULTS = { showMeaning: true, roundSize: 10, playAudio: false, autoAdvance: true, showExamples: true, strokeAnimation: true, studyMode: 'quiz' };
 
   function load() {
     try {

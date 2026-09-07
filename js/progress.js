@@ -115,6 +115,47 @@ const ProgressManager = (() => {
     }
   }
 
+  // Shared by recordAnswer and recordLearnAnswer: bumps the seen/correct/wrong
+  // counters and, on a wrong quiz answer only, the confusions map (Learn mode
+  // has no "which wrong option did you pick" to record, so selectedReading is
+  // simply omitted there).
+  function bumpCounters(qStat, isCorrect, selectedReading) {
+    qStat.seen += 1;
+    if (isCorrect) {
+      qStat.correct += 1;
+    } else {
+      qStat.wrong += 1;
+      if (selectedReading) {
+        qStat.confusions = qStat.confusions || {};
+        qStat.confusions[selectedReading] = (qStat.confusions[selectedReading] || 0) + 1;
+      }
+    }
+    qStat.lastSeen = Date.now();
+    qStat.lastCorrect = isCorrect;
+  }
+
+  // Stamps the scheduler's chosen interval and the due date it implies.
+  // Guarded because the standalone test harnesses load progress.js without
+  // the learning modules; without a scheduler the app still works, it just
+  // stops spacing reviews (every answered question stays due immediately,
+  // which is the pre-scheduling behavior).
+  function applyInterval(qStat, intervalDays) {
+    if (typeof ReviewScheduler === 'undefined') return;
+    qStat.interval = intervalDays;
+    qStat.dueAt = qStat.lastSeen + intervalDays * MS_PER_DAY;
+  }
+
+  function bumpGradeAndHistory(progress, mode, grade, isCorrect) {
+    const gKey = gradeKey(mode, grade);
+    const gStat = progress.grades[gKey] || { answered: 0, correct: 0 };
+    gStat.answered += 1;
+    if (isCorrect) gStat.correct += 1;
+    progress.grades[gKey] = gStat;
+
+    progress.history.push(isCorrect);
+    if (progress.history.length > HISTORY_LIMIT) progress.history.shift();
+  }
+
   // `selectedReading` is the wrong answer the learner actually clicked
   // (omitted/ignored when isCorrect is true). Recorded per-question as
   // `confusions: { [reading]: timesPicked }` so DistractorGenerator can
@@ -134,18 +175,7 @@ const ProgressManager = (() => {
     // interval as it stood *going into* this answer.
     const previousInterval = typeof qStat.interval === 'number' ? qStat.interval : 0;
 
-    qStat.seen += 1;
-    if (isCorrect) {
-      qStat.correct += 1;
-    } else {
-      qStat.wrong += 1;
-      if (selectedReading) {
-        qStat.confusions = qStat.confusions || {};
-        qStat.confusions[selectedReading] = (qStat.confusions[selectedReading] || 0) + 1;
-      }
-    }
-    qStat.lastSeen = Date.now();
-    qStat.lastCorrect = isCorrect;
+    bumpCounters(qStat, isCorrect, selectedReading);
 
     const validLatency = typeof latencyMs === 'number' && latencyMs > 0 && latencyMs <= MAX_LATENCY_MS
       ? Math.round(latencyMs)
@@ -156,30 +186,41 @@ const ProgressManager = (() => {
       while (qStat.latencies.length > LATENCY_SAMPLE_LIMIT) qStat.latencies.shift();
     }
 
-    // Guarded because the standalone test harnesses load progress.js without
-    // the learning modules; without a scheduler the app still works, it just
-    // stops spacing reviews (every answered question stays due immediately,
-    // which is the pre-scheduling behavior).
     if (typeof ReviewScheduler !== 'undefined') {
-      const interval = ReviewScheduler.nextIntervalDays(
-        { interval: previousInterval },
-        isCorrect,
-        validLatency
-      );
-      qStat.interval = interval;
-      qStat.dueAt = qStat.lastSeen + interval * MS_PER_DAY;
+      applyInterval(qStat, ReviewScheduler.nextIntervalDays({ interval: previousInterval }, isCorrect, validLatency));
     }
 
     progress.questions[qId] = qStat;
+    bumpGradeAndHistory(progress, mode, grade, isCorrect);
 
-    const gKey = gradeKey(mode, grade);
-    const gStat = progress.grades[gKey] || { answered: 0, correct: 0 };
-    gStat.answered += 1;
-    if (isCorrect) gStat.correct += 1;
-    progress.grades[gKey] = gStat;
+    save(progress);
+    return qStat;
+  }
 
-    progress.history.push(isCorrect);
-    if (progress.history.length > HISTORY_LIMIT) progress.history.shift();
+  // Learn mode's counterpart to recordAnswer: instead of an MCQ right/wrong
+  // plus latency, the learner self-grades their recall directly (see
+  // ReviewScheduler.nextIntervalDaysForGrade). "again" counts as wrong for
+  // the seen/correct/wrong and grade-total counters (same as a missed quiz
+  // answer); hard/good/easy all count as correct, differing only in how much
+  // the interval grows. No latency or confusions data — there's no timer or
+  // wrong-option pick in a flashcard flip.
+  function recordLearnAnswer(mode, grade, text, quality) {
+    const progress = load();
+
+    const qId = questionId(mode, grade, text);
+    const qStat = progress.questions[qId] || { seen: 0, correct: 0, wrong: 0, lastSeen: null, lastCorrect: null, confusions: {} };
+
+    const previousInterval = typeof qStat.interval === 'number' ? qStat.interval : 0;
+    const isCorrect = quality !== 'again';
+
+    bumpCounters(qStat, isCorrect, null);
+
+    if (typeof ReviewScheduler !== 'undefined') {
+      applyInterval(qStat, ReviewScheduler.nextIntervalDaysForGrade({ interval: previousInterval }, quality));
+    }
+
+    progress.questions[qId] = qStat;
+    bumpGradeAndHistory(progress, mode, grade, isCorrect);
 
     save(progress);
     return qStat;
@@ -387,6 +428,7 @@ const ProgressManager = (() => {
     load,
     save,
     recordAnswer,
+    recordLearnAnswer,
     reset,
     resetAll,
     mastery,

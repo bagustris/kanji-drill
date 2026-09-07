@@ -122,6 +122,46 @@ test('is pure — does not mutate the stats it is given', () => {
   assert.deepEqual(input, { interval: 4 });
 });
 
+console.log('\nReviewScheduler.nextIntervalDaysForGrade (flashcard self-grading)');
+
+test('"again" resets the interval to due-immediately', () => {
+  assert.equal(ReviewScheduler.nextIntervalDaysForGrade({ interval: 40 }, 'again'), 0);
+});
+
+test('first non-"again" grade graduates to the starting interval regardless of which one', () => {
+  assert.equal(ReviewScheduler.nextIntervalDaysForGrade({ interval: 0 }, 'hard'), 1);
+  assert.equal(ReviewScheduler.nextIntervalDaysForGrade({ interval: 0 }, 'good'), 1);
+  assert.equal(ReviewScheduler.nextIntervalDaysForGrade({ interval: 0 }, 'easy'), 1);
+});
+
+test('"good" multiplies by the full ease factor', () => {
+  assert.equal(ReviewScheduler.nextIntervalDaysForGrade({ interval: 4 }, 'good'), 10);
+});
+
+test('"hard" grows the interval by less than "good"', () => {
+  const hard = ReviewScheduler.nextIntervalDaysForGrade({ interval: 4 }, 'hard');
+  const good = ReviewScheduler.nextIntervalDaysForGrade({ interval: 4 }, 'good');
+  assert.equal(hard, 4 * ReviewSchedulerConfig.hardEaseFactor);
+  assert.ok(hard < good, 'hard interval should be shorter than good');
+});
+
+test('"easy" grows the interval by more than "good"', () => {
+  const easy = ReviewScheduler.nextIntervalDaysForGrade({ interval: 4 }, 'easy');
+  const good = ReviewScheduler.nextIntervalDaysForGrade({ interval: 4 }, 'good');
+  assert.ok(easy > good, 'easy interval should exceed good');
+});
+
+test('interval growth is capped for flashcard grading too', () => {
+  const capped = ReviewScheduler.nextIntervalDaysForGrade({ interval: 170 }, 'easy');
+  assert.equal(capped, ReviewSchedulerConfig.maxIntervalDays);
+});
+
+test('is pure — does not mutate the stats it is given', () => {
+  const input = { interval: 4 };
+  ReviewScheduler.nextIntervalDaysForGrade(input, 'good');
+  assert.deepEqual(input, { interval: 4 });
+});
+
 console.log('\nSpacedRepetitionStrategy');
 
 test('unseen questions score the flat introduction weight', () => {

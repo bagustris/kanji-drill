@@ -928,6 +928,8 @@ html, body {
   gap: 0.7rem;
 }
 
+.quiz-options.hidden { display: none; }
+
 /* The explicit manual-continue control shown after answering when automatic
    advance is off. */
 .quiz-continue {
@@ -954,6 +956,68 @@ html, body {
 }
 
 .quiz-continue.hidden { display: none; }
+
+/* --- Learn mode (flashcards) --- */
+
+/* The revealed reading/kanji, shown immediately when a Learn card renders —
+   sits above the grading row the same way a physical flashcard's back sits
+   above the "how did I do" judgment. */
+.quiz-answer-reveal {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--accent-ink);
+  margin-bottom: 1rem;
+}
+
+.quiz-answer-reveal.hidden { display: none; }
+
+/* Anki-style self-grading row, shown immediately alongside the revealed
+   answer. Four buttons rather than the quiz's 2x2 so the easy/hard gradient
+   reads left-to-right in one glance. */
+.quiz-grade-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+.quiz-grade-buttons.hidden { display: none; }
+
+.quiz-grade-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.7rem 0.3rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border: none;
+  border-radius: var(--radius);
+  color: #fff;
+  cursor: pointer;
+}
+
+.quiz-grade-btn span {
+  font-size: 0.65rem;
+  font-weight: normal;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.quiz-grade-btn .key-badge {
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #fff;
+}
+
+/* Same again(red) -> hard(orange) -> good(green) -> easy(blue) progression
+   Anki uses, so the grading row reads as a familiar gradient of confidence
+   rather than four arbitrary colors. */
+.quiz-grade-again { background: #d64545; }
+.quiz-grade-again:hover { background: #b83a3a; }
+.quiz-grade-hard { background: #d68a2d; }
+.quiz-grade-hard:hover { background: #b8761f; }
+.quiz-grade-good { background: #3f9c5c; }
+.quiz-grade-good:hover { background: #33824c; }
+.quiz-grade-easy { background: #3576d6; }
+.quiz-grade-easy:hover { background: #2c62b8; }
 
 /* Example words revealed after answering (kanji mode) — the kanji -> 熟語
    association a drill book builds. */

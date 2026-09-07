@@ -66,6 +66,14 @@
     </div>
 
     <div class="settings-row settings-row-column">
+      <span class="settings-row-label">モード<span>Study mode</span></span>
+      <div id="setting-study-mode" class="settings-segmented" role="radiogroup" aria-label="Study mode">
+        <button type="button" class="segmented-btn active" data-value="quiz">クイズ<span>Quiz</span></button>
+        <button type="button" class="segmented-btn" data-value="learn">まなぶ<span>Flashcards</span></button>
+      </div>
+    </div>
+
+    <div class="settings-row settings-row-column">
       <span class="settings-row-label">1回の問題数<span>Questions per round</span></span>
       <div id="setting-round-size" class="settings-segmented" role="radiogroup" aria-label="Questions per round">
         <button type="button" class="segmented-btn" data-value="5">5<span>問</span></button>
@@ -129,7 +137,7 @@
     <h3 class="grade-section-heading">ふくしゅう<span>Cumulative Review</span></h3>
     <div class="grade-grid grade-grid-single">
       <button id="btn-review" class="review-btn" disabled>
-        <span class="key-badge key-badge-corner shortcut-hint">R</span>ぜんぶまとめて
+        <span class="key-badge key-badge-corner shortcut-hint">R</span><span id="review-btn-label">クイズ<span>Quiz</span></span>
         <span class="grade-count" id="review-count">学年を1つ終えると使えます</span>
       </button>
     </div>
@@ -161,6 +169,13 @@
       <p id="quiz-meaning" class="quiz-meaning"></p>
       <p id="quiz-instruction" class="quiz-instruction">正しい読み方は？<span>Choose the correct reading</span></p>
       <div id="quiz-options" class="quiz-options"></div>
+      <div id="quiz-answer-reveal" class="quiz-answer-reveal hidden"></div>
+      <div id="quiz-grade-buttons" class="quiz-grade-buttons hidden">
+        <button class="quiz-grade-btn quiz-grade-again" data-quality="again" type="button"><span class="key-badge key-badge-corner">1</span>もう一度<span>Again</span></button>
+        <button class="quiz-grade-btn quiz-grade-hard" data-quality="hard" type="button"><span class="key-badge key-badge-corner">2</span>難しい<span>Hard</span></button>
+        <button class="quiz-grade-btn quiz-grade-good" data-quality="good" type="button"><span class="key-badge key-badge-corner">3</span>できた<span>Good</span></button>
+        <button class="quiz-grade-btn quiz-grade-easy" data-quality="easy" type="button"><span class="key-badge key-badge-corner">4</span>簡単<span>Easy</span></button>
+      </div>
       <div id="quiz-examples" class="quiz-examples hidden"></div>
       <button id="quiz-continue" class="quiz-continue hidden" type="button">つづける →<span>タップ / Tap or press → Enter Space</span></button>
     </div>

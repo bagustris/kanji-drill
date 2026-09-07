@@ -41,5 +41,35 @@ const ReviewScheduler = (() => {
     return Math.min(cfg.maxIntervalDays, previous * ease);
   }
 
-  return { nextIntervalDays };
+  // Same ladder as nextIntervalDays, but driven by a self-reported quality
+  // grade (Learn/flashcard mode) instead of a binary correct/incorrect plus
+  // latency. Kept as a separate function rather than folding a `quality`
+  // param into nextIntervalDays — the two answer shapes (MCQ vs. self-graded
+  // recall) aren't interchangeable, and this keeps the quiz path's tested
+  // behavior untouched.
+  //
+  // @param {Object} stats - only `interval` is read, as above.
+  // @param {'again'|'hard'|'good'|'easy'} quality
+  // @param {Object} [config=ReviewSchedulerConfig]
+  // @returns {number} interval in days.
+  function nextIntervalDaysForGrade(stats, quality, config) {
+    const cfg = config || ReviewSchedulerConfig;
+
+    if (quality === 'again') return cfg.lapseIntervalDays;
+
+    const previous = stats && typeof stats.interval === 'number' ? stats.interval : 0;
+
+    // Graduating interval starts the ladder the same way regardless of which
+    // non-"again" grade was picked — the grade's ease only matters once
+    // there's a previous interval to multiply.
+    if (previous <= 0) return cfg.graduatingIntervalDays;
+
+    const ease = quality === 'hard' ? cfg.hardEaseFactor
+      : quality === 'easy' ? cfg.easeFactor * cfg.easyBonus
+      : cfg.easeFactor;
+
+    return Math.min(cfg.maxIntervalDays, previous * ease);
+  }
+
+  return { nextIntervalDays, nextIntervalDaysForGrade };
 })();

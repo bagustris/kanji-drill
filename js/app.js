@@ -7,12 +7,19 @@ const state = {
   // see sourceGrade in loadData/pickQuestions).
   grade: null,
   isReview: false,
+  // Learn (flashcard) sessions reuse the cumulative-review pool/screen but
+  // self-grade instead of picking from options — see startLearn/renderQuestion.
+  isLearn: false,
   itemList: [],
   questions: [],
   index: 0,
   score: 0,
   missed: [],
   correctItems: [],
+  // Learn-mode-only: counts per self-graded quality, and the cards graded
+  // "again" (shown in the summary the way missed quiz answers are).
+  learnCounts: null,
+  learnAgainItems: [],
   // performance.now() stamp taken when the current question finished
   // rendering; nulled once consumed so a re-render can't double-count.
   questionShownAt: null,
@@ -43,10 +50,13 @@ const el = {
   quizMeaning: document.getElementById('quiz-meaning'),
   quizInstruction: document.getElementById('quiz-instruction'),
   quizOptions: document.getElementById('quiz-options'),
+  quizAnswerReveal: document.getElementById('quiz-answer-reveal'),
+  quizGradeButtons: document.getElementById('quiz-grade-buttons'),
   quizExamples: document.getElementById('quiz-examples'),
   quizContinue: document.getElementById('quiz-continue'),
   quizLeechBadge: document.getElementById('quiz-leech-badge'),
   btnReview: document.getElementById('btn-review'),
+  reviewBtnLabel: document.getElementById('review-btn-label'),
   reviewCount: document.getElementById('review-count'),
   summaryScore: document.getElementById('summary-score'),
   summaryMissed: document.getElementById('summary-missed'),
@@ -63,6 +73,7 @@ const el = {
   settingAutoAdvance: document.getElementById('setting-auto-advance'),
   settingStrokeAnimation: document.getElementById('setting-stroke-animation'),
   settingRoundSizeButtons: document.querySelectorAll('#setting-round-size .segmented-btn'),
+  settingStudyModeButtons: document.querySelectorAll('#setting-study-mode .segmented-btn'),
   installButton: document.getElementById('btn-install'),
   installHint: document.getElementById('settings-install-hint'),
   aboutVersion: document.getElementById('about-version'),
@@ -92,18 +103,29 @@ el.modeButtons.forEach((btn) => {
     });
     el.gradeButtons.forEach((gbtn) => {
       gbtn.dataset.mode = mode;
-      gbtn.disabled = !isGradeAvailable(gbtn, mode);
+      gbtn.disabled = !isGradeAvailable(Number(gbtn.dataset.grade), mode);
     });
     renderDashboard();
   });
 });
 
+// Every grade button (and the cumulative review button below) launches
+// either the MCQ quiz or a Learn/flashcard session over the same pool,
+// depending on the studyMode setting (Settings → モード) — a single global
+// switch rather than a second button cluttering every grade tile.
 el.gradeButtons.forEach((btn) => {
   btn.dataset.mode = 'kanji';
-  btn.addEventListener('click', () => startGrade(btn.dataset.mode, Number(btn.dataset.grade)));
+  btn.addEventListener('click', () => {
+    const grade = Number(btn.dataset.grade);
+    if (SettingsManager.get('studyMode') === 'learn') startGradeLearn(btn.dataset.mode, grade);
+    else startGrade(btn.dataset.mode, grade);
+  });
 });
 
-el.btnReview.addEventListener('click', () => startReview(getSelectedMode()));
+el.btnReview.addEventListener('click', () => {
+  if (SettingsManager.get('studyMode') === 'learn') startLearn(getSelectedMode());
+  else startReview(getSelectedMode());
+});
 
 el.btnQuit.addEventListener('click', () => showScreen('home'));
 el.btnHome.addEventListener('click', () => showScreen('home'));
@@ -111,6 +133,9 @@ el.btnHomeTitle.addEventListener('click', () => showScreen('home'));
 el.btnRetry.addEventListener('click', () => startRound());
 el.quizContinue.addEventListener('click', () => {
   if (state.awaitingContinue) advanceQuestion();
+});
+el.quizGradeButtons.querySelectorAll('.quiz-grade-btn').forEach((btn) => {
+  btn.addEventListener('click', () => gradeCard(btn.dataset.quality));
 });
 
 // The grade name shown in the dashboard (e.g. "3年生") is read straight off
@@ -273,6 +298,11 @@ function initSettingsPanel() {
     btn.classList.toggle('active', btn.dataset.value === roundSize);
   });
 
+  const studyMode = SettingsManager.get('studyMode');
+  el.settingStudyModeButtons.forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.value === studyMode);
+  });
+
   el.settingShowMeaning.addEventListener('change', () => {
     SettingsManager.set('showMeaning', el.settingShowMeaning.checked);
     applyMeaningVisibility();
@@ -316,6 +346,16 @@ function initSettingsPanel() {
     btn.addEventListener('click', () => {
       el.settingRoundSizeButtons.forEach((b) => b.classList.toggle('active', b === btn));
       SettingsManager.set('roundSize', btn.dataset.value === 'all' ? 'all' : Number(btn.dataset.value));
+    });
+  });
+
+  // Global switch for what the grade buttons and the cumulative review
+  // button launch — see the click handlers registered above.
+  el.settingStudyModeButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      el.settingStudyModeButtons.forEach((b) => b.classList.toggle('active', b === btn));
+      SettingsManager.set('studyMode', btn.dataset.value);
+      renderReviewButton();
     });
   });
 
@@ -577,6 +617,45 @@ function buildReverseQuestion(target, itemList) {
   };
 }
 
+// Learn mode's counterpart to buildQuestion/buildReverseQuestion: same card
+// shape minus `options` — a flashcard has nothing to distract, so there's no
+// need to pay DistractorGenerator's cost building a set that's never shown.
+function buildCard(target, mode) {
+  const correctReading = shuffle(target.readings)[0];
+  if (mode === 'kanji') {
+    return {
+      text: itemText(target),
+      sourceGrade: target.sourceGrade,
+      meaning: target.meaning,
+      correctReading,
+      examples: Array.isArray(target.examples) ? target.examples : [],
+    };
+  }
+  return {
+    text: itemText(target),
+    sourceGrade: target.sourceGrade,
+    sentence: target.sentence,
+    target: target.target,
+    meaning: mode === 'sentence' ? (target.translation || target.meaning) : target.meaning,
+    correctReading,
+    examples: mode === 'word' && Array.isArray(target.examples) ? target.examples : [],
+  };
+}
+
+function buildReverseCard(target) {
+  const kanji = itemText(target);
+  const reading = shuffle(target.readings)[0];
+  return {
+    text: kanji,
+    sourceGrade: target.sourceGrade,
+    reading,
+    meaning: target.meaning,
+    correctReading: kanji,
+    isReverse: true,
+    examples: Array.isArray(target.examples) ? target.examples : [],
+  };
+}
+
 // kanji-data organizes by data domain, not by app — grade/words/sentences
 // files each live under a different top-level directory there (kanji/,
 // words/, sentences/) with a kyoiku- prefix.
@@ -611,30 +690,49 @@ async function loadData(mode, grade) {
 // it just stops earlier grades from decaying while you work on a later one.
 function studiedGrades(mode) {
   return [...el.gradeButtons]
-    .map((btn) => ({ grade: Number(btn.dataset.grade), disabled: !isGradeAvailable(btn, mode) }))
-    .filter(({ grade, disabled }) => !disabled && ProgressManager.getGradeStats(mode, grade).answered > 0)
-    .map(({ grade }) => grade);
+    .map((btn) => Number(btn.dataset.grade))
+    .filter((grade) => isGradeAvailable(grade, mode) && ProgressManager.getGradeStats(mode, grade).answered > 0);
 }
 
-function isGradeAvailable(btn, mode) {
-  const counts = btn.querySelector('.grade-count');
+function isGradeAvailable(grade, mode) {
+  const counts = document.querySelector(`.grade-btn[data-grade="${grade}"] .grade-count`);
   return mode !== 'sentence' || parseInt(counts.dataset.sentenceCount, 10) > 0;
 }
 
-// Enables/labels the review button for the currently selected mode. Called on
-// mode switch and after every round, since finishing a grade for the first
-// time is exactly what makes review become available.
+// Enables/labels the single cumulative-review button for the currently
+// selected mode/studyMode — its label and click behavior (see the listener
+// above) both follow the studyMode setting, so this stays one button instead
+// of a separate one per session type. Called on mode switch and after every
+// round, since finishing a grade for the first time is exactly what makes
+// review become available.
 function renderReviewButton() {
   const mode = getSelectedMode();
   const grades = studiedGrades(mode);
-  el.btnReview.disabled = grades.length === 0;
-  el.reviewCount.textContent = grades.length === 0
+  const label = grades.length === 0
     ? '学年を1つ終えると使えます'
     : `${grades.map(gradeDisplayName).join('・')}`;
+  el.btnReview.disabled = grades.length === 0;
+  el.reviewCount.textContent = label;
+  el.reviewBtnLabel.innerHTML = SettingsManager.get('studyMode') === 'learn'
+    ? 'フラッシュカード<span>Flashcards</span>'
+    : 'クイズ<span>Quiz</span>';
 }
 
 async function startGrade(mode, grade) {
   await startSession(mode, { grade, load: () => loadData(mode, grade) });
+}
+
+// The per-grade Learn entry point (studyMode: 'learn' — see the grade-button
+// click handler above): flashcards over a single grade's *entire* pool,
+// available whether or not that grade has ever been quizzed. This is
+// deliberately not gated on studiedGrades() the way startLearn/startReview
+// below are — its whole point is to let a learner preview a fresh grade
+// before ever taking its quiz, which a studied-only gate would make
+// impossible (see the isLearn design discussion: flashcards that only ever
+// cover material you've already quizzed are just a second quiz UI, not a
+// pre-study step).
+async function startGradeLearn(mode, grade) {
+  await startSession(mode, { grade, isLearn: true, load: () => loadData(mode, grade) });
 }
 
 async function startReview(mode) {
@@ -647,12 +745,30 @@ async function startReview(mode) {
   });
 }
 
-async function startSession(mode, { grade, isReview = false, load }) {
+// Cumulative-review counterpart to startGradeLearn: flashcards over
+// everything studied so far, across grades (see studiedGrades' doc comment
+// for why that pool is cumulative rather than a firehose). This is for
+// spaced-repetition upkeep of material already introduced — reviewing what
+// you've studied — as opposed to startGradeLearn's job of introducing a
+// single fresh grade before its first quiz.
+async function startLearn(mode) {
+  const grades = studiedGrades(mode);
+  if (grades.length === 0) return;
+  await startSession(mode, {
+    grade: null,
+    isReview: true,
+    isLearn: true,
+    load: async () => (await Promise.all(grades.map((g) => loadData(mode, g)))).flat(),
+  });
+}
+
+async function startSession(mode, { grade, isReview = false, isLearn = false, load }) {
   el.loadError.classList.add('hidden');
   try {
     state.mode = mode;
     state.grade = grade;
     state.isReview = isReview;
+    state.isLearn = isLearn;
     state.itemList = await load();
     renderDashboard();
     startRound();
@@ -670,14 +786,20 @@ function startRound() {
   const roundSize = configuredSize === 'all' ? state.itemList.length : configuredSize;
   const count = Math.min(roundSize, state.itemList.length);
   const picks = pickQuestions(state.itemList, state.mode, count);
-  state.questions = picks.map((entry) =>
-    state.mode === 'reverse'
+  state.questions = picks.map((entry) => {
+    if (state.isLearn) {
+      return state.mode === 'reverse' ? buildReverseCard(entry) : buildCard(entry, state.mode);
+    }
+    return state.mode === 'reverse'
       ? buildReverseQuestion(entry, state.itemList)
-      : buildQuestion(entry, state.itemList, state.mode));
+      : buildQuestion(entry, state.itemList, state.mode);
+  });
   state.index = 0;
   state.score = 0;
   state.missed = [];
   state.correctItems = [];
+  state.learnCounts = { again: 0, hard: 0, good: 0, easy: 0 };
+  state.learnAgainItems = [];
   showScreen('quiz');
   renderQuestion();
 }
@@ -687,6 +809,15 @@ const INSTRUCTION_TEXT = {
   reverse: ['この読み方の漢字は？', 'Choose the kanji for this reading'],
 };
 const DEFAULT_INSTRUCTION = ['正しい読み方は？', 'Choose the correct reading'];
+
+// The answer is shown immediately in Learn mode (no flip step — see
+// renderQuestion), so this reads as a statement of what's on screen rather
+// than an instruction to recall something hidden.
+const LEARN_INSTRUCTION_TEXT = {
+  sentence: ['赤字の読み方', 'Reading for the bold red part'],
+  reverse: ['この読み方の漢字', 'Kanji for this reading'],
+};
+const LEARN_DEFAULT_INSTRUCTION = ['読み方', 'Reading — grade yourself below'];
 
 // Bumped every time a question renders. An audio-gated auto-advance captures
 // this at answer time and only fires if it still matches — so a spoken reading
@@ -798,7 +929,9 @@ function renderQuestion() {
   // Flagged in review mode: the pool spans grades there, so without this a
   // grade-5 kanji surfacing mid-round just looks like a bug.
   const counter = `${state.index + 1} / ${state.questions.length}`;
-  el.quizProgress.textContent = state.isReview ? `ふくしゅう ${counter}` : counter;
+  el.quizProgress.textContent = state.isLearn ? `まなぶ ${counter}`
+    : state.isReview ? `ふくしゅう ${counter}`
+    : counter;
   el.quizKanji.classList.toggle('is-word', state.mode === 'word');
   el.quizKanji.classList.toggle('is-sentence', state.mode === 'sentence');
   el.quizKanji.classList.toggle('is-reverse', isReverse);
@@ -810,7 +943,14 @@ function renderQuestion() {
   if (isReverse) {
     el.quizKanji.innerHTML = readingHTML(q.reading);
   } else if (state.mode === 'sentence') {
-    el.quizKanji.innerHTML = highlightTarget(q.sentence, q.target);
+    // Learn mode shows the answer immediately (no flip step), so the
+    // furigana goes up front instead of waiting for a reveal.
+    if (state.isLearn) {
+      const { kanjiPart } = splitOkurigana(q.target);
+      el.quizKanji.innerHTML = highlightTarget(q.sentence, q.target, furiganaHTML(kanjiPart, q.correctReading));
+    } else {
+      el.quizKanji.innerHTML = highlightTarget(q.sentence, q.target);
+    }
   } else if (state.mode === 'kanji') {
     renderKanjiPrompt(q.text, renderGen);
   } else {
@@ -828,32 +968,62 @@ function renderQuestion() {
   // modes honor the setting — unless the item is a leech, which force-shows it.
   if (isReverse || leech) el.quizMeaning.classList.remove('hidden');
   else applyMeaningVisibility();
-  const [instructionMain, instructionSub] = INSTRUCTION_TEXT[state.mode] || DEFAULT_INSTRUCTION;
-  el.quizInstruction.innerHTML = `${instructionMain}<span>${instructionSub}</span>`;
-  el.quizOptions.classList.toggle('is-reverse', isReverse);
-  el.quizOptions.innerHTML = '';
-  q.options.forEach((option, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'option-btn';
-    // In reverse mode the options are kanji; readingHTML leaves a dot-free
-    // kanji untouched, so it's safe to route both through it.
-    btn.innerHTML = `<span class="key-badge key-badge-corner">${i + 1}</span>${readingHTML(option)}`;
-    btn.dataset.reading = option;
-    btn.addEventListener('click', () => handleAnswer(option, btn));
-    el.quizOptions.appendChild(btn);
-  });
 
-  // Example words are revealed only after answering (see handleAnswer) — before
-  // that they could give the reading away — so clear/hide them for each new
-  // question.
+  // Example words are revealed only after answering in quiz mode (before
+  // that they could give the reading away) and immediately in Learn mode —
+  // clear/hide them for each new question either way; the isLearn branch
+  // below re-populates them right away via renderExamples.
   el.quizExamples.innerHTML = '';
   el.quizExamples.classList.add('hidden');
 
+  if (state.isLearn) {
+    // Flashcard flow: the answer is shown immediately (no flip step) along
+    // with the self-grade buttons — see the design note on LEARN_INSTRUCTION_TEXT.
+    const [instructionMain, instructionSub] = LEARN_INSTRUCTION_TEXT[state.mode] || LEARN_DEFAULT_INSTRUCTION;
+    el.quizInstruction.innerHTML = `${instructionMain}<span>${instructionSub}</span>`;
+    el.quizOptions.classList.add('hidden');
+    el.quizOptions.innerHTML = '';
+
+    if (state.mode !== 'sentence') {
+      // Reverse mode's prompt is the reading (rendered above); the answer
+      // here is the kanji. Forward modes' answer is the reading.
+      el.quizAnswerReveal.innerHTML = isReverse ? escapeHtml(q.correctReading) : readingHTML(q.correctReading);
+      el.quizAnswerReveal.classList.remove('hidden');
+    } else {
+      // Sentence mode's answer (furigana) is already inline in the prompt
+      // above — no separate reveal line needed.
+      el.quizAnswerReveal.classList.add('hidden');
+      el.quizAnswerReveal.innerHTML = '';
+    }
+    renderExamples(q);
+    el.quizGradeButtons.classList.remove('hidden');
+  } else {
+    el.quizGradeButtons.classList.add('hidden');
+    el.quizAnswerReveal.classList.add('hidden');
+    el.quizOptions.classList.remove('hidden');
+    const [instructionMain, instructionSub] = INSTRUCTION_TEXT[state.mode] || DEFAULT_INSTRUCTION;
+    el.quizInstruction.innerHTML = `${instructionMain}<span>${instructionSub}</span>`;
+    el.quizOptions.classList.toggle('is-reverse', isReverse);
+    el.quizOptions.innerHTML = '';
+    q.options.forEach((option, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      // In reverse mode the options are kanji; readingHTML leaves a dot-free
+      // kanji untouched, so it's safe to route both through it.
+      btn.innerHTML = `<span class="key-badge key-badge-corner">${i + 1}</span>${readingHTML(option)}`;
+      btn.dataset.reading = option;
+      btn.addEventListener('click', () => handleAnswer(option, btn));
+      el.quizOptions.appendChild(btn);
+    });
+  }
+
   // Reverse mode speaks the reading up front (it's already on screen, so this
   // leaks nothing) — mirroring a teacher reading the target aloud before the
-  // learner points at the kanji. Forward modes must wait until the answer is
-  // revealed (see handleAnswer), since the reading *is* the answer.
+  // learner points at the kanji. Forward quiz-mode questions must wait until
+  // the answer is revealed (see handleAnswer), since the reading *is* the
+  // answer; Learn mode's answer is already visible, so it's spoken here too.
   if (isReverse) speakReading(q.reading);
+  else if (state.isLearn) speakReading(state.mode === 'sentence' ? q.sentence : q.correctReading);
 
   // Stamped last, once the options are actually on screen, so the measured
   // latency is time-to-answer rather than time-to-answer plus render.
@@ -883,13 +1053,19 @@ function getNavGroups() {
       { items: enabledItems(el.modeButtons), cols: el.modeButtons.length },
       { items: enabledItems(grids[0].children), cols: 2 },
       { items: enabledItems(grids[1].children), cols: 2 },
-      // The review row is a single full-width button, and it's disabled until
-      // a grade has been studied — so this group is empty on a fresh install
-      // and gets dropped below rather than stranding focus on a dead cell.
+      // The single review button is disabled until a grade has been studied
+      // — empty on a fresh install and dropped below rather than stranding
+      // focus on a dead cell.
       { items: enabledItems(grids[2].children), cols: 1 },
     ].filter((group) => group.items.length > 0);
   }
   if (state.screen === 'quiz') {
+    // Learn mode swaps the 2x2 MCQ grid for the 4-across self-grade row —
+    // the answer is already on screen (see renderQuestion), so there's no
+    // flip step to navigate through.
+    if (state.isLearn) {
+      return [{ items: [el.btnQuit], cols: 1 }, { items: [...el.quizGradeButtons.children], cols: 4 }];
+    }
     return [
       { items: [el.btnQuit], cols: 1 },
       { items: [...el.quizOptions.children], cols: 2 },
@@ -973,6 +1149,19 @@ document.addEventListener('keydown', (e) => {
   }
 
   if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+  // Learn (flashcard) mode: the answer is already on screen (see
+  // renderQuestion), so 1-4 pick a self-grade straight away instead of an
+  // MCQ option — checked before arrow-nav for the same reason
+  // awaitingContinue is below.
+  if (state.screen === 'quiz' && state.isLearn) {
+    if (e.key === '0') { el.btnQuit.click(); return; }
+    const index = Number(e.key) - 1;
+    if (!(index >= 0 && index < 4)) return;
+    const btn = el.quizGradeButtons.children[index];
+    if (btn) btn.click();
+    return;
+  }
 
   // While a revealed answer waits for a manual continue (auto-advance off),
   // →/Enter/Space move on and 0 still quits; other keys are swallowed (the
@@ -1107,6 +1296,23 @@ function renderExamples(q) {
   el.quizExamples.classList.remove('hidden');
 }
 
+// Records a Learn card's self-graded recall quality and moves straight to the
+// next card — unlike the quiz's handleAnswer, there's no auto-advance timer
+// or manual-continue step to arm: picking a grade already is the "continue"
+// gesture the way tapping a physical flashcard's next button would be.
+function gradeCard(quality) {
+  if (!state.isLearn) return;
+  const q = state.questions[state.index];
+
+  ProgressManager.recordLearnAnswer(state.mode, q.sourceGrade, q.text, quality);
+  state.learnCounts[quality] += 1;
+  if (quality === 'again') state.learnAgainItems.push(q);
+  else state.score++;
+
+  renderDashboard();
+  advanceQuestion();
+}
+
 function handleAnswer(selected, btnEl) {
   const q = state.questions[state.index];
   const isCorrect = selected === q.correctReading;
@@ -1215,6 +1421,25 @@ function summaryRowHTML(q) {
 
 function showSummary() {
   showScreen('summary');
+
+  if (state.isLearn) {
+    el.summaryScore.innerHTML = `${state.score} / ${state.questions.length} おぼえていた<span>Recalled</span>`;
+    el.summaryMissed.innerHTML = '';
+    if (state.learnAgainItems.length > 0) {
+      const heading = document.createElement('h3');
+      heading.textContent = 'もう一度おぼえよう';
+      el.summaryMissed.appendChild(heading);
+      state.learnAgainItems.forEach((q) => {
+        const row = document.createElement('div');
+        row.className = 'missed-item';
+        row.innerHTML = summaryRowHTML(q);
+        el.summaryMissed.appendChild(row);
+      });
+    }
+    el.summaryCorrect.innerHTML = '';
+    return;
+  }
+
   el.summaryScore.innerHTML = `${state.score} / ${state.questions.length} 正解<span>Correct</span>`;
   el.summaryMissed.innerHTML = '';
   if (state.missed.length > 0) {

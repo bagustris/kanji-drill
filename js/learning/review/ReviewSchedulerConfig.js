@@ -34,4 +34,20 @@ const ReviewSchedulerConfig = {
   // enough that capping keeps everything in slow rotation instead of letting
   // items disappear for years.
   maxIntervalDays: 180,
+
+  // --- Flashcard (Learn) self-grading -------------------------------------
+  // Learn mode has no distractor options to force an honest answer, so it
+  // asks the learner to self-grade instead (Again/Hard/Good/Easy, mirroring
+  // Anki). These multipliers only apply to nextIntervalDaysForGrade below —
+  // the quiz's binary nextIntervalDays is untouched.
+
+  // "Hard": recalled correctly but it took real effort. Same multiplier as
+  // hesitantEaseFactor above (both describe "correct but shaky"), kept as a
+  // separate knob since the two grading paths may want to diverge later.
+  hardEaseFactor: 1.2,
+
+  // "Easy": recalled instantly with no effort — grows the interval beyond
+  // what a plain "Good" would, so a truly known item stops coming back as
+  // often as one that merely wasn't wrong.
+  easyBonus: 1.3,
 };

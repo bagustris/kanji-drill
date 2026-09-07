@@ -9,6 +9,11 @@ The version shown in the app's Settings → About panel is read from the latest
 entry below (see `loadAppVersion()` in `js/app.js`), so this file is the single
 source of truth for the app version.
 
+## [2026-09-06]  
+### Added  
+- Fix reading to match elementary school reading.
+- Added learning mode for kanji.
+
 ## [1.3.0] - 2026-08-27  
 
 ### Added
