@@ -378,14 +378,15 @@ function initSettingsPanel() {
 
 // The About panel's version is read from CHANGELOG.md (the single source of
 // truth — see its header) rather than duplicated here: parse the newest
-// `## [x.y.z]` heading and show it. The static v-number in index.html is the
-// offline/pre-fetch fallback, so a failed fetch just leaves that in place.
+// `## [YYYY-MM-DD]` (or legacy `## [x.y.z]`) heading and show it. The static
+// v-number in index.html is the offline/pre-fetch fallback, so a failed
+// fetch just leaves that in place.
 async function loadAppVersion() {
   try {
     const res = await fetch('CHANGELOG.md');
     if (!res.ok) return;
     const text = await res.text();
-    const match = text.match(/^##\s*\[(\d+\.\d+\.\d+)\]/m);
+    const match = text.match(/^##\s*\[(\d{4}-\d{2}-\d{2}|\d+\.\d+\.\d+)\]/m);
     if (match) el.aboutVersion.textContent = `v${match[1]}`;
   } catch {
     // offline / fetch blocked — keep the static fallback from index.html

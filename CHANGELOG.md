@@ -2,17 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+Starting after 1.3.0, this project uses [Calendar Versioning](https://calver.org/)
+(`YYYY-MM-DD`, the release date) instead of semantic versioning.
 
 The version shown in the app's Settings → About panel is read from the latest
 entry below (see `loadAppVersion()` in `js/app.js`), so this file is the single
 source of truth for the app version.
 
-## [2026-09-06]  
-### Added  
-- Fix reading to match elementary school reading.
+## [2026-09-06]
+
+### Added
 - Added learning mode for kanji.
+
+### Fixed
+- Readings fixed to match elementary school (kyōiku) reading lists.
 
 ## [1.3.0] - 2026-08-27  
 
