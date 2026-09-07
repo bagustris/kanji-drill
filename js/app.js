@@ -467,7 +467,7 @@ function highlightTarget(sentence, target, kanjiHTML) {
   if (start === -1) return sentence;
   const end = start + target.length;
   const { kanjiPart, okurigana } = splitOkurigana(target);
-  const highlighted = `<span class="quiz-sentence-target">${kanjiHTML ?? kanjiPart}</span>${okurigana}`;
+  const highlighted = `<span class="quiz-target-kanji">${kanjiHTML ?? kanjiPart}</span>${okurigana}`;
   return `${sentence.slice(0, start)}${highlighted}${sentence.slice(end)}`;
 }
 
@@ -494,11 +494,45 @@ function readingHTML(reading) {
 // The part of a reading before the okurigana dot, e.g. "まな.ぶ" -> "まな".
 // In sentence mode the trailing okurigana is already written out as plain
 // kana in the sentence itself (it's not being quizzed, only the kanji's
-// reading is), so answer choices only need this core part — unlike
-// kanji/word mode, where there's no surrounding sentence to show it.
+// reading is), so answer choices only need this core part.
 function coreReading(reading) {
   const dot = reading.indexOf('.');
   return dot === -1 ? reading : reading.slice(0, dot);
+}
+
+// Word mode's equivalent of coreReading(), for readings that carry no dot
+// notation (unlike the kanji file sentence mode reads its readings from,
+// vendor/kanji-data/words/*.json readings are plain kana strings). An
+// inflected word like 早める shows its own okurigana directly in the quiz
+// prompt (renderQuestion), so — same reasoning as sentence mode — only the
+// kanji-part reading needs to be quizzed; the trailing める is inferred by
+// stripping the word text's own visible kana suffix from the end of its
+// reading (splitOkurigana), which every reading in the data is confirmed to
+// end with exactly. Without this, distractor readings for other okurigana
+// words (e.g. 早まる/はやまる, 早い/はやい) leaked which option was correct:
+// only the one ending in the same visible suffix as what's already on
+// screen could possibly be right, regardless of whether the kanji's own
+// reading was actually known.
+function wordCoreReading(word, reading) {
+  const { okurigana } = splitOkurigana(word);
+  return okurigana && reading.endsWith(okurigana) ? reading.slice(0, reading.length - okurigana.length) : reading;
+}
+
+// The inverse of wordCoreReading(), for the handful of places that still
+// need the word's WHOLE reading rather than just the quizzed core: TTS
+// should pronounce the full word (はやめる), not the truncated core alone
+// (はや), and the Learn-mode flashcard reveal / round-summary row should
+// show the full reading rather than repeat only the part already quizzed.
+// wordFullReading() reconstructs the plain pronunciation by re-appending the
+// word's own okurigana; wordDisplayReading() reinserts the kanji/okurigana
+// boundary dot so readingHTML() renders it the same way a kanji-file
+// reading already does (e.g. "はや.める").
+function wordFullReading(q) {
+  return q.correctReading + splitOkurigana(q.text).okurigana;
+}
+function wordDisplayReading(q) {
+  const { okurigana } = splitOkurigana(q.text);
+  return okurigana ? `${q.correctReading}.${okurigana}` : q.correctReading;
 }
 
 // Adaptive replacement for the old random weightedSample(): builds a pool of
@@ -679,9 +713,13 @@ async function loadData(mode, grade) {
   return entries.map((entry) => ({
     ...entry,
     sourceGrade: grade,
-    // Sentence answers only quiz the kanji's own reading; the okurigana is
-    // already written out in the sentence, so options drop it.
-    readings: mode === 'sentence' ? entry.readings.map(coreReading) : entry.readings,
+    // Sentence and word answers only quiz the kanji's own reading — the
+    // okurigana is already written out on screen (in the sentence, or in
+    // the word's own text), so options drop it. See coreReading()/
+    // wordCoreReading() for why each mode needs its own stripping logic.
+    readings: mode === 'sentence' ? entry.readings.map(coreReading)
+      : mode === 'word' ? entry.readings.map((r) => wordCoreReading(entry.word, r))
+      : entry.readings,
   }));
 }
 
@@ -954,6 +992,15 @@ function renderQuestion() {
     }
   } else if (state.mode === 'kanji') {
     renderKanjiPrompt(q.text, renderGen);
+  } else if (splitOkurigana(q.text).okurigana) {
+    // An inflected word (早める) shows its own okurigana directly here, the
+    // same way sentence mode's target word does inside its sentence — so
+    // only the kanji part is highlighted, and only the kanji part's reading
+    // is quizzed (see wordCoreReading()). A plain compound (学校) has no
+    // okurigana to give away, so it falls through to the plain branch below
+    // unstyled, same as before this word ever had a kana suffix to worry
+    // about.
+    el.quizKanji.innerHTML = highlightTarget(q.text, q.text);
   } else {
     el.quizKanji.textContent = q.text;
   }
@@ -987,8 +1034,11 @@ function renderQuestion() {
 
     if (state.mode !== 'sentence') {
       // Reverse mode's prompt is the reading (rendered above); the answer
-      // here is the kanji. Forward modes' answer is the reading.
-      el.quizAnswerReveal.innerHTML = isReverse ? escapeHtml(q.correctReading) : readingHTML(q.correctReading);
+      // here is the kanji. Forward modes' answer is the reading — word mode's
+      // shows the whole word's reading (wordDisplayReading), not just the
+      // kanji-part core that was actually quizzed (see wordCoreReading()).
+      el.quizAnswerReveal.innerHTML = isReverse ? escapeHtml(q.correctReading)
+        : readingHTML(state.mode === 'word' ? wordDisplayReading(q) : q.correctReading);
       el.quizAnswerReveal.classList.remove('hidden');
     } else {
       // Sentence mode's answer (furigana) is already inline in the prompt
@@ -1024,7 +1074,7 @@ function renderQuestion() {
   // the answer is revealed (see handleAnswer), since the reading *is* the
   // answer; Learn mode's answer is already visible, so it's spoken here too.
   if (isReverse) speakReading(q.reading);
-  else if (state.isLearn) speakReading(state.mode === 'sentence' ? q.sentence : q.correctReading);
+  else if (state.isLearn) speakReading(state.mode === 'sentence' ? q.sentence : state.mode === 'word' ? wordFullReading(q) : q.correctReading);
 
   // Stamped last, once the options are actually on screen, so the measured
   // latency is time-to-answer rather than time-to-answer plus render.
@@ -1347,14 +1397,18 @@ function handleAnswer(selected, btnEl) {
 
   // Forward modes speak the reading now that it's revealed (it lives in
   // correctReading — couldn't be spoken earlier without giving the answer
-  // away). Reverse mode already spoke it when the question rendered.
+  // away). Reverse mode already spoke it when the question rendered. Word
+  // mode speaks/times its WHOLE reading (wordFullReading), not just the
+  // kanji-part core that correctReading now holds (see wordCoreReading()).
   const spokenText = state.mode === 'sentence' ? q.sentence
+    : state.mode === 'word' ? wordFullReading(q)
     : state.mode !== 'reverse' ? q.correctReading
     : '';
   // Length for the reading pause: the whole sentence in sentence mode, the
   // reading otherwise — so longer content gets more time on screen.
   const readText = state.mode === 'sentence' ? q.sentence
     : state.mode === 'reverse' ? q.reading
+    : state.mode === 'word' ? wordFullReading(q)
     : q.correctReading;
 
   if (SettingsManager.get('autoAdvance')) {
@@ -1416,8 +1470,13 @@ function summaryRowHTML(q) {
   if (state.mode === 'reverse') {
     return `<span>${q.text}</span><span class="missed-item-meaning">${q.meaning}</span><span>${readingHTML(q.reading)}</span>`;
   }
-  const display = state.mode === 'sentence' ? highlightTarget(q.sentence, q.target) : q.text;
-  return `<span>${display}</span><span class="missed-item-meaning">${q.meaning}</span><span>${readingHTML(q.correctReading)}</span>`;
+  const display = state.mode === 'sentence' ? highlightTarget(q.sentence, q.target)
+    : state.mode === 'word' && splitOkurigana(q.text).okurigana ? highlightTarget(q.text, q.text)
+    : q.text;
+  // Word mode's correctReading is only the quizzed kanji-part core (see
+  // wordCoreReading()) — the summary should still show the whole reading.
+  const reading = state.mode === 'word' ? wordDisplayReading(q) : q.correctReading;
+  return `<span>${display}</span><span class="missed-item-meaning">${q.meaning}</span><span>${readingHTML(reading)}</span>`;
 }
 
 function showSummary() {

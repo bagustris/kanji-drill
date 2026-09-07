@@ -75,7 +75,16 @@ The main concept is "how kanji is read in particular words" and "how to associat
   食べる, generated from each kanji's own example words wherever the word is
   that kanji plus a kana-only suffix. Coverage follows whatever the kanji
   dataset already has for that kanji, so it's not exhaustive — see
-  `augment-words.js` above.
+  `augment-words.js` above. Since the word's own okurigana is already
+  written out in the quiz prompt, only the kanji is highlighted red and only
+  its own reading is quizzed (早める shows 早 in red + める plain, and offers
+  はや as an option, never the full はやめる) — otherwise any option ending
+  in a different kana suffix could be eliminated on sight without knowing
+  the kanji's actual reading. `wordCoreReading()` in `js/app.js` strips the
+  visible suffix off each candidate word's reading before it ever reaches
+  `DistractorGenerator`; the full reading is reconstructed only for display
+  (Learn-mode reveal, round summary) and speech (`wordFullReading()`/
+  `wordDisplayReading()`).
 - **Auto-advance by default (自動で次へ)** — after you answer, the quiz reveals
   the reading and moves on after a short timed pause. Turn the setting **off**
   to advance manually instead (tap/click, or → / Enter / Space), giving

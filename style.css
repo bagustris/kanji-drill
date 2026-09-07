@@ -896,7 +896,11 @@ html, body {
   font-size: 2rem;
 }
 
-.quiz-sentence-target {
+/* The kanji actually being quizzed, picked out from surrounding context
+   that's already given away (an okurigana suffix, a sentence's other
+   words) — used by both sentence mode's highlighted target and word mode's
+   kanji part (see highlightTarget()/renderQuestion() in app.js). */
+.quiz-target-kanji {
   color: var(--accent-ink);
   font-weight: bold;
 }
@@ -1093,8 +1097,8 @@ html, body {
 .quiz-examples.has-audio .ex-sentence::after { content: '🔊'; color: var(--accent-ink); font-size: 0.8em; margin-left: 0.35em; }
 
 /* The exact kanji (ex-word) or word (ex-sentence) being quizzed, picked out
-   from the rest of the example the same way the sentence-mode prompt
-   highlights its own target (.quiz-sentence-target). */
+   from the rest of the example the same way the quiz prompt highlights its
+   own target (.quiz-target-kanji). */
 .ex-target { color: var(--accent-ink); font-weight: bold; }
 
 /* "Weak spot" marker for a leech (a kanji the learner keeps missing). Subtle,

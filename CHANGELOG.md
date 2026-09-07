@@ -13,6 +13,17 @@ source of truth for the app version.
 ## [2026-09-07]
 
 ### Fixed
+- Word mode no longer quizzes an inflected word's full reading (e.g. 早める
+  -> はやめる). The word's own okurigana was already written out in the
+  prompt, so any option ending in a different kana suffix (早まる's はやまる,
+  早口's はやくち) could be eliminated on sight without knowing 早's actual
+  reading — only the option matching what was already on screen made sense.
+  The kanji part is now shown highlighted in red (matching sentence mode's
+  own target highlight, and inspired by ../wanikanji's compound-context
+  glyph), the trailing okurigana stays plain text right after it, and only
+  the kanji-part reading (はや) is quizzed — the full reading is still shown
+  on the Learn-mode flashcard reveal, spoken by TTS, and listed in the round
+  summary, just not offered as an eliminable multiple-choice answer.
 - Word mode's example sentences (れい文) now actually appear on the answer
   reveal with **答えた後に例を表示 / Show example after answering** on. The
   rendering code was correct all along; `vendor/kanji-data` was pinned to a
