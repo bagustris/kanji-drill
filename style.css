@@ -48,6 +48,12 @@ html, body {
   color: var(--fg);
   font-family: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", system-ui, -apple-system, sans-serif;
   min-height: 100%;
+  /* Kill Android Chrome's pull-to-refresh: a downward swipe that starts at
+     scroll position 0 (the top of any screen, or anywhere inside a dialog
+     that has nothing of its own left to scroll) would otherwise reload the
+     page and drop the round in progress. `contain` keeps the app's own
+     scrolling intact and only suppresses the chained overscroll gesture. */
+  overscroll-behavior-y: contain;
 }
 
 .app-header {
@@ -137,15 +143,27 @@ html, body {
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
   display: flex;
-  align-items: center;
   justify-content: center;
   padding: 1rem;
   z-index: 100;
+  /* The panel is taller than a phone viewport, so the overlay itself has to
+     be the scroller: without this the settings content was both clipped and
+     unscrollable, and every swipe over it chained straight to the document
+     and triggered pull-to-refresh. `contain` stops that chaining at the
+     overlay's own edges. */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .settings-overlay.hidden { display: none; }
 
 .settings-panel {
+  /* `margin: auto` rather than the overlay's `align-items: center`: auto
+     margins centre the panel when it fits and fall back to normal flow when
+     it doesn't, whereas centred flex alignment clips the panel's top off
+     screen once it overflows, with no way to scroll back up to it. */
+  margin: auto;
   width: 100%;
   max-width: 360px;
   background: var(--card-bg);

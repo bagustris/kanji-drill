@@ -13,7 +13,7 @@ The app currently has four drill types with focus on reading:
 3. Sentences reading (sentences)  
 4. Reverse reading (hiragana-kanji)
 
-The main concept is "how kanji is read in particular words" and "how to associate kanji with useful context" (comprehensible input).
+The main concept is "how kanji is read in particular words" and "how to associate kanji with useful context" (comprehensible input). It follows original Kanji Drill learning concept: Oboeru/remember (learn mode) --> renshuu/practice (kanji and reverse quiz) --> tashikameru/confirm (word and sentence quiz). The app is designed to be used in short bursts, with a focus on spaced repetition and adaptive learning.
 
 ## Features
 

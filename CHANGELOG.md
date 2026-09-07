@@ -10,6 +10,19 @@ The version shown in the app's Settings → About panel is read from the latest
 entry below (see `loadAppVersion()` in `js/app.js`), so this file is the single
 source of truth for the app version.
 
+## [2026-09-07]
+
+### Fixed
+- Settings dialog: scrolling it on a phone no longer reloads the page. The
+  overlay is now its own scroll container (`overflow-y: auto` +
+  `overscroll-behavior: contain`), so a swipe over the settings panel stops
+  at the dialog instead of chaining to the document and triggering Android
+  Chrome's pull-to-refresh; `overscroll-behavior-y: contain` on the page
+  itself suppresses the same gesture on every other screen. The panel is
+  also centred with `margin: auto` rather than flex `align-items: center`,
+  so its top is reachable when it is taller than the viewport instead of
+  being clipped off screen.
+
 ## [2026-09-06]
 
 ### Added
