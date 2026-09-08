@@ -248,6 +248,24 @@ test('DistractorGenerator.generate: gracefully returns fewer distractors when th
   assert.equal(distractors.length, 0);
 });
 
+// Readings are written on'yomi in katakana / kun'yomi in hiragana (see
+// vendor/kanji-data/kanji/*.json), so two different strings can be the same
+// spoken answer. Such a homophone must never be offered as a distractor: a
+// learner who read the kanji correctly could pick it and be marked wrong.
+test('DistractorGenerator.generate: never offers a homophone of the correct reading written in the other kana script', () => {
+  const itemList = [
+    { kanji: '京', readings: ['キョウ'], meaning: 'capital' },
+    { kanji: '今', readings: ['きょう'], meaning: 'now' }, // same sound, other script
+    { kanji: '曲', readings: ['キョク'], meaning: 'bend' },
+    { kanji: '局', readings: ['キョク'], meaning: 'bureau' }, // duplicate of 曲's reading
+    { kanji: '犬', readings: ['いぬ'], meaning: 'dog' },
+  ];
+  const question = questionFor(itemList, '京');
+  const distractors = DistractorGenerator.generate(question, itemList);
+  assert.ok(!distractors.includes('きょう'), `homophone offered as a distractor: ${JSON.stringify(distractors)}`);
+  assert.equal(new Set(distractors).size, distractors.length);
+});
+
 test('DistractorGenerator.generate: a reading the learner actually confused before outranks an otherwise-stronger candidate', () => {
   ProgressManager.resetAll();
   const itemList = buildItemList();

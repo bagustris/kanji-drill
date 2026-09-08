@@ -581,7 +581,7 @@ function buildQuestion(target, itemList, mode) {
   // closer to how an ES drill book presents it, and it doesn't leak the
   // okurigana by showing ぶ in the prompt. The reading is quizzed with its
   // okurigana intact (まな.ぶ), which readingHTML renders with the okurigana in
-  // red so it reads as "learn 学 = まな, okurigana ぶ". Example words (optional
+  // grey so it reads as "learn 学 = まな, okurigana ぶ". Example words (optional
   // in the data — see vendor/kanji-data/scripts/kyoiku/fetch-example-words.js) are still revealed after
   // answering to reinforce the kanji -> word association a drill book builds.
   if (mode === 'kanji') {

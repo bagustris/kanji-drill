@@ -182,7 +182,16 @@ first moving the data back to a plain committed directory.
 
 ### Data shape
 
-`data/gradeN.json` (kanji mode): `{ "kanji": "口", "readings": ["くち"], "meaning": "..." }`
+`data/gradeN.json` (kanji mode): `{ "kanji": "口", "readings": ["くち", "コウ"], "meaning": "..." }`
+**Reading script is meaningful, not cosmetic**: on'yomi are written in
+katakana, kun'yomi in hiragana, with a `.` marking the okurigana boundary
+(`なが.い`, rendered with the tail greyed by `readingHTML()`). Anything
+comparing or deduping readings must therefore fold the two kana scripts
+together first (`readingKey()` in `DistractorGenerator.js`, `foldReading()`
+in `SimilarityFeatures.js`) — キョウ and きょう are one spoken answer, and
+offering both as choices marks a correct reader wrong. Word and sentence
+files stay in plain hiragana (furigana always is).
+
 `data/wordsN.json` (word mode): same shape but `"word"` instead of `"kanji"`,
 plus an optional `examples: [{sentence, translation}]` (up to 2, attached
 whenever a sentence's `target` exactly matches the word — see

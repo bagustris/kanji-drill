@@ -173,14 +173,21 @@ other apps that share the same schema/tooling conventions.
 Each entry in a `data/gradeN.json` file looks like:
 
 ```json
-{ "kanji": "口", "readings": ["くち"] }
+{ "kanji": "口", "readings": ["くち", "コウ"] }
 ```
 
-`readings` is almost always a single hiragana reading — the one a kid at that
-grade would encounter first, not necessarily the "primary" dictionary reading
-(so 生 is せい as in 先生, not its kun'yomi). A small number of kanji list two
-readings, most notably the numbers 一〜十, which are taught as both a digit
-reading and a counting word (一 → いち / ひとつ) from day one.
+A reading's script says what kind of reading it is, the way a 漢字辞典 prints
+it: **on'yomi (音読み) in katakana** (口 → コウ), **kun'yomi (訓読み) in
+hiragana** (口 → くち), with a dot marking where okurigana begins (永 →
+なが.い — the app greys everything after the dot). A handful of readings that
+no dictionary classifies as either, because they're really whole words (好
+す.き, 亡 な.くなる, 踊 おど.り), stay in hiragana.
+
+An entry lists the readings a kid at that grade actually meets — not the full
+dictionary set — including every reading its own `examples` use, so nothing on
+the answer-reveal panel is a reading the quiz never taught. The numbers 一〜十
+carry both a digit reading and a counting word (一 → イチ / ひと.つ) from day
+one.
 
 > [!WARNING]
 > Readings were chosen by editorial judgment call, cross-referenced against

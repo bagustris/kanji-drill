@@ -62,6 +62,19 @@ const SimilarityFeatures = (() => {
     return 1 - levenshteinDistance(a, b) / maxLength;
   }
 
+  // Readings are written in the script that says what kind of reading they
+  // are — on'yomi in katakana (アツ), kun'yomi in hiragana (なが.い) — but a
+  // learner hears no such difference: キョウ and きょう are the same sound, so
+  // reading similarity has to be measured on the sound, not the script.
+  // Folding katakana to hiragana (and dropping the okurigana dot, a display
+  // marker) is what makes that comparison script-blind.
+  function foldReading(text) {
+    if (!text) return '';
+    return Array.from(text.replace(/\./g, ''))
+      .map((ch) => (ch >= '\u30a1' && ch <= '\u30f6' ? String.fromCharCode(ch.charCodeAt(0) - 0x60) : ch))
+      .join('');
+  }
+
   // First character (mora) of a reading, Unicode-codepoint-safe.
   function firstMora(text) {
     if (!text) return undefined;
@@ -104,8 +117,8 @@ const SimilarityFeatures = (() => {
    */
   function compute(question, candidate) {
     return {
-      exactReadingSimilarity: stringSimilarity(question.reading, candidate.reading),
-      firstMoraSimilarity: firstMora(question.reading) && firstMora(question.reading) === firstMora(candidate.reading) ? 1 : 0,
+      exactReadingSimilarity: stringSimilarity(foldReading(question.reading), foldReading(candidate.reading)),
+      firstMoraSimilarity: firstMora(foldReading(question.reading)) && firstMora(foldReading(question.reading)) === firstMora(foldReading(candidate.reading)) ? 1 : 0,
       confusionSimilarity: typeof candidate.confusionCount === 'number' ? Math.min(1, candidate.confusionCount / MAX_CONFUSION_COUNT) : 0,
       meaningSimilarity: jaccardSimilarity(tokenizeMeaning(question.meaning), tokenizeMeaning(candidate.meaning)),
       gradeSimilarity: numericCloseness(question.grade, candidate.grade, MAX_GRADE_DIFF),

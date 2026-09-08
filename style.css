@@ -936,7 +936,11 @@ html, body {
 }
 
 .okurigana {
-  color: var(--accent-ink);
+  /* Okurigana (the kana a reading contributes that the kanji itself doesn't
+     carry, e.g. the い of 永: なが.い) is greyed rather than accented: it's
+     context, not the part being learned, so it should recede next to the
+     kanji-derived core of the reading. */
+  color: var(--muted);
 }
 
 .option-btn.correct .okurigana,

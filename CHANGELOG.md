@@ -10,6 +10,45 @@ The version shown in the app's Settings → About panel is read from the latest
 entry below (see `loadAppVersion()` in `js/app.js`), so this file is the single
 source of truth for the app version.
 
+## [2026-09-08]
+
+### Changed
+- Kanji readings now say what kind of reading they are, the way a 漢字辞典
+  does: on'yomi (音読み) are written in katakana (圧 → アツ), kun'yomi
+  (訓読み) stay in hiragana (永 → なが.い). All 2,136 kanji across grades 1-9
+  were reclassified against KANJIDIC2 rather than by hand — 2,107 readings
+  rewritten. The handful that no dictionary classifies as either, because
+  they're really whole words (好 す.き, 亡 な.くなる, 踊 おど.り and three
+  more), stay in hiragana.
+- Okurigana in a reading is now grey instead of accent-red (永: なが**い**).
+  It's context rather than the part being learned, so it recedes next to the
+  kanji-derived core of the reading. Eleven kun'yomi also had their okurigana
+  boundary corrected to the 常用漢字表 position (後 うしろ → うし.ろ, 交
+  まじ.る → ま.じる, 向 むか.う → む.かう, 確 たしか.める → たし.かめる,
+  混 まざ.る → ま.ざる, 暮 くら.す → く.らす, 入 いり → い.り, ...).
+
+### Added
+- 12 readings that the data's own example words already used but that the
+  kanji entry itself didn't list (遊 ユ from 遊山, 帯 お.びる from 帯びる,
+  冊 サク from 短冊, ...), recovered by segmenting each example word's reading
+  against KANJIDIC2 and keeping only the reading actually used in it. Grades
+  1-2 are deliberately untouched: nothing was added there, only rewritten
+  into the on/kun kana convention.
+- Meanings and readings for grades 1-6 were cross-checked against
+  [Wikipedia's Kyōiku kanji list](https://en.wikipedia.org/wiki/Ky%C5%8Diku_kanji).
+  No meaning needed changing (every difference was a synonym — "big"/"large",
+  "die"/"death"), and every reading in the data is attested there or in
+  KANJIDIC2.
+
+### Fixed
+- A distractor that is a homophone of the correct answer in the other kana
+  script (きょう offered against a correct キョウ) can no longer appear as an
+  answer choice, and two choices that differ only by script no longer count
+  as distinct. Reading similarity is likewise measured on the folded kana, so
+  the on/kun script split doesn't make the distractor engine think キョウ and
+  きょう are unrelated sounds. Sentence mode's furigana and word mode's
+  readings stay hiragana throughout, as furigana in Japanese text always is.
+
 ## [2026-09-07]
 
 ### Fixed
