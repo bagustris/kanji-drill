@@ -997,6 +997,25 @@ html, body {
 
 .quiz-answer-reveal.hidden { display: none; }
 
+/* Separator between multiple readings in the Learn-mode reveal (e.g. 分's
+   7 readings) — de-emphasized so the readings themselves stay the focus. */
+.reading-sep {
+  margin: 0 0.3em;
+  color: var(--muted);
+  font-weight: normal;
+  opacity: 0.6;
+}
+
+/* Reverse mode's reveal is the kanji itself; its readings list sits below it
+   at a smaller weight, same relationship a dictionary entry's headword has
+   to its reading line. */
+.quiz-all-readings {
+  font-size: 1.15rem;
+  font-weight: normal;
+  color: var(--muted);
+  margin-top: 0.3rem;
+}
+
 /* Anki-style self-grading row, shown immediately alongside the revealed
    answer. Four buttons rather than the quiz's 2x2 so the easy/hard gradient
    reads left-to-right in one glance. */

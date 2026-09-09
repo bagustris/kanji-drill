@@ -190,8 +190,19 @@ function renderDashboard() {
 // dismiss it) rather than something wired into the arrow-key nav groups —
 // it's reached by mouse/touch or Tab, matching how a native <dialog> would
 // behave, without the added complexity of a full focus trap.
+// Centralizes the show/hide decision so both renderQuestion() and the
+// showMeaning toggle's change handler agree on it — reverse mode, leeches,
+// and Learn mode (a study view, not a recall quiz) always force the meaning
+// visible regardless of the showMeaning preference; forward quiz-mode
+// questions honor it. Without this shared check, toggling showMeaning off
+// mid-question could hide a meaning that was supposed to be force-shown
+// until the next card re-rendered.
 function applyMeaningVisibility() {
-  el.quizMeaning.classList.toggle('hidden', !SettingsManager.get('showMeaning'));
+  const q = state.questions[state.index];
+  const isReverse = state.mode === 'reverse';
+  const leech = q && ProgressManager.isLeech(ProgressManager.getQuestionId(state.mode, q.sourceGrade, q.text));
+  const forceShow = isReverse || leech || state.isLearn;
+  el.quizMeaning.classList.toggle('hidden', !forceShow && !SettingsManager.get('showMeaning'));
 }
 
 // Resolves the tri-state playAudio preference (see settings.js): an explicit
@@ -530,9 +541,28 @@ function wordCoreReading(word, reading) {
 function wordFullReading(q) {
   return q.correctReading + splitOkurigana(q.text).okurigana;
 }
+// Shared by wordDisplayReading (single quizzed reading) and allReadingsHTML
+// (every reading) — loadData() already stripped word readings down to their
+// kanji-part core (wordCoreReading), so re-appending the word's own
+// okurigana here is unconditional, not a suffix check.
+function wordDisplayReadingFor(text, reading) {
+  const { okurigana } = splitOkurigana(text);
+  return okurigana ? `${reading}.${okurigana}` : reading;
+}
 function wordDisplayReading(q) {
-  const { okurigana } = splitOkurigana(q.text);
-  return okurigana ? `${q.correctReading}.${okurigana}` : q.correctReading;
+  return wordDisplayReadingFor(q.text, q.correctReading);
+}
+
+// Learn mode's answer reveal shows every reading in q.allReadings, not just
+// the one quizzed reading (q.correctReading) — a kanji like 分 carries 7
+// readings, and a study view that hides 6 of them defeats the point of
+// "learning". Word mode's readings need the same dot-reinsertion
+// wordDisplayReadingFor() does for the single quizzed reading.
+function allReadingsHTML(q) {
+  const readings = state.mode === 'word'
+    ? q.allReadings.map((r) => wordDisplayReadingFor(q.text, r))
+    : q.allReadings;
+  return readings.map(readingHTML).join('<span class="reading-sep">、</span>');
 }
 
 // Adaptive replacement for the old random weightedSample(): builds a pool of
@@ -657,12 +687,17 @@ function buildReverseQuestion(target, itemList) {
 // need to pay DistractorGenerator's cost building a set that's never shown.
 function buildCard(target, mode) {
   const correctReading = shuffle(target.readings)[0];
+  // Learn mode is a study view, not a quiz reveal — it shows every reading a
+  // kanji/word carries (kept in the data's own order, e.g. 分's kun'yomi
+  // before its on'yomi), not just the one randomly picked for TTS/summary.
+  const allReadings = target.readings;
   if (mode === 'kanji') {
     return {
       text: itemText(target),
       sourceGrade: target.sourceGrade,
       meaning: target.meaning,
       correctReading,
+      allReadings,
       examples: Array.isArray(target.examples) ? target.examples : [],
     };
   }
@@ -673,6 +708,7 @@ function buildCard(target, mode) {
     target: target.target,
     meaning: mode === 'sentence' ? (target.translation || target.meaning) : target.meaning,
     correctReading,
+    allReadings,
     examples: mode === 'word' && Array.isArray(target.examples) ? target.examples : [],
   };
 }
@@ -686,6 +722,7 @@ function buildReverseCard(target) {
     reading,
     meaning: target.meaning,
     correctReading: kanji,
+    allReadings: target.readings,
     isReverse: true,
     examples: Array.isArray(target.examples) ? target.examples : [],
   };
@@ -753,7 +790,7 @@ function renderReviewButton() {
   el.btnReview.disabled = grades.length === 0;
   el.reviewCount.textContent = label;
   el.reviewBtnLabel.innerHTML = SettingsManager.get('studyMode') === 'learn'
-    ? 'フラッシュカード<span>Flashcards</span>'
+    ? 'まなぶ<span>Learn</span>'
     : 'クイズ<span>Quiz</span>';
 }
 
@@ -1011,11 +1048,9 @@ function renderQuestion() {
   // more time on a stubborn kanji.
   const leech = ProgressManager.isLeech(ProgressManager.getQuestionId(state.mode, q.sourceGrade, q.text));
   el.quizLeechBadge.classList.toggle('hidden', !leech);
-  // The meaning is what disambiguates homophone kanji in reverse mode, so it
-  // is always shown there regardless of the show-meaning preference; forward
-  // modes honor the setting — unless the item is a leech, which force-shows it.
-  if (isReverse || leech) el.quizMeaning.classList.remove('hidden');
-  else applyMeaningVisibility();
+  // See applyMeaningVisibility() for the show/hide rule (reverse/leech/Learn
+  // always force it visible; forward quiz-mode questions honor the setting).
+  applyMeaningVisibility();
 
   // Example words are revealed only after answering in quiz mode (before
   // that they could give the reading away) and immediately in Learn mode —
@@ -1025,7 +1060,7 @@ function renderQuestion() {
   el.quizExamples.classList.add('hidden');
 
   if (state.isLearn) {
-    // Flashcard flow: the answer is shown immediately (no flip step) along
+    // Learn mode flow: the answer is shown immediately (no flip step) along
     // with the self-grade buttons — see the design note on LEARN_INSTRUCTION_TEXT.
     const [instructionMain, instructionSub] = LEARN_INSTRUCTION_TEXT[state.mode] || LEARN_DEFAULT_INSTRUCTION;
     el.quizInstruction.innerHTML = `${instructionMain}<span>${instructionSub}</span>`;
@@ -1034,11 +1069,12 @@ function renderQuestion() {
 
     if (state.mode !== 'sentence') {
       // Reverse mode's prompt is the reading (rendered above); the answer
-      // here is the kanji. Forward modes' answer is the reading — word mode's
-      // shows the whole word's reading (wordDisplayReading), not just the
-      // kanji-part core that was actually quizzed (see wordCoreReading()).
-      el.quizAnswerReveal.innerHTML = isReverse ? escapeHtml(q.correctReading)
-        : readingHTML(state.mode === 'word' ? wordDisplayReading(q) : q.correctReading);
+      // here is the kanji, with all of that kanji's readings listed below it
+      // for study. Forward modes' answer is every reading the kanji/word
+      // has (allReadingsHTML), not just the one quizzed reading.
+      el.quizAnswerReveal.innerHTML = isReverse
+        ? `${escapeHtml(q.correctReading)}<div class="quiz-all-readings">${allReadingsHTML(q)}</div>`
+        : allReadingsHTML(q);
       el.quizAnswerReveal.classList.remove('hidden');
     } else {
       // Sentence mode's answer (furigana) is already inline in the prompt
