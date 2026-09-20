@@ -1,0 +1,10 @@
+.specstory/
+.claude/
+.vscode/
+
+# Reading-audit tool cache (tools/audit-readings.js)
+tools/.kanjiapi-cache.json
+tools/.kanjiapi-words-cache.json
+
+# Generated review output (tools/fetch-example-words.js)
+example-words-report.json
