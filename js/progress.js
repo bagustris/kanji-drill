@@ -344,6 +344,25 @@ const ProgressManager = (() => {
     return stats.seen >= LEECH_MIN_SEEN && stats.correct / stats.seen < LEECH_MAX_ACCURACY;
   }
 
+  // How many of this mode's questions are currently leeches — used to gate
+  // and label the にがて (weak-spot review) button the same way
+  // studiedGrades() gates ふくしゅう. Answered purely from stored question
+  // IDs (they already encode mode+grade, e.g. "grade2:山" — see questionId())
+  // rather than needing the kanji/word/sentence data loaded, so this stays a
+  // cheap, synchronous check the home screen can call on every render.
+  // Delegates the actual leech test to isLeech() itself rather than
+  // re-implementing the seen/accuracy predicate inline — otherwise this
+  // count (and the button it gates) could silently drift out of sync with
+  // what leechPickPool() (app.js) actually selects, if isLeech's rule ever
+  // changes in only one place.
+  function getLeechCount(mode) {
+    const progress = readSnapshot();
+    const idPrefix = new RegExp(`^${MODE_PREFIX[mode] || 'grade'}\\d+:`);
+    return Object.keys(progress.questions)
+      .filter((id) => idPrefix.test(id) && isLeech(id))
+      .length;
+  }
+
   // One-decimal accuracy percentage (e.g. 89.6), 0 when nothing answered yet.
   function getAccuracy(stats) {
     if (!stats || stats.answered === 0) return 0;
@@ -443,6 +462,7 @@ const ProgressManager = (() => {
     getErrorRate,
     getMastery,
     isLeech,
+    getLeechCount,
     getGradeStats,
     getGradeStatus,
     getOverallStats,

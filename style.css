@@ -700,6 +700,43 @@ html, body {
   outline-offset: 2px;
 }
 
+/* RecommendationEngine's single "what to do next" nudge, shown above the
+   grade grid — clicking it just clicks the button it's pointing at (see the
+   listener in app.js), so it never duplicates that button's own state. */
+.recommendation-banner {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.9rem 1.1rem;
+  text-align: left;
+  font: inherit;
+  background: var(--card-bg);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--accent-ink);
+  cursor: pointer;
+}
+
+.recommendation-banner:hover, .recommendation-banner:focus-visible {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  outline: none;
+}
+
+.recommendation-banner.hidden { display: none; }
+
+.recommendation-text {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.recommendation-text span {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.75rem;
+  font-weight: normal;
+  color: var(--muted);
+}
+
 .grade-section-heading {
   margin: 1.6rem 0 0.6rem;
   font-size: 0.85rem;
@@ -763,11 +800,6 @@ html, body {
 .grade-btn:disabled:hover {
   border-color: var(--border);
   box-shadow: none;
-}
-
-/* Cumulative review is one full-width button rather than a 2-up cell. */
-.grade-grid-single {
-  grid-template-columns: 1fr;
 }
 
 /* Deliberately not .grade-btn: that class is queried to enumerate the real
@@ -923,6 +955,17 @@ html, body {
 
 .quiz-meaning.hidden { display: none; }
 
+/* なりたち (kanji composition) hint — a structural cue, not the reading
+   being quizzed, so it sits alongside .quiz-meaning rather than looking like
+   part of the answer. */
+.quiz-composition {
+  color: var(--muted);
+  font-size: 1rem;
+  margin: 0 0 1rem;
+}
+
+.quiz-composition.hidden { display: none; }
+
 .quiz-instruction {
   color: var(--muted);
   font-size: 0.9rem;
@@ -996,6 +1039,14 @@ html, body {
 }
 
 .quiz-answer-reveal.hidden { display: none; }
+
+/* Forward modes reveal a reading, not a headword kanji — de-emphasized
+   relative to the default (reverse mode's kanji reveal), matching the
+   quieter weight .quiz-all-readings already uses for a reading line. */
+.quiz-answer-reveal.is-reading {
+  font-size: 1.3rem;
+  font-weight: normal;
+}
 
 /* Separator between multiple readings in the Learn-mode reveal (e.g. 分's
    7 readings) — de-emphasized so the readings themselves stay the focus. */

@@ -16,13 +16,19 @@ const SettingsManager = (() => {
   // for word mode (see renderExamples in app.js).
   // strokeAnimation defaults to true: kanji mode shows an animated
   // stroke-order diagram instead of the plain character (see
-  // renderKanjiStrokeOrder in app.js). Turning it off skips the fetch
-  // entirely and always shows the plain character.
+  // renderKanjiStrokeOrder in app.js). Turning it off skips *that* fetch and
+  // always shows the plain character — but showComposition (below) fetches
+  // the same KanjiVG file independently, so turning strokeAnimation off alone
+  // no longer eliminates the network request for a kanji's SVG.
+  // showComposition defaults to true: kanji mode shows a "made of" hint
+  // (e.g. 林 -> 木 + 木) parsed from the same KanjiVG file stroke order
+  // already fetches — see parseKanjiComposition/renderKanjiComposition in
+  // app.js. Kanji with no useful top-level decomposition show nothing.
   // studyMode defaults to 'quiz': grade buttons and cumulative review launch
   // the MCQ quiz. Switching to 'learn' in Settings makes those same buttons
   // launch flashcard sessions instead — a single global switch rather than a
   // second button cluttering every grade tile.
-  const DEFAULTS = { showMeaning: true, roundSize: 10, playAudio: false, autoAdvance: true, showExamples: true, strokeAnimation: true, studyMode: 'quiz' };
+  const DEFAULTS = { showMeaning: true, roundSize: 10, playAudio: false, autoAdvance: true, showExamples: true, strokeAnimation: true, showComposition: true, studyMode: 'quiz' };
 
   function load() {
     try {

@@ -10,6 +10,39 @@ The version shown in the app's Settings → About panel is read from the latest
 entry below (see `loadAppVersion()` in `js/app.js`), so this file is the single
 source of truth for the app version.
 
+## [2026-09-22]
+
+### Added
+- **にがて (weak-spot-only) review** — a second button next to ふくしゅう that
+  drills only the kanji/words you keep missing (seen ≥ 3 times, right less
+  than half — the same *leech* bar already used for the にがて badge and
+  extra scaffolding), instead of the full cumulative pool. Disabled with a
+  count until you have at least one. Works under both クイズ and まなぶ
+  (Settings → モード), and stays in step with any leech cleared or newly
+  created mid-round, including on もう一回/Retry.
+- **Recommendation banner** — a single "what to do next" nudge above the
+  grade grid, computed by a new `RecommendationEngine`
+  (`js/learning/recommendation/`): a struggling grade (accuracy < 50%) first,
+  then a にがて backlog, then the next grade to start, then a "start here"
+  welcome for a brand-new learner, and a maintenance-review suggestion once
+  everything looks solid. Tapping it just clicks whichever existing button
+  (a grade, にがて, or ふくしゅう) it's pointing at.
+- **なりたち (kanji composition hint)** — kanji mode now shows what a kanji
+  is built from (林 → 木 + 木, 明 → 日 + 月), parsed from the KanjiVG file
+  already fetched for stroke-order animation rather than any new data source
+  (verified against all 2,136 grade 1-9 kanji). Shown up front rather than
+  gated on answering — the kanji glyph is already the visible prompt, so this
+  reveals nothing about the reading being quizzed. Toggle in Settings
+  (**なりたちを表示**, on by default); kanji with no useful top-level
+  decomposition (or none at all) show nothing.
+
+### Changed
+- Learn mode's revealed reading is smaller and no longer bold (was 2rem
+  bold, matching reverse mode's kanji-headword reveal even though it's just
+  a reading) — reverse mode's own kanji reveal is unaffected.
+- The ふくしゅう button no longer shows an English "Quiz" gloss now that
+  にがて sits right next to it as a second button.
+
 ## [2026-09-08]
 
 ### Changed

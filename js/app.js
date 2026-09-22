@@ -8,9 +8,18 @@ const state = {
   grade: null,
   isReview: false,
   // Learn (flashcard) sessions reuse the cumulative-review pool/screen but
-  // self-grade instead of picking from options — see startLearn/renderQuestion.
+  // self-grade instead of picking from options — see startCumulative/renderQuestion.
   isLearn: false,
   itemList: [],
+  // Non-null only for a weak-spot (にがて) round: a filter applied to
+  // itemList to get the subset pickQuestions() draws from (leeches only).
+  // itemList itself stays the full cumulative pool so buildQuestion()'s
+  // distractor generation still has enough candidates — see startRound() and
+  // leechPickPool(). Stored as a function rather than a pre-computed array
+  // and re-applied on every startRound() call (including Retry) so a leech
+  // cleared — or newly created — mid-round is reflected the next round,
+  // instead of freezing the ふくしゅう pool from whenever the session started.
+  pickPool: null,
   questions: [],
   index: 0,
   score: 0,
@@ -48,6 +57,7 @@ const el = {
   quizProgress: document.getElementById('quiz-progress'),
   quizKanji: document.getElementById('quiz-kanji'),
   quizMeaning: document.getElementById('quiz-meaning'),
+  quizComposition: document.getElementById('quiz-composition'),
   quizInstruction: document.getElementById('quiz-instruction'),
   quizOptions: document.getElementById('quiz-options'),
   quizAnswerReveal: document.getElementById('quiz-answer-reveal'),
@@ -58,6 +68,11 @@ const el = {
   btnReview: document.getElementById('btn-review'),
   reviewBtnLabel: document.getElementById('review-btn-label'),
   reviewCount: document.getElementById('review-count'),
+  btnReviewWeak: document.getElementById('btn-review-weak'),
+  reviewWeakBtnLabel: document.getElementById('review-weak-btn-label'),
+  reviewWeakCount: document.getElementById('review-weak-count'),
+  recommendationBanner: document.getElementById('recommendation-banner'),
+  recommendationText: document.getElementById('recommendation-text'),
   summaryScore: document.getElementById('summary-score'),
   summaryMissed: document.getElementById('summary-missed'),
   summaryCorrect: document.getElementById('summary-correct'),
@@ -72,6 +87,7 @@ const el = {
   settingPlayAudio: document.getElementById('setting-play-audio'),
   settingAutoAdvance: document.getElementById('setting-auto-advance'),
   settingStrokeAnimation: document.getElementById('setting-stroke-animation'),
+  settingShowComposition: document.getElementById('setting-show-composition'),
   settingRoundSizeButtons: document.querySelectorAll('#setting-round-size .segmented-btn'),
   settingStudyModeButtons: document.querySelectorAll('#setting-study-mode .segmented-btn'),
   installButton: document.getElementById('btn-install'),
@@ -123,8 +139,22 @@ el.gradeButtons.forEach((btn) => {
 });
 
 el.btnReview.addEventListener('click', () => {
-  if (SettingsManager.get('studyMode') === 'learn') startLearn(getSelectedMode());
-  else startReview(getSelectedMode());
+  startCumulative(getSelectedMode(), { isLearn: SettingsManager.get('studyMode') === 'learn' });
+});
+
+el.btnReviewWeak.addEventListener('click', () => {
+  startCumulative(getSelectedMode(), { isLearn: SettingsManager.get('studyMode') === 'learn', weak: true });
+});
+
+// The recommendation banner is a shortcut to an action that already exists
+// elsewhere on the screen (a grade button, にがて, or ふくしゅう) — it never
+// starts a session itself, so renderRecommendation() and RecommendationEngine
+// never need to duplicate startGrade/startCumulative's logic.
+el.recommendationBanner.addEventListener('click', () => {
+  const { type, grade } = el.recommendationBanner.dataset;
+  if (type === 'grade') document.querySelector(`.grade-btn[data-grade="${grade}"]`)?.click();
+  else if (type === 'weak' && !el.btnReviewWeak.disabled) el.btnReviewWeak.click();
+  else if (type === 'review' && !el.btnReview.disabled) el.btnReview.click();
 });
 
 el.btnQuit.addEventListener('click', () => showScreen('home'));
@@ -180,10 +210,40 @@ function renderDashboard() {
     return { grade, name: gradeDisplayName(grade) };
   });
   ProgressView.renderAll(mode, grades);
+  // Computed once and shared with renderReviewButton/renderRecommendation
+  // below — both need this mode's leech count on every dashboard render, and
+  // getLeechCount() does a full scan of every stored question stat, not a
+  // cheap lookup.
+  const leechCount = ProgressManager.getLeechCount(mode);
   // Kept in step with the dashboard rather than called separately: the two
   // read the same progress data, and finishing a grade for the first time is
   // exactly what flips review from unavailable to available.
-  renderReviewButton();
+  renderReviewButton(leechCount);
+  renderRecommendation(mode, leechCount);
+}
+
+// One "what to do next" nudge above the grade grid — RecommendationEngine
+// (js/learning/recommendation/) turns this mode's per-grade stats and にがて
+// count into a single recommendation; this function only fetches what it
+// asks for and renders the result, the same read/render split ProgressView
+// keeps for the rest of the dashboard.
+function renderRecommendation(mode, leechCount) {
+  // Filtered by isGradeAvailable the same way studiedGrades() is — sentence
+  // mode disables grade buttons with no sentence data for that grade, and an
+  // unfiltered list here would let RecommendationEngine perpetually target an
+  // unanswerable, disabled grade (nextGrade never leaves answered === 0).
+  const grades = [...el.gradeButtons]
+    .filter((btn) => isGradeAvailable(Number(btn.dataset.grade), mode))
+    .map((btn) => {
+      const grade = Number(btn.dataset.grade);
+      const stats = ProgressManager.getGradeStats(mode, grade);
+      return { grade, name: gradeDisplayName(grade), answered: stats.answered, accuracy: stats.accuracy };
+    });
+  const rec = RecommendationEngine.recommend({ grades, leechCount });
+  el.recommendationText.innerHTML = `${rec.text}<span>${rec.sub}</span>`;
+  el.recommendationBanner.dataset.type = rec.type;
+  el.recommendationBanner.dataset.grade = rec.grade ?? '';
+  el.recommendationBanner.classList.remove('hidden');
 }
 
 // Settings dialog: a plain modal (backdrop click / Escape / close button
@@ -350,6 +410,18 @@ function initSettingsPanel() {
     // reading being quizzed.
     if (state.screen === 'quiz' && state.mode === 'kanji') {
       renderKanjiPrompt(state.questions[state.index].text, renderGen);
+    }
+  });
+
+  el.settingShowComposition.checked = SettingsManager.get('showComposition');
+  el.settingShowComposition.addEventListener('change', () => {
+    SettingsManager.set('showComposition', el.settingShowComposition.checked);
+    // Same safety as strokeAnimation above: components are structural, not
+    // the reading, so redrawing mid-question never gives anything away.
+    el.quizComposition.classList.add('hidden');
+    el.quizComposition.textContent = '';
+    if (state.screen === 'quiz' && state.mode === 'kanji') {
+      renderKanjiComposition(state.questions[state.index].text, renderGen);
     }
   });
 
@@ -781,7 +853,12 @@ function isGradeAvailable(grade, mode) {
 // of a separate one per session type. Called on mode switch and after every
 // round, since finishing a grade for the first time is exactly what makes
 // review become available.
-function renderReviewButton() {
+//
+// `leechCount`: optional — renderDashboard() already has this mode's count
+// (shared with renderRecommendation) and passes it through; the studyMode
+// toggle handler calls this alone, with no count to share, so it's computed
+// here in that case instead.
+function renderReviewButton(leechCount) {
   const mode = getSelectedMode();
   const grades = studiedGrades(mode);
   const label = grades.length === 0
@@ -789,9 +866,25 @@ function renderReviewButton() {
     : `${grades.map(gradeDisplayName).join('・')}`;
   el.btnReview.disabled = grades.length === 0;
   el.reviewCount.textContent = label;
-  el.reviewBtnLabel.innerHTML = SettingsManager.get('studyMode') === 'learn'
-    ? 'まなぶ<span>Learn</span>'
-    : 'クイズ<span>Quiz</span>';
+  // No English gloss here (unlike にがて below) — with the two buttons sitting
+  // side by side, "Quiz" next to にがて's own gloss reads as clutter, and
+  // クイズ needs no translation the way the less obvious にがて does.
+  el.reviewBtnLabel.textContent = SettingsManager.get('studyMode') === 'learn' ? 'まなぶ' : 'クイズ';
+  renderReviewWeakButton(mode, leechCount ?? ProgressManager.getLeechCount(mode));
+}
+
+// にがて (weak-spot-only) counterpart to renderReviewButton — gated on
+// ProgressManager.getLeechCount() rather than studiedGrades(), since a grade
+// can be "studied" with zero leeches yet (nothing missed enough times to
+// qualify — see isLeech's seen>=3/accuracy<50% bar).
+function renderReviewWeakButton(mode, leechCount) {
+  el.btnReviewWeak.disabled = leechCount === 0;
+  el.reviewWeakCount.textContent = leechCount === 0
+    ? 'にがてはまだありません'
+    : `${leechCount}問`;
+  el.reviewWeakBtnLabel.innerHTML = SettingsManager.get('studyMode') === 'learn'
+    ? 'まなぶ<span>Learn weak spots</span>'
+    : 'にがて<span>Weak spot</span>';
 }
 
 async function startGrade(mode, grade) {
@@ -801,8 +894,8 @@ async function startGrade(mode, grade) {
 // The per-grade Learn entry point (studyMode: 'learn' — see the grade-button
 // click handler above): flashcards over a single grade's *entire* pool,
 // available whether or not that grade has ever been quizzed. This is
-// deliberately not gated on studiedGrades() the way startLearn/startReview
-// below are — its whole point is to let a learner preview a fresh grade
+// deliberately not gated on studiedGrades() the way startCumulative()
+// below is — its whole point is to let a learner preview a fresh grade
 // before ever taking its quiz, which a studied-only gate would make
 // impossible (see the isLearn design discussion: flashcards that only ever
 // cover material you've already quizzed are just a second quiz UI, not a
@@ -811,34 +904,46 @@ async function startGradeLearn(mode, grade) {
   await startSession(mode, { grade, isLearn: true, load: () => loadData(mode, grade) });
 }
 
-async function startReview(mode) {
+// Shared loader for every cumulative-review variant (quiz/learn, all/にがて
+// only): pools every grade already studied in this mode — see studiedGrades'
+// doc comment for why the pool stays cumulative rather than a firehose.
+function cumulativeLoader(mode, grades) {
+  return async () => (await Promise.all(grades.map((g) => loadData(mode, g)))).flat();
+}
+
+// Restricts startRound()'s pickQuestions() pool to this learner's leeches
+// (にがて) while leaving state.itemList — and so buildQuestion()'s distractor
+// candidates — at the full cumulative set. A leech-only itemList would
+// otherwise starve DistractorGenerator of unique wrong-reading candidates,
+// the mirror image of the maxCandidates warning in CLAUDE.md.
+function leechPickPool(mode) {
+  return (itemList) => itemList.filter((entry) => ProgressManager.isLeech(
+    ProgressManager.getQuestionId(mode, entry.sourceGrade, itemText(entry)),
+  ));
+}
+
+// Every cumulative-review/learn variant funnels through here — quiz or
+// Learn (`isLearn`), over everything studied so far (`weak: false`, the
+// startReview/startLearn behavior: spaced-repetition upkeep of material
+// already introduced, as opposed to startGradeLearn's job of introducing a
+// single fresh grade before its first quiz) or narrowed to just this
+// learner's stubborn kanji (`weak: true`, the startWeakReview/startWeakLearn
+// behavior — startSession's pickPool narrows *which questions get picked* to
+// leeches only via leechPickPool, mirroring a teacher spending review time on
+// a learner's weak spots instead of re-drilling everything).
+async function startCumulative(mode, { isLearn = false, weak = false } = {}) {
   const grades = studiedGrades(mode);
   if (grades.length === 0) return;
   await startSession(mode, {
     grade: null,
     isReview: true,
-    load: async () => (await Promise.all(grades.map((g) => loadData(mode, g)))).flat(),
+    isLearn,
+    load: cumulativeLoader(mode, grades),
+    pickPool: weak ? leechPickPool(mode) : null,
   });
 }
 
-// Cumulative-review counterpart to startGradeLearn: flashcards over
-// everything studied so far, across grades (see studiedGrades' doc comment
-// for why that pool is cumulative rather than a firehose). This is for
-// spaced-repetition upkeep of material already introduced — reviewing what
-// you've studied — as opposed to startGradeLearn's job of introducing a
-// single fresh grade before its first quiz.
-async function startLearn(mode) {
-  const grades = studiedGrades(mode);
-  if (grades.length === 0) return;
-  await startSession(mode, {
-    grade: null,
-    isReview: true,
-    isLearn: true,
-    load: async () => (await Promise.all(grades.map((g) => loadData(mode, g)))).flat(),
-  });
-}
-
-async function startSession(mode, { grade, isReview = false, isLearn = false, load }) {
+async function startSession(mode, { grade, isReview = false, isLearn = false, load, pickPool = null }) {
   el.loadError.classList.add('hidden');
   try {
     state.mode = mode;
@@ -846,6 +951,10 @@ async function startSession(mode, { grade, isReview = false, isLearn = false, lo
     state.isReview = isReview;
     state.isLearn = isLearn;
     state.itemList = await load();
+    // Stored as the filter function itself (not its result) — see the
+    // doc comment on state.pickPool for why startRound() re-applies it fresh
+    // on every round rather than freezing the leech set here.
+    state.pickPool = pickPool;
     renderDashboard();
     startRound();
   } catch (err) {
@@ -858,10 +967,18 @@ async function startSession(mode, { grade, isReview = false, isLearn = false, lo
 }
 
 function startRound() {
+  // pickPool (set only for a にがて round — see leechPickPool) narrows which
+  // questions get selected; buildQuestion below always gets the full
+  // state.itemList regardless, so distractor generation keeps its normal
+  // candidate pool even when only a handful of leeches are being drilled.
+  // Re-applied here (rather than once in startSession) so Retry — which
+  // calls startRound() directly — picks up any leech cleared or newly
+  // created by the round just played, instead of reusing a stale snapshot.
+  const pool = state.pickPool ? state.pickPool(state.itemList) : state.itemList;
   const configuredSize = SettingsManager.get('roundSize');
-  const roundSize = configuredSize === 'all' ? state.itemList.length : configuredSize;
-  const count = Math.min(roundSize, state.itemList.length);
-  const picks = pickQuestions(state.itemList, state.mode, count);
+  const roundSize = configuredSize === 'all' ? pool.length : configuredSize;
+  const count = Math.min(roundSize, pool.length);
+  const picks = pickQuestions(pool, state.mode, count);
   state.questions = picks.map((entry) => {
     if (state.isLearn) {
       return state.mode === 'reverse' ? buildReverseCard(entry) : buildCard(entry, state.mode);
@@ -995,6 +1112,63 @@ function renderKanjiPrompt(char, myGen) {
   renderKanjiStrokeOrder(char, myGen);
 }
 
+// --- Kanji composition hint (なりたち) -----------------------------------
+// The same KanjiVG file fetched above for stroke order also carries a
+// decomposition tree (kvg:element on nested <g> groups) that this app never
+// otherwise reads — e.g. 林 is <g element="林"><g element="木"/><g
+// element="木"/></g>, 明 is 日+月. That's the actual "what a kanji is built
+// from" a Japanese kanji dictionary or textbook shows, not just a
+// stroke-order demo, and it's already on disk for every kanji this app uses
+// stroke order for (verified: 2,136/2,136 grade 1-9 kanji have an SVG).
+//
+// Depth is what makes this useful rather than noise: KanjiVG's tree recurses
+// all the way to primitive strokes, so only the *direct* children of the
+// whole-character root group are the textbook-level components — 諮's root
+// has exactly two (言, 咨), not the four leaf elements nested further inside
+// 咨. Atomic kanji (木) have zero such children, and a handful of entries
+// have exactly one (a historical/variant-form cross-reference, not a
+// composition) — both are treated as "nothing useful to show" rather than
+// rendering a single, uninformative "part".
+function parseKanjiComposition(svgText) {
+  if (!svgText) return [];
+  let doc;
+  try {
+    doc = new DOMParser().parseFromString(svgText, 'image/svg+xml');
+  } catch {
+    return [];
+  }
+  const strokePaths = doc.querySelector('[id^="kvg:StrokePaths"]');
+  const root = strokePaths && strokePaths.firstElementChild;
+  if (!root) return [];
+  const parts = [...root.children]
+    .filter((node) => node.tagName === 'g' && node.getAttribute('kvg:element'))
+    .map((node) => node.getAttribute('kvg:element'));
+  return parts.length >= 2 ? parts : [];
+}
+
+// Kanji-mode-only, and shown up front rather than gated on answering: unlike
+// reverse mode (where the kanji itself is the hidden answer), kanji mode's
+// prompt already IS the kanji glyph, so a components hint here reveals
+// nothing about the reading being quizzed — same reasoning that already lets
+// applyMeaningVisibility() show the meaning during the question. Shares
+// fetchKanjivgSvg's cache with renderKanjiStrokeOrder, so this never issues
+// a second network request for the same file; myGen guards the same stale-
+// response race renderKanjiStrokeOrder guards against. The setting is
+// re-checked after the await too, not just before: an in-flight call started
+// while it was on must not repopulate/reveal #quiz-composition if the
+// learner switches it off before the fetch resolves (the toggle handler
+// clears the element synchronously but doesn't bump renderGen, so myGen
+// alone wouldn't catch this).
+async function renderKanjiComposition(char, myGen) {
+  if (!SettingsManager.get('showComposition')) return;
+  const svgText = await fetchKanjivgSvg(char);
+  if (renderGen !== myGen || !SettingsManager.get('showComposition')) return;
+  const parts = parseKanjiComposition(svgText);
+  if (parts.length === 0) return;
+  el.quizComposition.textContent = parts.join(' + ');
+  el.quizComposition.classList.remove('hidden');
+}
+
 function renderQuestion() {
   renderGen++;
   const q = state.questions[state.index];
@@ -1011,6 +1185,11 @@ function renderQuestion() {
   el.quizKanji.classList.toggle('is-word', state.mode === 'word');
   el.quizKanji.classList.toggle('is-sentence', state.mode === 'sentence');
   el.quizKanji.classList.toggle('is-reverse', isReverse);
+  // Kanji-mode-only hint (see renderKanjiComposition below) — cleared here
+  // unconditionally and re-populated only in the kanji branch below, the same
+  // clear-then-repopulate shape quiz-examples uses a few lines down.
+  el.quizComposition.classList.add('hidden');
+  el.quizComposition.textContent = '';
   // Reverse prompts a reading (rendered through readingHTML so an okurigana
   // dot becomes the styled span); sentence highlights the target in its
   // sentence; word shows the bare word as-is (the reading, with its
@@ -1029,6 +1208,7 @@ function renderQuestion() {
     }
   } else if (state.mode === 'kanji') {
     renderKanjiPrompt(q.text, renderGen);
+    renderKanjiComposition(q.text, renderGen);
   } else if (splitOkurigana(q.text).okurigana) {
     // An inflected word (早める) shows its own okurigana directly here, the
     // same way sentence mode's target word does inside its sentence — so
@@ -1075,6 +1255,10 @@ function renderQuestion() {
       el.quizAnswerReveal.innerHTML = isReverse
         ? `${escapeHtml(q.correctReading)}<div class="quiz-all-readings">${allReadingsHTML(q)}</div>`
         : allReadingsHTML(q);
+      // Forward modes' reveal is a reading, not the bold-headword kanji
+      // reverse mode shows here — de-emphasize it so it reads rather than
+      // shouts (see CLAUDE.md / .quiz-answer-reveal.is-reading in style.css).
+      el.quizAnswerReveal.classList.toggle('is-reading', !isReverse);
       el.quizAnswerReveal.classList.remove('hidden');
     } else {
       // Sentence mode's answer (furigana) is already inline in the prompt
@@ -1289,6 +1473,10 @@ document.addEventListener('keydown', (e) => {
     }
     if (key === 'r') {
       if (!el.btnReview.disabled) el.btnReview.click();
+      return;
+    }
+    if (key === 'n') {
+      if (!el.btnReviewWeak.disabled) el.btnReviewWeak.click();
       return;
     }
     const btn = document.querySelector(`.grade-btn[data-grade="${e.key}"]`);
